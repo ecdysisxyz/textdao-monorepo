@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
+import {InitializationBase} from "bundle/textDAO/functions/initializer/InitializationBase.sol";
 import { Storage } from "bundle/textDAO/storages/Storage.sol";
 import { Schema } from "bundle/textDAO/storages/Schema.sol";
 
-contract Initialize {
-    function initialize(address[] calldata initialMembers, Schema.ProposalsConfig calldata pConfig) external onlyOnce returns (bool) {
+contract Initialize is InitializationBase {
+    function initialize(address[] calldata initialMembers, Schema.ProposalsConfig calldata pConfig) external initializer returns (bool) {
 
         Schema.MemberJoinProtectedStorage storage $ = Storage.$Members();
         Schema.ProposalsConfig storage $pConfig = Storage.$Proposals().config;
@@ -24,10 +25,4 @@ contract Initialize {
         $.nextMemberId = currentMemberId;
         return true;
     }
-    modifier onlyOnce() {
-        Schema.MemberJoinProtectedStorage storage $ = Storage.$Members();
-        require($.nextMemberId == 0, "Initialize: already initialized");
-        _;
-    }
-
 }

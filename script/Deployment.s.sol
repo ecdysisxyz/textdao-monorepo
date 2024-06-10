@@ -1,16 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-
 import { console2 } from "forge-std/console2.sol";
 import { MCDevKit } from "@devkit/MCDevKit.sol";
 import { MCScript } from "@devkit/MCScript.sol";
 
 import { Clone } from "@mc-std/functions/Clone.sol";
-import { Initialize } from "bundle/textDAO/functions/onlyonce/Initialize.sol";
-import { Propose } from "bundle/textDAO/functions/Propose.sol";
-import { Fork } from "bundle/textDAO/functions/Fork.sol";
-import { Vote } from "bundle/textDAO/functions/Vote.sol";
+import { Initialize } from "bundle/textDAO/functions/initializer/Initialize.sol";
+import { Propose } from "bundle/textDAO/functions/onlyMember/Propose.sol";
+import { Vote } from "bundle/textDAO/functions/onlyMember/Vote.sol";
+import { Fork } from "bundle/textDAO/functions/onlyReps/Fork.sol";
 import { Tally } from "bundle/textDAO/functions/Tally.sol";
 import { Execute } from "bundle/textDAO/functions/Execute.sol";
 import { Getter } from "bundle/textDAO/functions/Getter.sol";

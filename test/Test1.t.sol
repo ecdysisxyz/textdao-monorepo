@@ -3,9 +3,9 @@ pragma solidity ^0.8.24;
 
 import { UCSTestBase } from "bundle/_utils/UCSTestBase.sol";
 import { SelectorLib } from "bundle/_utils/SelectorLib.sol";
-import { Propose } from "bundle/textDAO/functions/Propose.sol";
-import { Fork } from "bundle/textDAO/functions/Fork.sol";
-import { Vote } from "bundle/textDAO/functions/Vote.sol";
+import { Propose } from "bundle/textDAO/functions/onlyMember/Propose.sol";
+import { Vote } from "bundle/textDAO/functions/onlyMember/Vote.sol";
+import { Fork } from "bundle/textDAO/functions/onlyReps/Fork.sol";
 import { Execute } from "bundle/textDAO/functions/Execute.sol";
 import { Tally } from "bundle/textDAO/functions/Tally.sol";
 import { Storage } from "bundle/textDAO/storages/Storage.sol";

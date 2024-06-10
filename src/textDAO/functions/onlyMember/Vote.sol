@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
+import {OnlyMemberBase} from "bundle/textDAO/functions/onlyMember/OnlyMemberBase.sol";
 import { console2 } from "forge-std/console2.sol";
 import { Storage } from "bundle/textDAO/storages/Storage.sol";
 import { Schema } from "bundle/textDAO/storages/Schema.sol";
 
-contract Vote {
-    function voteHeaders(uint pid, uint[3] calldata headerIds) external returns (bool) {
+contract Vote is OnlyMemberBase {
+    function voteHeaders(uint pid, uint[3] calldata headerIds) external onlyMember returns (bool) {
         Schema.ProposeStorage storage $ = Storage.$Proposals();
         Schema.Proposal storage $p = $.proposals[pid];
 
