@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import { UCSTestBase } from "bundle/_utils/UCSTestBase.sol";
+import {MCTest} from "@devkit/Flattened.sol";
+
 import { Propose } from "bundle/textDAO/functions/onlyMember/Propose.sol";
 import { Fork } from "bundle/textDAO/functions/onlyReps/Fork.sol";
 import { Vote } from "bundle/textDAO/functions/onlyMember/Vote.sol";
@@ -12,9 +13,9 @@ import { Schema } from "bundle/textDAO/storages/Schema.sol";
 import { SaveTextProtected } from "bundle/textDAO/functions/protected/SaveTextProtected.sol";
 import { MemberJoinProtected } from "bundle/textDAO/functions/protected/MemberJoinProtected.sol";
 
-contract Test2 is UCSTestBase {
+contract TextDAOTest is MCTest {
 
-    function setUp() public override {
+    function setUp() public {
         implementations[Propose.propose.selector] = address(new Propose());
         implementations[Fork.fork.selector] = address(new Fork());
         implementations[Execute.execute.selector] = address(new Execute());
