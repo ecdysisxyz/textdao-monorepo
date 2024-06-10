@@ -5,6 +5,7 @@ import {MCTest} from "@devkit/Flattened.sol";
 
 import { Vote } from "bundle/textDAO/functions/onlyMember/Vote.sol";
 import { Storage, Schema } from "bundle/textDAO/storages/Storage.sol";
+import {TestUtils} from "test/fixtures/TestUtils.sol";
 
 contract VoteTest is MCTest {
 
@@ -28,6 +29,7 @@ contract VoteTest is MCTest {
         uint fork2ndScoreBefore = $p.headers[fork2ndId].currentScore;
         uint fork3rdScoreBefore = $p.headers[fork3rdId].currentScore;
 
+        TestUtils.setMsgSenderAsMember();
         Vote(address(this)).voteHeaders(pid, [fork1stId, fork2ndId, fork3rdId]);
 
         uint fork1stScoreAfter = $p.headers[fork1stId].currentScore;
@@ -54,6 +56,7 @@ contract VoteTest is MCTest {
         uint fork2ndScoreBefore = $p.cmds[fork2ndId].currentScore;
         uint fork3rdScoreBefore = $p.cmds[fork3rdId].currentScore;
 
+        TestUtils.setMsgSenderAsMember();
         Vote(address(this)).voteCmds(pid, [fork1stId, fork2ndId, fork3rdId]);
 
         uint fork1stScoreAfter = $p.cmds[fork1stId].currentScore;

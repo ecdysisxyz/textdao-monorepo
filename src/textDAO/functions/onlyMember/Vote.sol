@@ -24,7 +24,7 @@ contract Vote is OnlyMemberBase {
             $p.headers[headerIds[2]].currentScore += 1;
         }
     }
-    function voteCmds(uint pid, uint[3] calldata cmdIds) external returns (bool) {
+    function voteCmds(uint pid, uint[3] calldata cmdIds) external onlyMember returns (bool) {
         Schema.ProposeStorage storage $ = Storage.$Proposals();
         Schema.Proposal storage $p = $.proposals[pid];
 
