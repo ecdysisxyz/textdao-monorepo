@@ -3,7 +3,7 @@ pragma solidity ^0.8.24;
 
 import { Storage } from "bundle/textDAO/storages/Storage.sol";
 import { Schema } from "bundle/textDAO/storages/Schema.sol";
-import { DecodeErrorString } from "bundle/_utils/DecodeErrorString.sol";
+import { DecodeErrorString } from "@devkit/system/message/DecodeErrorString.sol";
 
 contract Execute {
     function execute(uint pid) external returns (bool) {

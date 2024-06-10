@@ -4,8 +4,8 @@ pragma solidity ^0.8.24;
 import { Storage } from "bundle/textDAO/storages/Storage.sol";
 import { Schema } from "bundle/textDAO/storages/Schema.sol";
 import { Types } from "bundle/textDAO/storages/Types.sol";
-import { SortLib } from "bundle/_utils/SortLib.sol";
-import { SelectorLib } from "bundle/_utils/SelectorLib.sol";
+import { SortLib } from "bundle/textDAO/functions/_utils/SortLib.sol";
+import { SelectorLib } from "bundle/textDAO/functions/_utils/SelectorLib.sol";
 
 contract Tally {
     function tally(uint pid) external onlyOncePerInterval(pid) returns (bool) {

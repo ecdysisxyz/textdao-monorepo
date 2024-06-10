@@ -4,7 +4,7 @@ pragma solidity ^0.8.24;
 
 import { Storage } from "bundle/textDAO/storages/Storage.sol";
 import { Schema } from "bundle/textDAO/storages/Schema.sol";
-import { ProtectionBase } from "bundle/_utils/ProtectionBase.sol";
+import { ProtectionBase } from "bundle/textDAO/functions/protected/ProtectionBase.sol";
 import "@chainlink/vrf/interfaces/VRFCoordinatorV2Interface.sol";
 
 contract SetConfigsProtected is ProtectionBase {
