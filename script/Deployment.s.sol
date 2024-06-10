@@ -43,6 +43,8 @@ contract Deployment is MCScript {
 
         address getter = address(new Getter());
         mc.use("getProposal", Getter.getProposal.selector, getter);
+        mc.use("getProposalHeaders", Getter.getProposalHeaders.selector, getter);
+        mc.use("getProposalCommand", Getter.getProposalCommand.selector, getter);
         mc.use("getNextProposalId", Getter.getNextProposalId.selector, getter);
         mc.use("getProposalsConfig", Getter.getProposalsConfig.selector, getter);
         mc.use("getText", Getter.getText.selector, getter);

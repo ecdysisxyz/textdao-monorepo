@@ -17,11 +17,6 @@ library Schema {
         uint repsNum;
         uint quorumScore;
     }
-    struct ProposalNoTallied {
-        Schema.Header[] headers;
-        Schema.Command[] cmds;
-        Schema.ProposalMeta proposalMeta;
-    }
     struct Proposal {
         Header[] headers;
         Command[] cmds;

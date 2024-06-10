@@ -12,6 +12,8 @@ contract GetterTest is MCTest {
     function setUp() public {
         address getter = address(new Getter());
         _use(Getter.getProposal.selector, getter);
+        _use(Getter.getProposalHeaders.selector, getter);
+        _use(Getter.getProposalCommand.selector, getter);
         _use(Getter.getNextProposalId.selector, getter);
         _use(Getter.getProposalsConfig.selector, getter);
         _use(Getter.getText.selector, getter);
@@ -27,13 +29,22 @@ contract GetterTest is MCTest {
 
     function test_Proposals_success() public {
         Schema.ProposeStorage storage $ = Storage.$Proposals();
-    
+
+        $.proposals[1].headers.push();
+        $.proposals[1].cmds.push();
+        $.proposals[1].cmds[0].actions.push();
         $.proposals[1].proposalMeta.currentScore = 1;
         $.nextProposalId = 1;
         $.config.expiryDuration = 1;
 
-        Schema.ProposalNoTallied memory resProposalNoTallied = Getter(address(this)).getProposal(1);
-        assertEq(resProposalNoTallied.proposalMeta.currentScore, 1);
+        Getter.ProposalInfo memory proposalInfo = Getter(address(this)).getProposal(1);
+        assertEq(proposalInfo.proposalMeta.currentScore, 1);
+
+        Schema.Header[] memory headers = Getter(address(this)).getProposalHeaders(1);
+        assertEq(headers.length, 1);
+
+        Schema.Command memory cmd = Getter(address(this)).getProposalCommand(1, 0);
+        assertEq(cmd.actions.length, 1);
 
         uint resNextProposalId = Getter(address(this)).getNextProposalId();
         assertEq(resNextProposalId, 1);
@@ -50,7 +61,7 @@ contract GetterTest is MCTest {
 
         Schema.Text memory resText = Getter(address(this)).getText(1);
         assertEq(resText.id, 1);
-        
+
         uint resNextTextId = Getter(address(this)).getNextTextId();
         assertEq(resNextTextId, 1);
     }
@@ -63,7 +74,7 @@ contract GetterTest is MCTest {
 
         Schema.Member memory resMember = Getter(address(this)).getMember(1);
         assertEq(resMember.id, 1);
-        
+
         uint resNextmemberId = Getter(address(this)).getNextMemberId();
         assertEq(resNextmemberId, 1);
     }
@@ -96,5 +107,5 @@ contract GetterTest is MCTest {
 
         Schema.ConfigOverride memory resConfigOverride = Getter(address(this)).getConfigOverride(bytes4(uint32(1)));
         assertEq(resConfigOverride.quorumScore, 1);
-    }    
+    }
 }

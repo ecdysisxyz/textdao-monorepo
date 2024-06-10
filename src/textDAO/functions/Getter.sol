@@ -6,12 +6,26 @@ import { Storage } from "bundle/textDAO/storages/Storage.sol";
 
 // External getter functions
 contract Getter {
-    function getProposal(uint id) external view returns (Schema.ProposalNoTallied memory) {
-        return Schema.ProposalNoTallied({
-            headers: Storage.$Proposals().proposals[id].headers,
-            cmds: Storage.$Proposals().proposals[id].cmds,
-            proposalMeta: Storage.$Proposals().proposals[id].proposalMeta
+    struct ProposalInfo {
+        Schema.ProposalMeta proposalMeta;
+        uint256 headersLength;
+        uint256 cmdsLength;
+    }
+    function getProposal(uint id) external view returns (ProposalInfo memory) {
+        Schema.Proposal storage proposal = Storage.$Proposals().proposals[id];
+        return ProposalInfo({
+            headersLength: proposal.headers.length,
+            cmdsLength: proposal.cmds.length,
+            proposalMeta: proposal.proposalMeta
         });
+    }
+
+    function getProposalHeaders(uint pid) external view returns(Schema.Header[] memory) {
+        return Storage.$Proposals().proposals[pid].headers;
+    }
+
+    function getProposalCommand(uint pid, uint cid) external view returns(Schema.Command memory) {
+        return Storage.$Proposals().proposals[pid].cmds[cid];
     }
 
     function getNextProposalId() external view returns (uint) {

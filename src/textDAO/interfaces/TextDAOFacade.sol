@@ -3,6 +3,7 @@ pragma solidity ^0.8.24;
 
 import { Schema } from "bundle/textDAO/storages/Schema.sol";
 import { Types } from "bundle/textDAO/storages/Types.sol";
+import {Getter} from "bundle/textDAO/functions/Getter.sol";
 
 contract TextDAOFacade {
     function clone(address _target) public {}
@@ -17,7 +18,10 @@ contract TextDAOFacade {
     function setProposalsConfig(Schema.ProposalsConfig calldata _config) public {}
     function overrideProposalsConfig(uint _proposalId, Schema.ProposalsConfig calldata _config) public {}
     function saveText(uint _proposalId, string calldata _text) public {}
-    function getProposal(uint id) external view returns (Schema.ProposalNoTallied memory) {}
+    // Getters
+    function getProposal(uint id) external view returns (Getter.ProposalInfo memory) {}
+    function getProposalHeaders(uint id) external view returns (Schema.Header[] memory) {}
+    function getProposalCommand(uint pid, uint cid) external view returns (Schema.Command memory) {}
     function getNextProposalId() external view returns (uint) {}
     function getProposalsConfig() external view returns (Schema.ProposalsConfig memory) {}
     function getText(uint id) external view returns (Schema.Text memory) {}
