@@ -2,11 +2,16 @@
 src = 'src'
 out = 'out'
 libs = ['lib']
-
-# See more config options https://github.com/foundry-rs/foundry/tree/master/config
-
 fs_permissions = [
     { access = "read-write", path = "./.env"},
     { access = "read", path = "./mc.toml" },
     { access = "read", path = "./lib/mc/mc.toml" }
 ]
+
+[profile.dev]
+no_match_path = 'simulation'
+
+[profile.simulations]
+test = 'test/simulations'
+
+# See more config options https://github.com/foundry-rs/foundry/tree/master/config
