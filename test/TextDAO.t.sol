@@ -16,14 +16,15 @@ import { MemberJoinProtected } from "bundle/textDAO/functions/protected/MemberJo
 contract TextDAOTest is MCTest {
 
     function setUp() public {
-        implementations[Propose.propose.selector] = address(new Propose());
-        implementations[Fork.fork.selector] = address(new Fork());
-        implementations[Execute.execute.selector] = address(new Execute());
-        implementations[Vote.voteHeaders.selector] = address(new Vote());
-        implementations[Vote.voteCmds.selector] = address(new Vote());
-        implementations[Tally.tally.selector] = address(new Tally());
-        implementations[SaveTextProtected.saveText.selector] = address(new SaveTextProtected());
-        implementations[MemberJoinProtected.memberJoin.selector] = address(new MemberJoinProtected());
+        _use(Propose.propose.selector, address(new Propose()));
+        _use(Fork.fork.selector, address(new Fork()));
+        _use(Execute.execute.selector, address(new Execute()));
+        address vote = address(new Vote());
+        _use(Vote.voteHeaders.selector, vote);
+        _use(Vote.voteCmds.selector, vote);
+        _use(Tally.tally.selector, address(new Tally()));
+        _use(SaveTextProtected.saveText.selector, address(new SaveTextProtected()));
+        _use(MemberJoinProtected.memberJoin.selector, address(new MemberJoinProtected()));
     }
 
     function test_execute_successWithText() public {
@@ -104,8 +105,5 @@ contract TextDAOTest is MCTest {
         assertEq($m.members[1].addr, address(2));
         assertEq($m.nextMemberId, candidates.length);
     }
-
-
-
 
 }
