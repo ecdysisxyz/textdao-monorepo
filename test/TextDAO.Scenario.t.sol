@@ -8,6 +8,8 @@ import {TextDAOFacade, Schema} from "bundle/textDAO/interfaces/TextDAOFacade.sol
 
 import {Types} from "bundle/textDAO/storages/Types.sol";
 
+import {FulfillRandomWords} from "bundle/textDAO/functions/FulfillRandomWords.sol";
+
 contract TextDAOScenarioTest is MCTest {
     TextDAOFacade textDAO;
 
@@ -15,7 +17,36 @@ contract TextDAOScenarioTest is MCTest {
         textDAO = TextDAOFacade(DeployLib.deployTextDAO(mc));
     }
 
-    function test_scenario_filler() public {
+    function test_scenario_withoutVrf() public {
+        // 1. initialize
+        address[] memory initialMembers = new address[](1);
+        initialMembers[0] = address(this); // Example initial member address
+
+        Schema.ProposalsConfig memory pConfig = Schema.ProposalsConfig({
+            expiryDuration: 2 minutes,
+            tallyInterval: 1 minutes,
+            repsNum: 1000,
+            quorumScore: 3
+        });
+
+        textDAO.initialize(initialMembers, pConfig);
+
+
+        // 2. propose
+        Types.ProposalArg memory _p;
+
+        uint256 pid1 = textDAO.propose(_p);
+        uint256 pid2 = textDAO.propose(_p);
+
+        // 3. fork
+        textDAO.fork(pid1, _p);
+
+        // 4. vote
+        // 5. tally
+        // 6. execute
+    }
+
+    function test_filler() public {
         address[] memory initialMembers = new address[](1);
         initialMembers[0] = address(this); // Example initial member address
         try textDAO.initialize(initialMembers, Schema.ProposalsConfig({
