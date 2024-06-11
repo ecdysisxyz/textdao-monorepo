@@ -8,6 +8,7 @@ import {
     Storage,
     Schema
 } from "bundle/textDAO/functions/protected/MemberJoinProtected.sol";
+import {ProtectionBase} from "bundle/textDAO/functions/protected/ProtectionBase.sol";
 
 contract MemberJoinProtectedTest is MCTest {
 
@@ -22,7 +23,7 @@ contract MemberJoinProtectedTest is MCTest {
         vm.assume(expiryTime < execTime);
         vm.warp(execTime);
 
-        Storage.$Proposals().proposals[0].proposalMeta.headerRank.push();
+        Storage.$Proposals().proposals[0].proposalMeta.cmdRank.push();
 
         MemberJoinProtected(address(this)).memberJoin({
             pid: 0,
@@ -45,7 +46,7 @@ contract MemberJoinProtectedTest is MCTest {
         vm.assume(execTime <= expiryTime);
         vm.warp(execTime);
 
-        vm.expectRevert("Corresponding proposal must be expired and tallied.");
+        vm.expectRevert(ProtectionBase.ProposalNotExpiredYet.selector);
         MemberJoinProtected(address(this)).memberJoin({
             pid: 0,
             candidates: new Schema.Member[](1)
@@ -53,9 +54,7 @@ contract MemberJoinProtectedTest is MCTest {
     }
 
     function test_memberJoin_revert_notTalliedYet() public {
-        // TODO arrange
-
-        vm.expectRevert("Corresponding proposal must be expired and tallied.");
+        vm.expectRevert(ProtectionBase.ProposalNotTalliedYet.selector);
         MemberJoinProtected(address(this)).memberJoin({
             pid: 0,
             candidates: new Schema.Member[](1)

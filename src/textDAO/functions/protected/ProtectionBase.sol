@@ -5,12 +5,14 @@ import { Storage } from "bundle/textDAO/storages/Storage.sol";
 import { Schema } from "bundle/textDAO/storages/Schema.sol";
 
 contract ProtectionBase {
+    error ProposalNotExpiredYet();
+    error ProposalNotTalliedYet();
 
-    /// @dev Write your own reusable protection (e.g., for DAO, for AA wallets, for onlyOwner, for token holders and stakers)
     modifier protected(uint pid) {
-        Schema.ProposeStorage storage $ = Storage.$Proposals();
-        Schema.Proposal storage $p = $.proposals[pid];
-        require($p.proposalMeta.createdAt + $.config.expiryDuration < block.timestamp && $p.proposalMeta.headerRank.length > 0, "Corresponding proposal must be expired and tallied.");
+        Schema.ProposalMeta storage $proposal = Storage.$Proposals().proposals[pid].proposalMeta;
+        Schema.ProposalsConfig storage $config = Storage.$Proposals().config;
+        if (block.timestamp <= $proposal.createdAt + $config.expiryDuration) revert ProposalNotExpiredYet();
+        if ($proposal.cmdRank.length == 0) revert ProposalNotTalliedYet();
         _;
     }
 
