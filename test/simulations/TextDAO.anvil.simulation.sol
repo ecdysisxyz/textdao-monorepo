@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {MCTest, StdChains, console2} from "@devkit/Flattened.sol";
+import {MCTest, console2, StdChains} from "@devkit/Flattened.sol";
 
 import {TestUtils} from "test/fixtures/TestUtils.sol";
 
@@ -14,8 +14,12 @@ contract TextDAOAnvilSimulation is MCTest {
     TextDAOFacade textDAO;
 
     function setUp() public {
-        vm.createSelectFork(getChain("anvil").rpcUrl);
-        textDAO = TextDAOFacade(vm.envAddress("ANVIL_TEXT_DAO_ADDR"));
+        StdChains.Chain memory chain = getChain("anvil");
+        vm.createSelectFork(chain.rpcUrl);
+        string memory envKey = string.concat("TEXT_DAO_ADDR_", vm.toString(chain.chainId));
+        address textDAOAddr = vm.envAddress(envKey);
+        if (textDAOAddr.code.length == 0) revert("TextDAO Not Deployed Yet");
+        textDAO = TextDAOFacade(textDAOAddr);
     }
 
     function test_scenario() public {
