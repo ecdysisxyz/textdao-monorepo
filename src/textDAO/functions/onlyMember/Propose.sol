@@ -44,6 +44,10 @@ contract Propose is OnlyMemberBase {
             $vrf.requests[$vrf.nextId].requestId = requestId;
             $vrf.requests[$vrf.nextId].proposalId = proposalId;
             $vrf.nextId++;
+        } else {
+            for (uint i; i < $member.nextMemberId; ++i) {
+                $p.proposalMeta.reps.push($member.members[i].addr);
+            }
         }
 
         if (_p.header.metadataURI.length > 0) {

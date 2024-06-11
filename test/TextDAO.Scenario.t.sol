@@ -40,6 +40,12 @@ contract TextDAOScenarioTest is MCTest {
 
         // 3. fork
         textDAO.fork(pid1, _p);
+        textDAO.fork(pid1, _p);
+        textDAO.fork(pid2, _p);
+        textDAO.fork(pid1, _p);
+        textDAO.fork(pid1, _p);
+        textDAO.fork(pid2, _p);
+        textDAO.fork(pid1, _p);
 
         // 4. vote
         // 5. tally
