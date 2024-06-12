@@ -6,23 +6,25 @@ import {Storage} from "bundle/textDAO/storages/Storage.sol";
 import {Schema} from "bundle/textDAO/storages/Schema.sol";
 
 contract Initialize is Initializable {
-    function initialize(address[] calldata initialMembers, Schema.ProposalsConfig calldata pConfig) external initializer returns (bool) {
+    function initialize(address[] calldata initialMembers, Schema.ProposalsConfig calldata pConfig) external initializer {
+        // 1. Set Members
+        Schema.MemberJoinProtectedStorage storage $member = Storage.$Members();
+        uint nextMemberId;
+        for (uint i; i < initialMembers.length; ++i) {
+            $member.members[i].id = i;
+            $member.members[i].addr = initialMembers[i];
+            nextMemberId++;
+        }
+        $member.nextMemberId = nextMemberId;
 
-        Schema.MemberJoinProtectedStorage storage $ = Storage.$Members();
+        // 2. Set ProposalsConfig
         Schema.ProposalsConfig storage $pConfig = Storage.$Proposals().config;
         $pConfig.expiryDuration = pConfig.expiryDuration;
         $pConfig.tallyInterval = pConfig.tallyInterval;
         $pConfig.repsNum = pConfig.repsNum;
         $pConfig.quorumScore = pConfig.quorumScore;
 
-        uint currentMemberId = $.nextMemberId;
-        for (uint i = 0; i < initialMembers.length; i++) {
-            $.members[currentMemberId].id = currentMemberId;
-            $.members[currentMemberId].addr = initialMembers[i];
-            $.members[currentMemberId].metadataURI = "";
-            currentMemberId++;
-        }
-        $.nextMemberId = currentMemberId;
-        return true;
+        /// @dev emit Initialized(1) @Initializable.initializer()
+
     }
 }
