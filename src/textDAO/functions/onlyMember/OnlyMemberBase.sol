@@ -11,8 +11,11 @@ abstract contract OnlyMemberBase {
 
         bool result;
 
-        for (uint i; i < $member.nextMemberId; i++) {
-            result = $member.members[i].addr == msg.sender || result;
+        for (uint i; i < $member.nextMemberId; ++i) {
+            if ($member.members[i].addr == msg.sender) {
+                result = true;
+                break;
+            }
         }
         if (!result) revert YouAreNotTheMember();
         _;
