@@ -2,13 +2,14 @@
 pragma solidity ^0.8.24;
 
 import {MCTest} from "@devkit/Flattened.sol";
+import {TestUtils} from "test/fixtures/TestUtils.sol";
 
 import {
     Vote,
     Storage,
     Schema
 } from "bundle/textDAO/functions/onlyMember/Vote.sol";
-import {TestUtils} from "test/fixtures/TestUtils.sol";
+import {OnlyMemberBase} from "bundle/textDAO/functions/onlyMember/OnlyMemberBase.sol";
 
 contract VoteTest is MCTest {
     function setUp() public {
@@ -44,7 +45,7 @@ contract VoteTest is MCTest {
     }
 
     function test_voteHeaders_revert_notMember() public {
-        vm.expectRevert("You are not the member.");
+        vm.expectRevert(OnlyMemberBase.YouAreNotTheMember.selector);
         Vote(address(this)).voteHeaders(0, [uint(0), 1, 2]);
     }
 
@@ -76,7 +77,7 @@ contract VoteTest is MCTest {
     }
 
     function test_voteCmds_revert_notMember() public {
-        vm.expectRevert("You are not the member.");
+        vm.expectRevert(OnlyMemberBase.YouAreNotTheMember.selector);
         Vote(address(this)).voteCmds(0, [uint(0), 1, 2]);
     }
 

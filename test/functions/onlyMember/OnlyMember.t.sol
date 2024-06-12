@@ -39,7 +39,7 @@ contract OnlyMemberTest is MCTest {
 
     function test_onlyMember_revert_notMember(address caller) public {
         vm.prank(caller);
-        vm.expectRevert("You are not the member.");
+        vm.expectRevert(OnlyMemberBase.YouAreNotTheMember.selector);
         OnlyMember(target).doSomething();
     }
 

@@ -4,6 +4,8 @@ pragma solidity ^0.8.24;
 import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
 
 abstract contract OnlyMemberBase {
+    error YouAreNotTheMember();
+
     modifier onlyMember() {
         Schema.MemberJoinProtectedStorage storage $member = Storage.$Members();
 
@@ -12,7 +14,7 @@ abstract contract OnlyMemberBase {
         for (uint i; i < $member.nextMemberId; i++) {
             result = $member.members[i].addr == msg.sender || result;
         }
-        require(result, "You are not the member.");
+        if (!result) revert YouAreNotTheMember();
         _;
     }
 
