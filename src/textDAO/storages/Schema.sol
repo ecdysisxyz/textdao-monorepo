@@ -119,6 +119,23 @@ library Schema {
         uint tagId;
         uint taggedId;
     }
+
+
+    /**
+     * @dev Initializable @openzeppelin~5.0.0
+     * @custom:storage-location erc7201:openzeppelin.storage.Initializable
+     */
+    struct InitializableStorage {
+        /**
+         * @dev Indicates that the contract has been initialized.
+         */
+        uint64 _initialized;
+        /**
+         * @dev Indicates that the contract is in the process of being initialized.
+         */
+        bool _initializing;
+    }
+
 }
 
 

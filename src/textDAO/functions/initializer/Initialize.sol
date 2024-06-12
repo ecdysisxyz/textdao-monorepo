@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {InitializationBase} from "bundle/textDAO/functions/initializer/InitializationBase.sol";
-import { Storage } from "bundle/textDAO/storages/Storage.sol";
-import { Schema } from "bundle/textDAO/storages/Schema.sol";
+import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.sol";
+import {Storage} from "bundle/textDAO/storages/Storage.sol";
+import {Schema} from "bundle/textDAO/storages/Schema.sol";
 
-contract Initialize is InitializationBase {
+contract Initialize is Initializable {
     function initialize(address[] calldata initialMembers, Schema.ProposalsConfig calldata pConfig) external initializer returns (bool) {
 
         Schema.MemberJoinProtectedStorage storage $ = Storage.$Members();
