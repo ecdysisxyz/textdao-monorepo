@@ -9,6 +9,7 @@ import {TextDAOFacade, Schema} from "bundle/textDAO/interfaces/TextDAOFacade.sol
 import {Types} from "bundle/textDAO/storages/Types.sol";
 
 import {FulfillRandomWords} from "bundle/textDAO/functions/FulfillRandomWords.sol";
+import {MemberJoinProtected} from "bundle/textDAO/functions/protected/MemberJoinProtected.sol";
 
 contract TextDAOScenarioTest is MCTest {
     TextDAOFacade textDAO;
@@ -35,21 +36,81 @@ contract TextDAOScenarioTest is MCTest {
         // 2. propose
         Types.ProposalArg memory _p;
 
+        uint256 pid0 = textDAO.propose(_p);
         uint256 pid1 = textDAO.propose(_p);
         uint256 pid2 = textDAO.propose(_p);
 
+
         // 3. fork
+        _p.header.metadataURI = "Qm...";
+        _p.cmd.actions = new Schema.Action[](1);
+        _p.cmd.actions[0] = Schema.Action({
+            func: "memberJoin(uint256,(uint256,address,bytes32)[])",
+            abiParams: abi.encode(pid1, new Schema.Member[](1))
+        });
+
+        Types.ProposalArg memory _p2;
+        _p2.header.metadataURI = "Qm.......";
+        _p2.cmd.actions = new Schema.Action[](1);
+        _p2.cmd.actions[0] = Schema.Action({
+            func: "saveText(uint256,uint256,bytes32[])",
+            abiParams: abi.encode(1, 1, new bytes32[](1))
+        });
+
+        Types.ProposalArg memory _p3;
+        _p3.header.metadataURI = "Qm.......";
+        _p3.cmd.actions = new Schema.Action[](1);
+        _p3.cmd.actions[0] = Schema.Action({
+            func: "saveText(uint256,uint256,bytes32[])",
+            abiParams: abi.encode(pid0, new Schema.Member[](1)) // TODO Oops...
+        });
+
+        textDAO.fork(pid0, _p);
+        textDAO.fork(pid0, _p);
+        textDAO.fork(pid1, _p2);
+        textDAO.fork(pid0, _p);
+        textDAO.fork(pid0, _p);
         textDAO.fork(pid1, _p);
         textDAO.fork(pid1, _p);
-        textDAO.fork(pid2, _p);
-        textDAO.fork(pid1, _p);
-        textDAO.fork(pid1, _p);
-        textDAO.fork(pid2, _p);
-        textDAO.fork(pid1, _p);
+        textDAO.fork(pid0, _p);
+        textDAO.fork(pid0, _p);
+        textDAO.fork(pid2, _p3); // TODO need at least 3 forks to tally
+        textDAO.fork(pid2, _p3);
+        textDAO.fork(pid2, _p3);
+
 
         // 4. vote
+        uint[3] memory _headerIds = [uint(2), 1, 0];
+        uint[3] memory _headerIds1 = [uint(3), 1, 0];
+        uint[3] memory _headerIds2 = [uint(0), 1, 0];
+        textDAO.voteHeaders(pid0, _headerIds2);
+        textDAO.voteHeaders(pid0, _headerIds1);
+        textDAO.voteHeaders(pid0, _headerIds2);
+        textDAO.voteHeaders(pid1, _headerIds2);
+        textDAO.voteHeaders(pid1, _headerIds2);
+        textDAO.voteHeaders(pid0, _headerIds1);
+        textDAO.voteHeaders(pid0, _headerIds2);
+        textDAO.voteCmds(pid0, _headerIds2);
+        textDAO.voteCmds(pid0, _headerIds2);
+        textDAO.voteCmds(pid0, _headerIds2);
+        textDAO.voteCmds(pid1, _headerIds2);
+        textDAO.voteCmds(pid1, _headerIds2);
+        textDAO.voteCmds(pid1, _headerIds2);
+        textDAO.voteCmds(pid2, _headerIds2);
+
+
         // 5. tally
+        textDAO.tally(pid0);
+        textDAO.tally(pid1);
+        textDAO.tally(pid2);
+
+
         // 6. execute
+        vm.warp(block.timestamp + pConfig.expiryDuration + 1);
+        textDAO.execute(pid0);
+        textDAO.execute(pid1);
+        textDAO.execute(pid2);
+
     }
 
     function test_filler() public {
