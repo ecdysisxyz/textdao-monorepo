@@ -3,15 +3,18 @@ pragma solidity ^0.8.24;
 
 import {MCTest} from "@devkit/Flattened.sol";
 
-import { Vote } from "bundle/textDAO/functions/onlyMember/Vote.sol";
-import { Storage, Schema } from "bundle/textDAO/storages/Storage.sol";
+import {
+    Vote,
+    Storage,
+    Schema
+} from "bundle/textDAO/functions/onlyMember/Vote.sol";
 import {TestUtils} from "test/fixtures/TestUtils.sol";
 
 contract VoteTest is MCTest {
-
     function setUp() public {
-        implementations[Vote.voteHeaders.selector] = address(new Vote());
-        implementations[Vote.voteCmds.selector] = address(new Vote());
+        address vote = address(new Vote());
+        _use(Vote.voteHeaders.selector, vote);
+        _use(Vote.voteCmds.selector, vote);
     }
 
     function test_voteHeaders() public {
@@ -19,26 +22,30 @@ contract VoteTest is MCTest {
         uint fork1stId = 9;
         uint fork2ndId = 1;
         uint fork3rdId = 5;
-        Schema.Proposal storage $p = Storage.$Proposals().proposals[pid];
-        Schema.Header[] storage $headers = $p.headers;
+        Schema.Header[] storage $headers = Storage.$Proposals().proposals[pid].headers;
         for (uint i; i < 10; i++) {
             $headers.push();
         }
 
-        uint fork1stScoreBefore = $p.headers[fork1stId].currentScore;
-        uint fork2ndScoreBefore = $p.headers[fork2ndId].currentScore;
-        uint fork3rdScoreBefore = $p.headers[fork3rdId].currentScore;
+        uint fork1stScoreBefore = $headers[fork1stId].currentScore;
+        uint fork2ndScoreBefore = $headers[fork2ndId].currentScore;
+        uint fork3rdScoreBefore = $headers[fork3rdId].currentScore;
 
         TestUtils.setMsgSenderAsMember();
         Vote(address(this)).voteHeaders(pid, [fork1stId, fork2ndId, fork3rdId]);
 
-        uint fork1stScoreAfter = $p.headers[fork1stId].currentScore;
-        uint fork2ndScoreAfter = $p.headers[fork2ndId].currentScore;
-        uint fork3rdScoreAfter = $p.headers[fork3rdId].currentScore;
+        uint fork1stScoreAfter = $headers[fork1stId].currentScore;
+        uint fork2ndScoreAfter = $headers[fork2ndId].currentScore;
+        uint fork3rdScoreAfter = $headers[fork3rdId].currentScore;
 
         assertEq(fork1stScoreBefore + 3, fork1stScoreAfter);
         assertEq(fork2ndScoreBefore + 2, fork2ndScoreAfter);
         assertEq(fork3rdScoreBefore + 1, fork3rdScoreAfter);
+    }
+
+    function test_voteHeaders_revert_notMember() public {
+        vm.expectRevert("You are not the member.");
+        Vote(address(this)).voteHeaders(0, [uint(0), 1, 2]);
     }
 
     function test_voteCmds() public {
@@ -66,6 +73,11 @@ contract VoteTest is MCTest {
         assertEq(fork1stScoreBefore + 3, fork1stScoreAfter);
         assertEq(fork2ndScoreBefore + 2, fork2ndScoreAfter);
         assertEq(fork3rdScoreBefore + 1, fork3rdScoreAfter);
+    }
+
+    function test_voteCmds_revert_notMember() public {
+        vm.expectRevert("You are not the member.");
+        Vote(address(this)).voteCmds(0, [uint(0), 1, 2]);
     }
 
 }
