@@ -9,4 +9,8 @@ library TestUtils {
         Storage.$Members().members[0].addr = ForgeHelper.msgSender();
         Storage.$Members().nextMemberId = 1;
     }
+
+    function setMsgSenderAsRep(uint256 pid) internal {
+        Storage.$Proposals().proposals[pid].proposalMeta.reps.push(ForgeHelper.msgSender());
+    }
 }

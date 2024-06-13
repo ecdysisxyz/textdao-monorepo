@@ -1,20 +1,24 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import { Storage } from "bundle/textDAO/storages/Storage.sol";
-import { Schema } from "bundle/textDAO/storages/Schema.sol";
-import { Types } from "bundle/textDAO/storages/Types.sol";
+import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
 
 abstract contract OnlyRepsBase {
+    error YouAreNotTheRep();
+
     modifier onlyReps(uint pid) {
-        Schema.ProposeStorage storage $ = Storage.$Proposals();
-        Schema.Proposal storage $p = $.proposals[pid];
+        address[] storage $reps = Storage.$Proposals().proposals[pid].proposalMeta.reps;
 
         bool result;
-        for (uint i; i <  $p.proposalMeta.reps.length; i++) {
-            result = $p.proposalMeta.reps[i] == msg.sender || result;
+        for (uint i; i < $reps.length; ++i) {
+            if ($reps[i] == msg.sender) {
+                result = true;
+                break;
+            }
         }
-        require(result, "You are not the rep.");
+        if (!result) revert YouAreNotTheRep();
+
         _;
     }
+
 }
