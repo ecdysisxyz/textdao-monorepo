@@ -13,4 +13,8 @@ library TestUtils {
     function setMsgSenderAsRep(uint256 pid) internal {
         Storage.$Proposals().proposals[pid].proposalMeta.reps.push(ForgeHelper.msgSender());
     }
+
+    function setMsgSenderAsVrfCoordinator() internal {
+        Storage.$VRF().config.vrfCoordinator = ForgeHelper.msgSender();
+    }
 }
