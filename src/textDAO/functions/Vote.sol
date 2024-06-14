@@ -1,14 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import { console2 } from "forge-std/console2.sol";
-import { Storage } from "bundle/textDAO/storages/Storage.sol";
-import { Schema } from "bundle/textDAO/storages/Schema.sol";
+import {OnlyMemberBase} from "bundle/textDAO/functions/onlyMember/OnlyMemberBase.sol";
+import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
 
-contract Vote {
-    function voteHeaders(uint pid, uint[3] calldata headerIds) external returns (bool) {
-        Schema.ProposeStorage storage $ = Storage.$Proposals();
-        Schema.Proposal storage $p = $.proposals[pid];
+contract Vote is OnlyMemberBase {
+    function voteHeaders(uint pid, uint[3] calldata headerIds) external onlyMember returns (bool) {
+        Schema.Proposal storage $p = Storage.$Proposals().proposals[pid];
 
         require($p.headers.length > 0, "No headers for this proposal.");
 
@@ -23,9 +21,9 @@ contract Vote {
             $p.headers[headerIds[2]].currentScore += 1;
         }
     }
-    function voteCmds(uint pid, uint[3] calldata cmdIds) external returns (bool) {
-        Schema.ProposeStorage storage $ = Storage.$Proposals();
-        Schema.Proposal storage $p = $.proposals[pid];
+
+    function voteCmds(uint pid, uint[3] calldata cmdIds) external onlyMember returns (bool) {
+        Schema.Proposal storage $p = Storage.$Proposals().proposals[pid];
 
         require($p.cmds.length > 0, "No cmds for this proposal.");
 
@@ -40,4 +38,5 @@ contract Vote {
             $p.cmds[cmdIds[2]].currentScore += 1;
         }
     }
+
 }

@@ -8,6 +8,7 @@ import {Storage} from "bundle/textDAO/storages/Storage.sol";
 import {Schema} from "bundle/textDAO/storages/Schema.sol";
 import {Types} from "bundle/textDAO/storages/Types.sol";
 import {VRFCoordinatorV2Interface} from "@chainlink/vrf/interfaces/VRFCoordinatorV2Interface.sol";
+import {OnlyMemberBase} from "bundle/textDAO/functions/onlyMember/OnlyMemberBase.sol";
 
 /**
  *  Validation:
@@ -190,7 +191,7 @@ contract ProposeTest is MCTest {
 
         Types.ProposalArg memory p;
 
-        vm.expectRevert("You are not the member.");
+        vm.expectRevert(OnlyMemberBase.YouAreNotTheMember.selector);
         Propose(address(this)).propose(p);
     }
 

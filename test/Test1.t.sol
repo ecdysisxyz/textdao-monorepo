@@ -2,6 +2,7 @@
 pragma solidity ^0.8.24;
 
 import { UCSTestBase } from "bundle/_utils/UCSTestBase.sol";
+import {TestUtils} from "test/fixtures/TestUtils.sol";
 import { SelectorLib } from "bundle/_utils/SelectorLib.sol";
 import { Propose } from "bundle/textDAO/functions/Propose.sol";
 import { Fork } from "bundle/textDAO/functions/Fork.sol";
@@ -86,7 +87,9 @@ contract Test1 is UCSTestBase {
         uint fork2ndScoreBefore = $p.headers[fork2ndId].currentScore;
         uint fork3rdScoreBefore = $p.headers[fork3rdId].currentScore;
 
+        TestUtils.setMsgSenderAsMember();
         Vote(address(this)).voteHeaders(pid, [fork1stId, fork2ndId, fork3rdId]);
+        Vote(address(this)).voteHeaders(pid, [uint256(0),0,0]);
 
         uint fork1stScoreAfter = $p.headers[fork1stId].currentScore;
         uint fork2ndScoreAfter = $p.headers[fork2ndId].currentScore;
@@ -111,6 +114,7 @@ contract Test1 is UCSTestBase {
         uint fork2ndScoreBefore = $p.cmds[fork2ndId].currentScore;
         uint fork3rdScoreBefore = $p.cmds[fork3rdId].currentScore;
 
+        TestUtils.setMsgSenderAsMember();
         Vote(address(this)).voteCmds(pid, [fork1stId, fork2ndId, fork3rdId]);
 
         uint fork1stScoreAfter = $p.cmds[fork1stId].currentScore;
