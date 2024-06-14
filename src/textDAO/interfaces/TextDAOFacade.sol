@@ -9,7 +9,7 @@ contract TextDAOFacade {
     function clone(address _target) public {}
     function initialize(address[] calldata initialMembers, Schema.ProposalsConfig calldata pConfig) public {}
     function propose(Types.ProposalArg calldata _p) public returns (uint) {}
-    function fork(uint pid, Types.ProposalArg calldata _p) external returns (uint forkId) {}
+    function fork(uint pid, Types.ProposalArg calldata _p) external {}
     function voteHeaders(uint _proposalId, uint[3] calldata _headerIds) public {}
     function voteCmds(uint _proposalId, uint[3] calldata _cmdIds) public {}
     function tally(uint _proposalId) public {}

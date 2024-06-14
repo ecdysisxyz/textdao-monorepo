@@ -7,9 +7,8 @@ import { Schema } from "bundle/textDAO/storages/Schema.sol";
 import { Types } from "bundle/textDAO/storages/Types.sol";
 
 contract Fork is OnlyRepsBase {
-    function fork(uint pid, Types.ProposalArg calldata _p) external onlyReps(pid) returns (uint forkId) {
-        Schema.ProposeStorage storage $ = Storage.$Proposals();
-        Schema.Proposal storage $p = $.proposals[pid];
+    function fork(uint pid, Types.ProposalArg calldata _p) external onlyReps(pid) {
+        Schema.Proposal storage $p = Storage.$Proposals().proposals[pid];
 
         if (_p.header.metadataURI.length > 0) {
             $p.headers.push(_p.header);

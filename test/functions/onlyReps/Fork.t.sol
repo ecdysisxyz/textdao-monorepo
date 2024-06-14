@@ -2,10 +2,15 @@
 pragma solidity ^0.8.24;
 
 import {MCTest} from "@devkit/Flattened.sol";
+import {TestUtils} from "test/fixtures/TestUtils.sol";
 
-import { Fork } from "bundle/textDAO/functions/onlyReps/Fork.sol";
-import { Storage, Schema } from "bundle/textDAO/storages/Storage.sol";
-import { Types } from "bundle/textDAO/storages/Types.sol";
+import {
+    Fork,
+    Storage,
+    Schema,
+    Types,
+    OnlyRepsBase
+} from "bundle/textDAO/functions/onlyReps/Fork.sol";
 
 contract ForkTest is MCTest {
 
@@ -15,21 +20,29 @@ contract ForkTest is MCTest {
 
     function test_fork() public {
         uint pid = 0;
-        Schema.ProposeStorage storage $ = Storage.$Proposals();
-        Schema.Proposal storage $p = $.proposals[pid];
+        Schema.Proposal storage $p = Storage.$Proposals().proposals[pid];
 
         Types.ProposalArg memory p;
         p.header.metadataURI = "Qc.....xh";
         p.cmd.actions = new Schema.Action[](1);
 
-        $p.proposalMeta.reps.push(); // array init
-        $p.proposalMeta.reps[0] = address(this);
-
         assertEq($p.headers.length, 0);
         assertEq($p.cmds.length, 0);
-        uint forkId = Fork(address(this)).fork(pid, p);
+
+        TestUtils.setMsgSenderAsRep(pid);
+        Fork(address(this)).fork(pid, p);
+
         assertEq($p.headers.length, 1);
         assertEq($p.cmds.length, 1);
+    }
+
+    function test_fork_revert_notRep() public {
+        Types.ProposalArg memory p;
+        p.header.metadataURI = "Qc.....xh";
+        p.cmd.actions = new Schema.Action[](1);
+
+        vm.expectRevert(OnlyRepsBase.YouAreNotTheRep.selector);
+        Fork(address(this)).fork(0, p);
     }
 
 }
