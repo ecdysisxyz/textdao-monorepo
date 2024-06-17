@@ -3,12 +3,11 @@ pragma solidity ^0.8.24;
 
 import {MCTest, console2} from "@devkit/Flattened.sol";
 
-import {DeployLib} from "script/DeployLib.sol";
+import {DeployLib} from "script/deployment/DeployLib.sol";
 import {TextDAOFacade, Schema} from "bundle/textDAO/interfaces/TextDAOFacade.sol";
 
 import {Types} from "bundle/textDAO/storages/Types.sol";
 
-import {FulfillRandomWords} from "bundle/textDAO/functions/FulfillRandomWords.sol";
 import {MemberJoinProtected} from "bundle/textDAO/functions/protected/MemberJoinProtected.sol";
 
 contract TextDAOScenarioTest is MCTest {
