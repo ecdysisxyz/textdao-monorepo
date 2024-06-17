@@ -9,12 +9,12 @@ import {Initialize} from "bundle/textDAO/functions/initializer/Initialize.sol";
 import {Propose} from "bundle/textDAO/functions/onlyMember/Propose.sol";
 import {Vote} from "bundle/textDAO/functions/onlyMember/Vote.sol";
 import {Fork} from "bundle/textDAO/functions/onlyReps/Fork.sol";
+import {RawFulfillRandomWords} from "bundle/textDAO/functions/onlyVrfCoordinator/RawFulfillRandomWords.sol";
 import {ConfigOverrideProtected} from "bundle/textDAO/functions/protected/ConfigOverrideProtected.sol";
 import {MemberJoinProtected} from "bundle/textDAO/functions/protected/MemberJoinProtected.sol";
 import {SaveTextProtected} from "bundle/textDAO/functions/protected/SaveTextProtected.sol";
 import {SetConfigsProtected} from "bundle/textDAO/functions/protected/SetConfigsProtected.sol";
 import {Execute} from "bundle/textDAO/functions/Execute.sol";
-import {FulfillRandomWords} from "bundle/textDAO/functions/FulfillRandomWords.sol";
 import {Getter} from "bundle/textDAO/functions/Getter.sol";
 import {Tally} from "bundle/textDAO/functions/Tally.sol";
 

@@ -5,7 +5,7 @@ import {MCTest, console2, StdChains} from "@devkit/Flattened.sol";
 
 import {TestUtils} from "test/fixtures/TestUtils.sol";
 
-import {DeployLib} from "script/DeployLib.sol";
+import {DeployLib} from "script/deployment/DeployLib.sol";
 import {TextDAOFacade, Schema} from "bundle/textDAO/interfaces/TextDAOFacade.sol";
 
 import {Types} from "bundle/textDAO/storages/Types.sol";

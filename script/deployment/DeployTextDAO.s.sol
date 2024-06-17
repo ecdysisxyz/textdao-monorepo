@@ -2,7 +2,7 @@
 pragma solidity ^0.8.24;
 
 import {MCScript, VmSafe} from "@devkit/Flattened.sol";
-import {DeployLib} from "script/DeployLib.sol";
+import {DeployLib} from "script/deployment/DeployLib.sol";
 
 contract DeployTextDAOScript is MCScript {
     function run() public startBroadcastWith("DEPLOYER_PRIV_KEY") {
