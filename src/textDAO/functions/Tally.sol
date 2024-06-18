@@ -8,6 +8,8 @@ import { SortLib } from "bundle/textDAO/functions/_utils/SortLib.sol";
 import { SelectorLib } from "bundle/textDAO/functions/_utils/SelectorLib.sol";
 
 contract Tally {
+    event ProposalTallied(uint pid, Schema.ProposalMeta proposalMeta);
+
     function tally(uint pid) external onlyOncePerInterval(pid) returns (bool) {
         Schema.DAOState storage $ = Storage.DAOState();
         Schema.Proposal storage $p = $.proposals[pid];
@@ -109,6 +111,7 @@ contract Tally {
         // interval flag
         require($.config.tallyInterval > 0, "Set tally interval at config.");
         $p.tallied[block.timestamp / $.config.tallyInterval] = true;
+        emit ProposalTallied(pid, $p.proposalMeta);
     }
 
     modifier onlyOncePerInterval(uint pid) {
