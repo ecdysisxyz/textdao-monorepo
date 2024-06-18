@@ -18,7 +18,7 @@ contract GetterTest is MCTest {
         _use(Getter.getText.selector, getter);
         _use(Getter.getNextTextId.selector, getter);
         _use(Getter.getMember.selector, getter);
-        _use(Getter.getNextMemberId.selector, getter);
+        _use(Getter.getMembers.selector, getter);
         _use(Getter.getVRFRequest.selector, getter);
         _use(Getter.getNextVRFId.selector, getter);
         _use(Getter.getSubscriptionId.selector, getter);
@@ -62,16 +62,19 @@ contract GetterTest is MCTest {
     }
 
     function test_Members_success() public {
-        Schema.MemberJoinProtectedStorage storage $ = Storage.$Members();
+        Schema.Members storage $ = Storage.Members();
 
-        $.members[1].id = 1;
-        $.nextMemberId = 1;
+        string memory _metadata = "pseudo metadata";
+        $.members.push().metadataURI = _metadata;
 
-        Schema.Member memory resMember = Getter(address(this)).getMember(1);
-        assertEq(resMember.id, 1);
+        Schema.Member memory resMember = Getter(address(this)).getMember(0);
+        assertEq(
+            keccak256(abi.encode(resMember.metadataURI)),
+            keccak256(abi.encode(_metadata))
+        );
 
-        uint resNextmemberId = Getter(address(this)).getNextMemberId();
-        assertEq(resNextmemberId, 1);
+        Schema.Member[] memory _members = Getter(address(this)).getMembers();
+        assertEq(_members.length, 1);
     }
 
     function test_VRF_success() public {

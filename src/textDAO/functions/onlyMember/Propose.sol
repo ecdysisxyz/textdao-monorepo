@@ -30,9 +30,9 @@ contract Propose is OnlyMemberBase {
 
 
         Schema.VRFStorage storage $vrf = Storage.$VRF();
-        Schema.MemberJoinProtectedStorage storage $member = Storage.$Members();
+        Schema.Member[] storage $members = Storage.Members().members;
 
-        if ($DAOState.config.repsNum < $member.nextMemberId) {
+        if ($DAOState.config.repsNum < $members.length) { // TODO check
             /*
                 VRF Request to choose reps
             */
@@ -59,8 +59,8 @@ contract Propose is OnlyMemberBase {
             $vrf.requests[$vrf.nextId].proposalId = proposalId;
             $vrf.nextId++;
         } else {
-            for (uint i; i < $member.nextMemberId; ++i) {
-                $proposal.proposalMeta.reps.push($member.members[i].addr);
+            for (uint i; i < $members.length; ++i) {
+                $proposal.proposalMeta.reps.push($members[i].addr);
             }
         }
 

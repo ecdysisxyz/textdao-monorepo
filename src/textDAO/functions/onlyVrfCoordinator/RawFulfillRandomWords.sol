@@ -9,11 +9,11 @@ contract RawFulfillRandomWords is VRFConsumerV2Interface, OnlyVrfCoordinatorBase
     function rawFulfillRandomWords(uint256 requestId, uint256[] memory randomWords) external onlyVrfCoordinator {
         uint256 proposalId = Storage.$VRF().requests[requestId].proposalId;
         Schema.Proposal storage $p = Storage.DAOState().proposals[proposalId];
-        Schema.MemberJoinProtectedStorage storage $member = Storage.$Members();
+        Schema.Member[] storage $members = Storage.Members().members;
 
         for (uint i; i < randomWords.length; i++) {
-            uint pickedIndex = uint256(randomWords[i]) % $member.nextMemberId;
-            $p.proposalMeta.reps.push($member.members[pickedIndex].addr);
+            uint pickedIndex = uint256(randomWords[i]) % $members.length;
+            $p.proposalMeta.reps.push($members[pickedIndex].addr);
             $p.proposalMeta.nextRepId++;
         }
     }

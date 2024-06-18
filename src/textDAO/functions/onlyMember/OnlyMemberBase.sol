@@ -7,11 +7,11 @@ abstract contract OnlyMemberBase {
     error YouAreNotTheMember();
 
     modifier onlyMember() {
-        Schema.MemberJoinProtectedStorage storage $member = Storage.$Members();
+        Schema.Member[] storage $members = Storage.Members().members;
 
         bool result;
-        for (uint i; i < $member.nextMemberId; ++i) {
-            if ($member.members[i].addr == msg.sender) {
+        for (uint i; i < $members.length; ++i) {
+            if ($members[i].addr == msg.sender) {
                 result = true;
                 break;
             }

@@ -40,12 +40,12 @@ contract Getter {
         return Storage.$Texts().nextTextId;
     }
 
-    function getMember(uint id) external view returns (Schema.Member memory) {
-        return Storage.$Members().members[id];
+    function getMember(uint memberId) external view returns (Schema.Member memory) {
+        return Storage.Members().members[memberId];
     }
 
-    function getNextMemberId() external view returns (uint) {
-        return Storage.$Members().nextMemberId;
+    function getMembers() external view returns (Schema.Member[] memory) {
+        return Storage.Members().members;
     }
 
     function getVRFRequest(uint id) external view returns (Schema.Request memory) {

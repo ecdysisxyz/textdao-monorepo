@@ -10,7 +10,7 @@ import {BaseSlots} from "bundle/textDAO/storages/BaseSlots.sol";
 library Storage {
     bytes32 internal constant baseslot_DAOState = BaseSlots.baseslot_DAOState;
     bytes32 internal constant baseslot_TextSaveProtectedStorage = BaseSlots.baseslot_TextSaveProtectedStorage;
-    bytes32 internal constant baseslot_MemberJoinProtectedStorage = BaseSlots.baseslot_MemberJoinProtectedStorage;
+    bytes32 internal constant baseslot_Members = BaseSlots.baseslot_Members;
     bytes32 internal constant baseslot_VRFStorage = BaseSlots.baseslot_VRFStorage;
     bytes32 internal constant baseslot_ConfigOverrideStorage = BaseSlots.baseslot_ConfigOverrideStorage;
 
@@ -24,8 +24,8 @@ library Storage {
         assembly { $.slot := slot }
     }
 
-    function $Members() internal pure returns (Schema.MemberJoinProtectedStorage storage $) {
-        bytes32 slot = baseslot_MemberJoinProtectedStorage;
+    function Members() internal pure returns (Schema.Members storage $) {
+        bytes32 slot = baseslot_Members;
         assembly { $.slot := slot }
     }
 

@@ -23,11 +23,10 @@ contract RawFulfillRandomWordsTest is MCTest {
         // proposalId = 0
         Storage.$VRF().requests[requestId].proposalId = 0;
 
-        Schema.MemberJoinProtectedStorage storage $member = Storage.$Members();
+        Schema.Member[] storage $members = Storage.Members().members;
         for (uint i; i < members.length; ++i) {
-            $member.members[i] = members[i];
+            $members.push(members[i]);
         }
-        $member.nextMemberId = members.length;
 
         Schema.ProposalMeta storage $proposalMeta = Storage.DAOState().proposals.push().proposalMeta;
         assertEq($proposalMeta.reps.length, 0);

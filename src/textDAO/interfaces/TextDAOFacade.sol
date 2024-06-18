@@ -7,7 +7,7 @@ import {Getter} from "bundle/textDAO/functions/Getter.sol";
 
 contract TextDAOFacade {
     function clone(address _target) public {}
-    function initialize(address[] calldata initialMembers, Schema.DeliberationConfig calldata pConfig) public {}
+    function initialize(Schema.Member[] calldata initialMembers, Schema.DeliberationConfig calldata pConfig) public {}
     function propose(Types.ProposalArg calldata _p) public returns (uint) {}
     function fork(uint pid, Types.ProposalArg calldata _p) external {}
     function voteHeaders(uint _proposalId, uint[3] calldata _headerIds) public {}
@@ -22,12 +22,11 @@ contract TextDAOFacade {
     function getProposal(uint id) external view returns (Getter.ProposalInfo memory) {}
     function getProposalHeaders(uint id) external view returns (Schema.Header[] memory) {}
     function getProposalCommand(uint pid, uint cid) external view returns (Schema.Command memory) {}
-    function getNextProposalId() external view returns (uint) {}
     function getProposalsConfig() external view returns (Schema.DeliberationConfig memory) {}
     function getText(uint id) external view returns (Schema.Text memory) {}
     function getNextTextId() external view returns (uint) {}
     function getMember(uint id) external view returns (Schema.Member memory) {}
-    function getNextMemberId() external view returns (uint) {}
+    function getMembers() external view returns (Schema.Member[] memory) {}
     function getVRFRequest(uint id) external view returns (Schema.Request memory) {}
     function getNextVRFId() external view returns (uint) {}
     function getSubscriptionId() external view returns (uint64) {}

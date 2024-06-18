@@ -7,13 +7,10 @@ import { ProtectionBase } from "bundle/textDAO/functions/protected/ProtectionBas
 
 contract MemberJoinProtected is ProtectionBase {
     function memberJoin(uint pid, Schema.Member[] memory candidates) public protected(pid) returns (bool) {
-        Schema.MemberJoinProtectedStorage storage $ = Storage.$Members();
+        Schema.Members storage $ = Storage.Members();
 
-        for (uint i; i < candidates.length; i++) {
-            $.members[$.nextMemberId+i].id = candidates[i].id;
-            $.members[$.nextMemberId+i].addr = candidates[i].addr;
-            $.members[$.nextMemberId+i].metadataURI = candidates[i].metadataURI;
+        for (uint i; i < candidates.length; ++i) {
+            $.members.push(candidates[i]);
         }
-        $.nextMemberId = $.nextMemberId + candidates.length;
     }
 }

@@ -19,8 +19,8 @@ contract TextDAOScenarioTest is MCTest {
 
     function test_scenario_withoutVrf() public {
         // 1. initialize
-        address[] memory initialMembers = new address[](1);
-        initialMembers[0] = address(this); // Example initial member address
+        Schema.Member[] memory initialMembers = new Schema.Member[](1);
+        initialMembers[0].addr = address(this); // Example initial member address
 
         Schema.DeliberationConfig memory pConfig = Schema.DeliberationConfig({
             expiryDuration: 2 minutes,
@@ -44,7 +44,7 @@ contract TextDAOScenarioTest is MCTest {
         _p.header.metadataURI = "Qm...";
         _p.cmd.actions = new Schema.Action[](1);
         _p.cmd.actions[0] = Schema.Action({
-            func: "memberJoin(uint256,(uint256,address,bytes32)[])",
+            func: "memberJoin(uint256,(address,string)[])",
             abiParams: abi.encode(pid1, new Schema.Member[](1))
         });
 
@@ -113,8 +113,8 @@ contract TextDAOScenarioTest is MCTest {
     }
 
     function test_filler() public {
-        address[] memory initialMembers = new address[](1);
-        initialMembers[0] = address(this); // Example initial member address
+        Schema.Member[] memory initialMembers = new Schema.Member[](1);
+        initialMembers[0].addr = address(this); // Example initial member address
         try textDAO.initialize(initialMembers, Schema.DeliberationConfig({
             expiryDuration: 2 minutes,
             tallyInterval: 1 minutes,
@@ -158,13 +158,12 @@ contract TextDAOScenarioTest is MCTest {
         uint plannedProposalId = 0;
         Schema.Member[] memory candidates = new Schema.Member[](1); // Assuming there's one candidate for demonstration
         candidates[0] = Schema.Member({
-            id: 123, // Example candidate ID
             addr: 0x1234567890123456789012345678901234567890, // Example candidate address
             metadataURI: "exampleURI" // Example metadata URI
         });
 
         proposalArg.cmd.actions[0] = Schema.Action({
-            func: "memberJoin(uint256,address[])",
+            func: "memberJoin(uint256,(address,string)[])",
             abiParams: abi.encode(plannedProposalId, candidates)
         });
         uint proposalId = textDAO.propose(proposalArg);

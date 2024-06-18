@@ -68,11 +68,9 @@ contract TextDAOTest is MCTest {
     function test_execute_successWithJoin() public {
         Schema.Member[] memory candidates = new Schema.Member[](2);
         Schema.Member memory member1;
-        member1.id = 0;
         member1.addr = address(1);
         candidates[0] = member1;
         Schema.Member memory member2;
-        member2.id = 1;
         member2.addr = address(2);
         candidates[1] = member2;
 
@@ -80,7 +78,7 @@ contract TextDAOTest is MCTest {
         Schema.Proposal storage $p = $.proposals.push();
         uint pid = 0;
 
-        Schema.MemberJoinProtectedStorage storage $m = Storage.$Members();
+        Schema.Members storage $m = Storage.Members();
 
         $p.cmds.push(); // Note: initialize for storage array
         Schema.Command storage $cmd = $p.cmds[0];
@@ -88,7 +86,7 @@ contract TextDAOTest is MCTest {
         $cmd.actions.push(); // Note: initialize for storage array
         Schema.Action storage $action = $cmd.actions[0];
 
-        $action.func = "memberJoin(uint256,(uint256,address,bytes32)[])";
+        $action.func = "memberJoin(uint256,(address,string)[])";
         $action.abiParams = abi.encode(pid, candidates);
 
         $p.proposalMeta.cmdRank.push(); // Note: initialize for storage array
@@ -98,13 +96,13 @@ contract TextDAOTest is MCTest {
         $.config.expiryDuration = 0;
         $p.proposalMeta.headerRank.push(); // Note: initialize for storage array
 
-        assertEq($m.members[0].addr, address(0));
-        assertEq($m.members[1].addr, address(0));
-        assertEq($m.nextMemberId, 0);
+        // assertEq($m.members[0].addr, address(0));
+        // assertEq($m.members[1].addr, address(0));
+        assertEq($m.members.length, 0);
         Execute(address(this)).execute(pid);
         assertEq($m.members[0].addr, address(1));
         assertEq($m.members[1].addr, address(2));
-        assertEq($m.nextMemberId, candidates.length);
+        assertEq($m.members.length, candidates.length);
     }
 
 }

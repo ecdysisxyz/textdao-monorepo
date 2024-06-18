@@ -58,16 +58,16 @@ library Schema {
         bytes32[] metadataURIs;
     }
 
-    /// @custom:storage-location erc7201:textDAO.MemberJoinProtectedStorage
-    struct MemberJoinProtectedStorage {
-        mapping(uint => Member) members;
-        uint nextMemberId;
+
+    /// @custom:storage-location erc7201:textDAO.Members
+    struct Members {
+        Member[] members;
     }
     struct Member {
-        uint id;
         address addr;
-        bytes32 metadataURI;
+        string metadataURI;
     }
+
 
     /// @custom:storage-location erc7201:textDAO.VRFStorage
     struct VRFStorage {

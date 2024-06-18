@@ -46,7 +46,7 @@ library DeployLib {
         mc.use("getText", Getter.getText.selector, getter);
         mc.use("getNextTextId", Getter.getNextTextId.selector, getter);
         mc.use("getMember", Getter.getMember.selector, getter);
-        mc.use("getNextMemberId", Getter.getNextMemberId.selector, getter);
+        mc.use("getMembers", Getter.getMembers.selector, getter);
         mc.use("getVRFRequest", Getter.getVRFRequest.selector, getter);
         mc.use("getNextVRFId", Getter.getNextVRFId.selector, getter);
         mc.use("getSubscriptionId", Getter.getSubscriptionId.selector, getter);

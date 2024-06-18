@@ -40,11 +40,10 @@ contract ProposeTest is MCTest {
     // function test_propose_success_withoutVrfRequest() public {}
 
     function test_propose_success_withVrfRequest() public {
-        Schema.MemberJoinProtectedStorage storage $m = Storage.$Members();
+        Schema.Members storage $m = Storage.Members();
         Schema.VRFStorage storage $vrf = Storage.$VRF();
 
-        $m.nextMemberId = 1;
-        $m.members[0].addr = address(this);
+        $m.members.push().addr = address(this);
 
         uint256 _requestId = 1;
 
@@ -110,11 +109,10 @@ contract ProposeTest is MCTest {
     }
 
     function test_propose_success_2nd() public {
-        Schema.MemberJoinProtectedStorage storage $m = Storage.$Members();
+        Schema.Members storage $m = Storage.Members();
         Schema.VRFStorage storage $vrf = Storage.$VRF();
 
-        $m.nextMemberId = 1;
-        $m.members[0].addr = address(this);
+        $m.members.push().addr = address(this);
 
         uint256 _requestId = 1;
 
@@ -183,7 +181,7 @@ contract ProposeTest is MCTest {
     }
 
     function test_propose_RevertIf_NotMember() public {
-        // Schema.MemberJoinProtectedStorage storage $m = Storage.$Members();
+        // Schema.Members storage $m = Storage.Members();
         // assertEq($m.members.length, 0);
 
         Types.ProposalArg memory p;

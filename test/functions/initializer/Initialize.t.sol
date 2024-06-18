@@ -15,16 +15,17 @@ contract InitializeTest is MCTest {
         _use(Initialize.initialize.selector, address(new Initialize()));
     }
 
-    function test_initialize_success(address[] calldata initialMembers, Schema.DeliberationConfig calldata pConfig) public {
+    function test_initialize_success(Schema.Member[] calldata initialMembers, Schema.DeliberationConfig calldata pConfig) public {
         vm.expectEmit();
         emit Initializable.Initialized(1);
         Initialize(target).initialize(initialMembers, pConfig);
 
-        Schema.MemberJoinProtectedStorage storage $member = Storage.$Members();
-        for (uint i; i < $member.nextMemberId; ++i) {
-            assertEq($member.members[i].id, i);
-            assertEq($member.members[i].addr, initialMembers[i]);
-            assertEq($member.members[i].metadataURI, "");
+        Schema.Member[] storage $members = Storage.Members().members;
+        for (uint i; i < initialMembers.length; ++i) {
+            assertEq(
+                keccak256(abi.encode($members[i])),
+                keccak256(abi.encode(initialMembers[i]))
+            );
         }
 
         Schema.DeliberationConfig storage $pConfig = Storage.DAOState().config;
@@ -41,10 +42,10 @@ contract InitializeTest is MCTest {
             repsNum: 1000,
             quorumScore: 3
         });
-        Initialize(target).initialize(new address[](1), pConfig);
+        Initialize(target).initialize(new Schema.Member[](1), pConfig);
 
         vm.expectRevert(Initializable.InvalidInitialization.selector);
-        Initialize(target).initialize(new address[](2), pConfig);
+        Initialize(target).initialize(new Schema.Member[](2), pConfig);
     }
 
 }

@@ -33,10 +33,10 @@ contract MemberJoinProtectedTest is MCTest {
         for (uint i; i < candidates.length; ++i) {
             assertEq(
                 keccak256(abi.encode(candidates[i])),
-                keccak256(abi.encode(Storage.$Members().members[i]))
+                keccak256(abi.encode(Storage.Members().members[i]))
             );
         }
-        assertEq(candidates.length, Storage.$Members().nextMemberId);
+        assertEq(candidates.length, Storage.Members().members.length);
     }
 
     function test_memberJoin_revert_notExpiredYet(uint256 proposeTime, uint256 expiryTime, uint256 execTime) public {

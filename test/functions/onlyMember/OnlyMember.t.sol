@@ -27,11 +27,11 @@ contract OnlyMemberTest is MCTest {
     }
 
     function test_onlyMember_success(Schema.Member[] memory members, uint membersIndex) public {
-        Schema.MemberJoinProtectedStorage storage $member = Storage.$Members();
+        Schema.Member[] storage $members = Storage.Members().members;
         for (uint i; i < members.length; ++i) {
-            $member.members[i] = members[i];
+            $members.push(members[i]);
         }
-        $member.nextMemberId = members.length;
+
         vm.assume(membersIndex < members.length);
         vm.prank(members[membersIndex].addr);
         assertTrue(OnlyMember(target).doSomething());
