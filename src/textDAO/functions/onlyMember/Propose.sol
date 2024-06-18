@@ -9,6 +9,9 @@ import { Types } from "bundle/textDAO/storages/Types.sol";
 import "@chainlink/vrf/interfaces/VRFCoordinatorV2Interface.sol";
 
 contract Propose is OnlyMemberBase {
+    event HeaderProposed(uint pid, Schema.Header header);
+    event CommandProposed(uint pid, Schema.Command cmd);
+
     function propose(Types.ProposalArg calldata _p) external onlyMember returns (uint proposalId) {
         Schema.DAOState storage $DAOState = Storage.DAOState();
 
@@ -17,9 +20,11 @@ contract Propose is OnlyMemberBase {
         Schema.Proposal storage $proposal = $DAOState.proposals.push();
         if (_p.header.metadataURI.length > 0) {
             $proposal.headers.push(_p.header);
+            emit HeaderProposed(proposalId, _p.header);
         }
         if (_p.cmd.actions.length > 0) {
             $proposal.cmds.push(_p.cmd);
+            emit CommandProposed(proposalId, _p.cmd);
         }
         $proposal.proposalMeta.createdAt = block.timestamp;
 
