@@ -36,7 +36,7 @@ contract TextDAOTest is MCTest {
         metadataURIs[0] = bytes32(uint256(1));
         metadataURIs[1] = bytes32(uint256(2));
 
-        Schema.ProposeStorage storage $ = Storage.$Proposals();
+        Schema.DAOState storage $ = Storage.DAOState();
         Schema.Proposal storage $p = $.proposals[pid];
 
         Schema.Text storage $text = Storage.$Texts().texts[textId];
@@ -77,7 +77,7 @@ contract TextDAOTest is MCTest {
         member2.addr = address(2);
         candidates[1] = member2;
 
-        Schema.ProposeStorage storage $ = Storage.$Proposals();
+        Schema.DAOState storage $ = Storage.DAOState();
         Schema.Proposal storage $p = $.proposals[pid];
         Schema.MemberJoinProtectedStorage storage $m = Storage.$Members();
 

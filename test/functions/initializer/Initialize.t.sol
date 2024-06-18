@@ -27,7 +27,7 @@ contract InitializeTest is MCTest {
             assertEq($member.members[i].metadataURI, "");
         }
 
-        Schema.ProposalsConfig storage $pConfig = Storage.$Proposals().config;
+        Schema.ProposalsConfig storage $pConfig = Storage.DAOState().config;
         assertEq(
             keccak256(abi.encode($pConfig)),
             keccak256(abi.encode(pConfig))

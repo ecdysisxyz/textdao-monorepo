@@ -9,8 +9,8 @@ contract ProtectionBase {
     error ProposalNotTalliedYet();
 
     modifier protected(uint pid) {
-        Schema.ProposalMeta storage $proposal = Storage.$Proposals().proposals[pid].proposalMeta;
-        Schema.ProposalsConfig storage $config = Storage.$Proposals().config;
+        Schema.ProposalMeta storage $proposal = Storage.DAOState().proposals[pid].proposalMeta;
+        Schema.ProposalsConfig storage $config = Storage.DAOState().config;
         if (block.timestamp <= $proposal.createdAt + $config.expiryDuration) revert ProposalNotExpiredYet();
         if ($proposal.cmdRank.length == 0) revert ProposalNotTalliedYet();
         _;

@@ -20,7 +20,7 @@ contract ForkTest is MCTest {
 
     function test_fork() public {
         uint pid = 0;
-        Schema.Proposal storage $p = Storage.$Proposals().proposals[pid];
+        Schema.Proposal storage $p = Storage.DAOState().proposals[pid];
 
         Types.ProposalArg memory p;
         p.header.metadataURI = "Qc.....xh";

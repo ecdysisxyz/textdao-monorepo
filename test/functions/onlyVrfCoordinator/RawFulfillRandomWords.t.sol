@@ -28,7 +28,7 @@ contract RawFulfillRandomWordsTest is MCTest {
         }
         $member.nextMemberId = members.length;
 
-        Schema.ProposalMeta storage $proposalMeta = Storage.$Proposals().proposals[proposalId].proposalMeta;
+        Schema.ProposalMeta storage $proposalMeta = Storage.DAOState().proposals[proposalId].proposalMeta;
         assertEq($proposalMeta.reps.length, 0);
 
         TestUtils.setMsgSenderAsVrfCoordinator();

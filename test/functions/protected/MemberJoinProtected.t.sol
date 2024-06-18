@@ -17,13 +17,13 @@ contract MemberJoinProtectedTest is MCTest {
     }
 
     function test_memberJoin_success(uint256 proposeTime, uint256 expiryTime, uint256 execTime, Schema.Member[] memory candidates) public {
-        Storage.$Proposals().proposals[0].proposalMeta.createdAt = proposeTime;
+        Storage.DAOState().proposals[0].proposalMeta.createdAt = proposeTime;
         vm.assume(expiryTime >= proposeTime);
-        Storage.$Proposals().config.expiryDuration = expiryTime - proposeTime;
+        Storage.DAOState().config.expiryDuration = expiryTime - proposeTime;
         vm.assume(expiryTime < execTime);
         vm.warp(execTime);
 
-        Storage.$Proposals().proposals[0].proposalMeta.cmdRank.push();
+        Storage.DAOState().proposals[0].proposalMeta.cmdRank.push();
 
         MemberJoinProtected(address(this)).memberJoin({
             pid: 0,
@@ -40,9 +40,9 @@ contract MemberJoinProtectedTest is MCTest {
     }
 
     function test_memberJoin_revert_notExpiredYet(uint256 proposeTime, uint256 expiryTime, uint256 execTime) public {
-        Storage.$Proposals().proposals[0].proposalMeta.createdAt = proposeTime;
+        Storage.DAOState().proposals[0].proposalMeta.createdAt = proposeTime;
         vm.assume(expiryTime >= proposeTime);
-        Storage.$Proposals().config.expiryDuration = expiryTime - proposeTime;
+        Storage.DAOState().config.expiryDuration = expiryTime - proposeTime;
         vm.assume(execTime <= expiryTime);
         vm.warp(execTime);
 

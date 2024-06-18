@@ -7,7 +7,7 @@ abstract contract OnlyRepsBase {
     error YouAreNotTheRep();
 
     modifier onlyReps(uint pid) {
-        address[] storage $reps = Storage.$Proposals().proposals[pid].proposalMeta.reps;
+        address[] storage $reps = Storage.DAOState().proposals[pid].proposalMeta.reps;
 
         bool result;
         for (uint i; i < $reps.length; ++i) {

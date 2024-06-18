@@ -81,7 +81,7 @@ contract ProposeTest is MCTest {
             vrfRequestId: $vrf.requests[$vrf.nextId].requestId,
             vrfProposalId: $vrf.requests[$vrf.nextId].proposalId,
             vrfNextId: $vrf.nextId,
-            nextProposalId: Storage.$Proposals().nextProposalId
+            nextProposalId: Storage.DAOState().nextProposalId
         });
 
         // Act & Record
@@ -97,7 +97,7 @@ contract ProposeTest is MCTest {
         assertEq($vrf.requests[_preState.vrfRequestId].proposalId, _preState.nextProposalId);
         assertEq(_preState.vrfNextId + 1, $vrf.nextId);
 
-        Schema.Proposal storage $p = Storage.$Proposals().proposals[pid];
+        Schema.Proposal storage $p = Storage.DAOState().proposals[pid];
 
         assertEq(pid, 0);
         assertEq($p.proposalMeta.currentScore, 0);
@@ -153,7 +153,7 @@ contract ProposeTest is MCTest {
             vrfRequestId: $vrf.requests[$vrf.nextId].requestId,
             vrfProposalId: $vrf.requests[$vrf.nextId].proposalId,
             vrfNextId: $vrf.nextId,
-            nextProposalId: Storage.$Proposals().nextProposalId
+            nextProposalId: Storage.DAOState().nextProposalId
         });
 
         // Act & Record
@@ -168,7 +168,7 @@ contract ProposeTest is MCTest {
         assertEq($vrf.requests[_preState.vrfRequestId].proposalId, _preState.nextProposalId);
         assertEq(_preState.vrfNextId + 1, $vrf.nextId);
 
-        Schema.Proposal storage $p = Storage.$Proposals().proposals[pid];
+        Schema.Proposal storage $p = Storage.DAOState().proposals[pid];
 
         assertEq(pid, 0);
         assertEq($p.proposalMeta.headerRank.length, 0);
@@ -176,7 +176,7 @@ contract ProposeTest is MCTest {
         assertEq($p.headers[0].metadataURI, p.header.metadataURI);
 
         uint pid2 = Propose(address(this)).propose(p);
-        Schema.Proposal storage $p2 = Storage.$Proposals().proposals[pid2];
+        Schema.Proposal storage $p2 = Storage.DAOState().proposals[pid2];
 
         assertEq(pid, 0);
         assertEq($p2.proposalMeta.headerRank.length, 0);

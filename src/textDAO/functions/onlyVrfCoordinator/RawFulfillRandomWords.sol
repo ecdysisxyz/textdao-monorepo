@@ -8,7 +8,7 @@ import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
 contract RawFulfillRandomWords is VRFConsumerV2Interface, OnlyVrfCoordinatorBase {
     function rawFulfillRandomWords(uint256 requestId, uint256[] memory randomWords) external onlyVrfCoordinator {
         uint256 proposalId = Storage.$VRF().requests[requestId].proposalId;
-        Schema.Proposal storage $p = Storage.$Proposals().proposals[proposalId];
+        Schema.Proposal storage $p = Storage.DAOState().proposals[proposalId];
         Schema.MemberJoinProtectedStorage storage $member = Storage.$Members();
 
         for (uint i; i < randomWords.length; i++) {

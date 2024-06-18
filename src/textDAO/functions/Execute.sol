@@ -7,7 +7,7 @@ import { DecodeErrorString } from "@devkit/system/message/DecodeErrorString.sol"
 
 contract Execute {
     function execute(uint pid) external returns (bool) {
-        Schema.ProposeStorage storage $ = Storage.$Proposals();
+        Schema.DAOState storage $ = Storage.DAOState();
         Schema.Proposal storage $p = $.proposals[pid];
 
         // TODO Validate match pid

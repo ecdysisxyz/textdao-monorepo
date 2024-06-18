@@ -10,7 +10,7 @@ contract StorageTest is MCTest {
 
     function test_ProposeStorage() public {
         vm.record();
-        Storage.$Proposals().nextProposalId = 1;
+        Storage.DAOState().nextProposalId = 1;
         (, bytes32[] memory writes) = vm.accesses(
             address(this)
         );

@@ -9,7 +9,7 @@ import "@chainlink/vrf/interfaces/VRFCoordinatorV2Interface.sol";
 
 contract SetConfigsProtected is ProtectionBase {
     function setProposalsConfig(uint pid, Schema.ProposalsConfig memory config) public protected(pid) returns (bool) {
-        Schema.ProposeStorage storage $ = Storage.$Proposals();
+        Schema.DAOState storage $ = Storage.DAOState();
         $.config.expiryDuration = config.expiryDuration;
         $.config.repsNum = config.repsNum;
         $.config.quorumScore = config.quorumScore;

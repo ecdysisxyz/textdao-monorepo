@@ -9,7 +9,7 @@ import { SelectorLib } from "bundle/textDAO/functions/_utils/SelectorLib.sol";
 
 contract Tally {
     function tally(uint pid) external onlyOncePerInterval(pid) returns (bool) {
-        Schema.ProposeStorage storage $ = Storage.$Proposals();
+        Schema.DAOState storage $ = Storage.DAOState();
         Schema.Proposal storage $p = $.proposals[pid];
         Schema.Header[] storage $headers = $p.headers;
         Schema.Command[] storage $cmds = $p.cmds;
@@ -112,7 +112,7 @@ contract Tally {
     }
 
     modifier onlyOncePerInterval(uint pid) {
-        Schema.ProposeStorage storage $ = Storage.$Proposals();
+        Schema.DAOState storage $ = Storage.DAOState();
         Schema.Proposal storage $p = $.proposals[pid];
         require($.config.tallyInterval > 0, "Set tally interval at config.");
         require(!$p.tallied[block.timestamp / $.config.tallyInterval], "This interval is already tallied.");

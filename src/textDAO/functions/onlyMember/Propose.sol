@@ -10,7 +10,7 @@ import "@chainlink/vrf/interfaces/VRFCoordinatorV2Interface.sol";
 
 contract Propose is OnlyMemberBase {
     function propose(Types.ProposalArg calldata _p) external onlyMember returns (uint proposalId) {
-        Schema.ProposeStorage storage $ = Storage.$Proposals();
+        Schema.DAOState storage $ = Storage.DAOState();
 
         proposalId = $.nextProposalId;
 

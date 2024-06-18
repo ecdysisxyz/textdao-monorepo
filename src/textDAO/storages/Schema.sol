@@ -6,7 +6,7 @@ pragma solidity ^0.8.24;
  */
 library Schema {
     /// @custom:storage-location erc7201:textDAO.ProposeStorage
-    struct ProposeStorage {
+    struct DAOState {
         mapping(uint => Proposal) proposals;
         uint nextProposalId;
         ProposalsConfig config;

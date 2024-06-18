@@ -27,7 +27,7 @@ contract OnlyRepsTest is MCTest {
     }
 
     function test_onlyReps_success(address[] calldata reps, uint256 repIndex, uint256 pid) public {
-        Storage.$Proposals().proposals[pid].proposalMeta.reps = reps;
+        Storage.DAOState().proposals[pid].proposalMeta.reps = reps;
 
         vm.assume(repIndex < reps.length);
         vm.prank(reps[repIndex]);
@@ -35,7 +35,7 @@ contract OnlyRepsTest is MCTest {
     }
 
     function test_onlyReps_revert_notRep(address[] calldata reps, uint256 repIndex, uint256 pid, address caller) public {
-        Storage.$Proposals().proposals[pid].proposalMeta.reps = reps;
+        Storage.DAOState().proposals[pid].proposalMeta.reps = reps;
 
         vm.assume(repIndex < reps.length);
         for (uint i; i < reps.length; ++i) {

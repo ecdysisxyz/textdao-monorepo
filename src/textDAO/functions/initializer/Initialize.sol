@@ -18,7 +18,7 @@ contract Initialize is Initializable {
         $member.nextMemberId = nextMemberId;
 
         // 2. Set ProposalsConfig
-        Schema.ProposalsConfig storage $pConfig = Storage.$Proposals().config;
+        Schema.ProposalsConfig storage $pConfig = Storage.DAOState().config;
         $pConfig.expiryDuration = pConfig.expiryDuration;
         $pConfig.tallyInterval = pConfig.tallyInterval;
         $pConfig.repsNum = pConfig.repsNum;
