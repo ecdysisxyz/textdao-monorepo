@@ -7,14 +7,19 @@ import { Schema } from "bundle/textDAO/storages/Schema.sol";
 import { Types } from "bundle/textDAO/storages/Types.sol";
 
 contract Fork is OnlyRepsBase {
+    event HeaderForked(uint pid, Schema.Header header);
+    event CommandForked(uint pid, Schema.Command cmd);
+
     function fork(uint pid, Types.ProposalArg calldata _p) external onlyReps(pid) {
         Schema.Proposal storage $p = Storage.DAOState().proposals[pid];
 
         if (_p.header.metadataURI.length > 0) {
             $p.headers.push(_p.header);
+            emit HeaderForked(pid, _p.header);
         }
         if (_p.cmd.actions.length > 0) {
             $p.cmds.push(_p.cmd);
+            emit CommandForked(pid, _p.cmd);
         }
         // Note: Shadow(sender, timestamp)
     }
