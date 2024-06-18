@@ -22,7 +22,7 @@ contract TextDAOScenarioTest is MCTest {
         address[] memory initialMembers = new address[](1);
         initialMembers[0] = address(this); // Example initial member address
 
-        Schema.ProposalsConfig memory pConfig = Schema.ProposalsConfig({
+        Schema.DeliberationConfig memory pConfig = Schema.DeliberationConfig({
             expiryDuration: 2 minutes,
             tallyInterval: 1 minutes,
             repsNum: 1000,
@@ -115,7 +115,7 @@ contract TextDAOScenarioTest is MCTest {
     function test_filler() public {
         address[] memory initialMembers = new address[](1);
         initialMembers[0] = address(this); // Example initial member address
-        try textDAO.initialize(initialMembers, Schema.ProposalsConfig({
+        try textDAO.initialize(initialMembers, Schema.DeliberationConfig({
             expiryDuration: 2 minutes,
             tallyInterval: 1 minutes,
             repsNum: 1,

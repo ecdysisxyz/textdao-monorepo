@@ -10,7 +10,7 @@ contract ProtectionBase {
 
     modifier protected(uint pid) {
         Schema.ProposalMeta storage $proposal = Storage.DAOState().proposals[pid].proposalMeta;
-        Schema.ProposalsConfig storage $config = Storage.DAOState().config;
+        Schema.DeliberationConfig storage $config = Storage.DAOState().config;
         if (block.timestamp <= $proposal.createdAt + $config.expiryDuration) revert ProposalNotExpiredYet();
         if ($proposal.cmdRank.length == 0) revert ProposalNotTalliedYet();
         _;

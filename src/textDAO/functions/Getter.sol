@@ -32,7 +32,7 @@ contract Getter {
         return Storage.DAOState().nextProposalId;
     }
 
-    function getProposalsConfig() external view returns (Schema.ProposalsConfig memory) {
+    function getProposalsConfig() external view returns (Schema.DeliberationConfig memory) {
         return Storage.DAOState().config;
     }
 

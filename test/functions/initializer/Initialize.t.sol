@@ -15,7 +15,7 @@ contract InitializeTest is MCTest {
         _use(Initialize.initialize.selector, address(new Initialize()));
     }
 
-    function test_initialize_success(address[] calldata initialMembers, Schema.ProposalsConfig calldata pConfig) public {
+    function test_initialize_success(address[] calldata initialMembers, Schema.DeliberationConfig calldata pConfig) public {
         vm.expectEmit();
         emit Initializable.Initialized(1);
         Initialize(target).initialize(initialMembers, pConfig);
@@ -27,7 +27,7 @@ contract InitializeTest is MCTest {
             assertEq($member.members[i].metadataURI, "");
         }
 
-        Schema.ProposalsConfig storage $pConfig = Storage.DAOState().config;
+        Schema.DeliberationConfig storage $pConfig = Storage.DAOState().config;
         assertEq(
             keccak256(abi.encode($pConfig)),
             keccak256(abi.encode(pConfig))
@@ -35,7 +35,7 @@ contract InitializeTest is MCTest {
     }
 
     function test_initialize_revert_InvalidInitialization() public {
-        Schema.ProposalsConfig memory pConfig = Schema.ProposalsConfig({
+        Schema.DeliberationConfig memory pConfig = Schema.DeliberationConfig({
             expiryDuration: 2 minutes,
             tallyInterval: 1 minutes,
             repsNum: 1000,

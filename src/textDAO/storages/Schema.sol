@@ -9,9 +9,9 @@ library Schema {
     struct DAOState {
         mapping(uint => Proposal) proposals;
         uint nextProposalId;
-        ProposalsConfig config;
+        DeliberationConfig config;
     }
-    struct ProposalsConfig {
+    struct DeliberationConfig {
         uint expiryDuration;
         uint tallyInterval;
         uint repsNum;

@@ -8,7 +8,7 @@ import { ProtectionBase } from "bundle/textDAO/functions/protected/ProtectionBas
 import "@chainlink/vrf/interfaces/VRFCoordinatorV2Interface.sol";
 
 contract SetConfigsProtected is ProtectionBase {
-    function setProposalsConfig(uint pid, Schema.ProposalsConfig memory config) public protected(pid) returns (bool) {
+    function setProposalsConfig(uint pid, Schema.DeliberationConfig memory config) public protected(pid) returns (bool) {
         Schema.DAOState storage $ = Storage.DAOState();
         $.config.expiryDuration = config.expiryDuration;
         $.config.repsNum = config.repsNum;

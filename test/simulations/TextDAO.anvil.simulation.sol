@@ -25,7 +25,7 @@ contract TextDAOAnvilSimulation is MCTest {
     function test_scenario() public {
         address[] memory initialMembers = new address[](1);
         initialMembers[0] = address(this); // Example initial member address
-        try textDAO.initialize(initialMembers, Schema.ProposalsConfig({
+        try textDAO.initialize(initialMembers, Schema.DeliberationConfig({
             expiryDuration: 2 minutes,
             tallyInterval: 1 minutes,
             repsNum: 1,

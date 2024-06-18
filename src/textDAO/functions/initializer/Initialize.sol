@@ -6,7 +6,7 @@ import {Storage} from "bundle/textDAO/storages/Storage.sol";
 import {Schema} from "bundle/textDAO/storages/Schema.sol";
 
 contract Initialize is Initializable {
-    function initialize(address[] calldata initialMembers, Schema.ProposalsConfig calldata pConfig) external initializer {
+    function initialize(address[] calldata initialMembers, Schema.DeliberationConfig calldata pConfig) external initializer {
         // 1. Set Members
         Schema.MemberJoinProtectedStorage storage $member = Storage.$Members();
         uint nextMemberId;
@@ -18,7 +18,7 @@ contract Initialize is Initializable {
         $member.nextMemberId = nextMemberId;
 
         // 2. Set ProposalsConfig
-        Schema.ProposalsConfig storage $pConfig = Storage.DAOState().config;
+        Schema.DeliberationConfig storage $pConfig = Storage.DAOState().config;
         $pConfig.expiryDuration = pConfig.expiryDuration;
         $pConfig.tallyInterval = pConfig.tallyInterval;
         $pConfig.repsNum = pConfig.repsNum;

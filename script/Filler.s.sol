@@ -19,7 +19,7 @@ contract Filler is Script {
 
         address[] memory initialMembers = new address[](1);
         initialMembers[0] = address(this); // Example initial member address
-        try textdao.initialize(initialMembers, Schema.ProposalsConfig({
+        try textdao.initialize(initialMembers, Schema.DeliberationConfig({
             expiryDuration: 2 minutes,
             tallyInterval: 1 minutes,
             repsNum: 1,

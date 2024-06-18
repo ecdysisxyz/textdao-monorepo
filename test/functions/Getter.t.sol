@@ -49,7 +49,7 @@ contract GetterTest is MCTest {
         uint resNextProposalId = Getter(address(this)).getNextProposalId();
         assertEq(resNextProposalId, 1);
 
-        Schema.ProposalsConfig memory resProposalsConfig = Getter(address(this)).getProposalsConfig();
+        Schema.DeliberationConfig memory resProposalsConfig = Getter(address(this)).getProposalsConfig();
         assertEq(resProposalsConfig.expiryDuration, 1);
     }
 
