@@ -10,15 +10,24 @@ import "@chainlink/vrf/interfaces/VRFCoordinatorV2Interface.sol";
 
 contract Propose is OnlyMemberBase {
     function propose(Types.ProposalArg calldata _p) external onlyMember returns (uint proposalId) {
-        Schema.DAOState storage $ = Storage.DAOState();
+        Schema.DAOState storage $DAOState = Storage.DAOState();
 
-        proposalId = $.nextProposalId;
+        proposalId = $DAOState.proposals.length;
 
-        Schema.Proposal storage $p = $.proposals[proposalId];
+        Schema.Proposal storage $proposal = $DAOState.proposals.push();
+        if (_p.header.metadataURI.length > 0) {
+            $proposal.headers.push(_p.header);
+        }
+        if (_p.cmd.actions.length > 0) {
+            $proposal.cmds.push(_p.cmd);
+        }
+        $proposal.proposalMeta.createdAt = block.timestamp;
+
+
         Schema.VRFStorage storage $vrf = Storage.$VRF();
         Schema.MemberJoinProtectedStorage storage $member = Storage.$Members();
 
-        if ($.config.repsNum < $member.nextMemberId) {
+        if ($DAOState.config.repsNum < $member.nextMemberId) {
             /*
                 VRF Request to choose reps
             */
@@ -46,20 +55,11 @@ contract Propose is OnlyMemberBase {
             $vrf.nextId++;
         } else {
             for (uint i; i < $member.nextMemberId; ++i) {
-                $p.proposalMeta.reps.push($member.members[i].addr);
+                $proposal.proposalMeta.reps.push($member.members[i].addr);
             }
         }
 
-        if (_p.header.metadataURI.length > 0) {
-            $p.headers.push(_p.header);
-        }
-        if (_p.cmd.actions.length > 0) {
-            $p.cmds.push(_p.cmd);
-        }
-        $p.proposalMeta.createdAt = block.timestamp;
         // Note: Shadow(sender, timestamp)
-
-        $.nextProposalId++;
     }
 
 }

@@ -13,9 +13,8 @@ contract TallyTest is MCTest {
     }
 
     function test_tally_success() public {
-        uint pid = 0;
         Schema.DAOState storage $ = Storage.DAOState();
-        Schema.Proposal storage $p = $.proposals[pid];
+        Schema.Proposal storage $p = $.proposals.push();
 
         $p.proposalMeta.createdAt = 0;
         $.config.expiryDuration = 1000;
@@ -42,7 +41,7 @@ contract TallyTest is MCTest {
         $p.cmds[5].currentScore = 9;
         $p.cmds[6].currentScore = 8;
 
-        Tally(address(this)).tally(pid);
+        Tally(address(this)).tally(0);
 
         assertEq($p.proposalMeta.headerRank[0], 8);
         assertEq($p.proposalMeta.headerRank[1], 9);
@@ -55,9 +54,8 @@ contract TallyTest is MCTest {
     }
 
     function test_tally_failCommandQuorumWithOverride() public {
-        uint pid = 0;
         Schema.DAOState storage $ = Storage.DAOState();
-        Schema.Proposal storage $p = $.proposals[pid];
+        Schema.Proposal storage $p = $.proposals.push();
         Schema.ConfigOverrideStorage storage $configOverride = Storage.$ConfigOverride();
 
         $p.proposalMeta.createdAt = 0;
@@ -86,7 +84,7 @@ contract TallyTest is MCTest {
         $p.cmds[5].currentScore = 9;
         $p.cmds[6].currentScore = 8;
 
-        Tally(address(this)).tally(pid);
+        Tally(address(this)).tally(0);
 
         assertEq($p.proposalMeta.headerRank[0], 8);
         assertEq($p.proposalMeta.headerRank[1], 9);
@@ -104,7 +102,7 @@ contract TallyTest is MCTest {
         uint256 expiryDuration = expirationTime - createdAt;
         Storage.DAOState().config.expiryDuration = expiryDuration;
         Storage.DAOState().config.tallyInterval = 1;
-        Storage.DAOState().proposals[0].proposalMeta.createdAt = createdAt;
+        Storage.DAOState().proposals.push().proposalMeta.createdAt = createdAt;
 
         vm.assume(executionBlockTime >= expirationTime);
 

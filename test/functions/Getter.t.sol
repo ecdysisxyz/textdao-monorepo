@@ -14,7 +14,6 @@ contract GetterTest is MCTest {
         _use(Getter.getProposal.selector, getter);
         _use(Getter.getProposalHeaders.selector, getter);
         _use(Getter.getProposalCommand.selector, getter);
-        _use(Getter.getNextProposalId.selector, getter);
         _use(Getter.getProposalsConfig.selector, getter);
         _use(Getter.getText.selector, getter);
         _use(Getter.getNextTextId.selector, getter);
@@ -29,12 +28,11 @@ contract GetterTest is MCTest {
 
     function test_Proposals_success() public {
         Schema.DAOState storage $ = Storage.DAOState();
-
-        $.proposals[1].headers.push();
-        $.proposals[1].cmds.push();
-        $.proposals[1].cmds[0].actions.push();
-        $.proposals[1].proposalMeta.currentScore = 1;
-        $.nextProposalId = 1;
+        $.proposals.push();
+        Schema.Proposal storage $proposal = $.proposals.push();
+        $proposal.headers.push();
+        $proposal.cmds.push().actions.push();
+        $proposal.proposalMeta.currentScore = 1;
         $.config.expiryDuration = 1;
 
         Getter.ProposalInfo memory proposalInfo = Getter(address(this)).getProposal(1);
@@ -45,9 +43,6 @@ contract GetterTest is MCTest {
 
         Schema.Command memory cmd = Getter(address(this)).getProposalCommand(1, 0);
         assertEq(cmd.actions.length, 1);
-
-        uint resNextProposalId = Getter(address(this)).getNextProposalId();
-        assertEq(resNextProposalId, 1);
 
         Schema.DeliberationConfig memory resProposalsConfig = Getter(address(this)).getProposalsConfig();
         assertEq(resProposalsConfig.expiryDuration, 1);

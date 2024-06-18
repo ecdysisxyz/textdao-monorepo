@@ -22,20 +22,24 @@ contract OnlyRepsTest is MCTest {
     }
 
     function test_onlyReps_success() public {
+        Storage.DAOState().proposals.push();
+
         TestUtils.setMsgSenderAsRep(0);
         assertTrue(OnlyReps(target).doSomething(0));
     }
 
-    function test_onlyReps_success(address[] calldata reps, uint256 repIndex, uint256 pid) public {
-        Storage.DAOState().proposals[pid].proposalMeta.reps = reps;
+    function test_onlyReps_success(address[] calldata reps, uint256 repIndex) public {
+        // proposalId = 0
+        Storage.DAOState().proposals.push().proposalMeta.reps = reps;
 
         vm.assume(repIndex < reps.length);
         vm.prank(reps[repIndex]);
-        assertTrue(OnlyReps(target).doSomething(pid));
+        assertTrue(OnlyReps(target).doSomething(0));
     }
 
-    function test_onlyReps_revert_notRep(address[] calldata reps, uint256 repIndex, uint256 pid, address caller) public {
-        Storage.DAOState().proposals[pid].proposalMeta.reps = reps;
+    function test_onlyReps_revert_notRep(address[] calldata reps, uint256 repIndex, address caller) public {
+        // proposalId = 0
+        Storage.DAOState().proposals.push().proposalMeta.reps = reps;
 
         vm.assume(repIndex < reps.length);
         for (uint i; i < reps.length; ++i) {
@@ -43,7 +47,7 @@ contract OnlyRepsTest is MCTest {
         }
         vm.prank(caller);
         vm.expectRevert(OnlyRepsBase.YouAreNotTheRep.selector);
-        OnlyReps(target).doSomething(pid);
+        OnlyReps(target).doSomething(0);
     }
 
 }

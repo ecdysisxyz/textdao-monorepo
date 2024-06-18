@@ -14,18 +14,18 @@ contract Dummy {
     }
 
     function save() public returns (bool) {
-        $.nextProposalId = 1;
-        get().nextProposalId = 1;
+        // $.nextProposalId = 1;
+        // get().nextProposalId = 1;
         $.proposals[0].tallied[0] = true;
         get().proposals[0].tallied[0] = true;
         return true;
     }
 
     function dump1() public view returns (uint) {
-        return $.nextProposalId;
+        // return $.nextProposalId;
     }
     function dump2() public view returns (uint) {
-        return get().nextProposalId;
+        // return get().nextProposalId;
     }
 
 }

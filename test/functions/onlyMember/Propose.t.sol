@@ -30,7 +30,6 @@ contract ProposeTest is MCTest {
         uint256 vrfRequestId;
         uint256 vrfProposalId;
         uint256 vrfNextId;
-        uint256 nextProposalId;
     }
 
     function setUp() public {
@@ -80,8 +79,7 @@ contract ProposeTest is MCTest {
         StateDiff memory _preState = StateDiff({
             vrfRequestId: $vrf.requests[$vrf.nextId].requestId,
             vrfProposalId: $vrf.requests[$vrf.nextId].proposalId,
-            vrfNextId: $vrf.nextId,
-            nextProposalId: Storage.DAOState().nextProposalId
+            vrfNextId: $vrf.nextId
         });
 
         // Act & Record
@@ -94,7 +92,7 @@ contract ProposeTest is MCTest {
 
         assertEq(_preState.vrfRequestId, 0);
         assertEq($vrf.requests[_preState.vrfRequestId].requestId, _requestId);
-        assertEq($vrf.requests[_preState.vrfRequestId].proposalId, _preState.nextProposalId);
+        assertEq($vrf.requests[_preState.vrfRequestId].proposalId, pid);
         assertEq(_preState.vrfNextId + 1, $vrf.nextId);
 
         Schema.Proposal storage $p = Storage.DAOState().proposals[pid];
@@ -152,8 +150,7 @@ contract ProposeTest is MCTest {
         StateDiff memory _preState = StateDiff({
             vrfRequestId: $vrf.requests[$vrf.nextId].requestId,
             vrfProposalId: $vrf.requests[$vrf.nextId].proposalId,
-            vrfNextId: $vrf.nextId,
-            nextProposalId: Storage.DAOState().nextProposalId
+            vrfNextId: $vrf.nextId
         });
 
         // Act & Record
@@ -165,7 +162,7 @@ contract ProposeTest is MCTest {
 
         assertEq(_preState.vrfRequestId, 0);
         assertEq($vrf.requests[_preState.vrfRequestId].requestId, _requestId);
-        assertEq($vrf.requests[_preState.vrfRequestId].proposalId, _preState.nextProposalId);
+        assertEq($vrf.requests[_preState.vrfRequestId].proposalId, pid);
         assertEq(_preState.vrfNextId + 1, $vrf.nextId);
 
         Schema.Proposal storage $p = Storage.DAOState().proposals[pid];

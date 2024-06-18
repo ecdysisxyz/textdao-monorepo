@@ -28,10 +28,6 @@ contract Getter {
         return Storage.DAOState().proposals[pid].cmds[cid];
     }
 
-    function getNextProposalId() external view returns (uint) {
-        return Storage.DAOState().nextProposalId;
-    }
-
     function getProposalsConfig() external view returns (Schema.DeliberationConfig memory) {
         return Storage.DAOState().config;
     }

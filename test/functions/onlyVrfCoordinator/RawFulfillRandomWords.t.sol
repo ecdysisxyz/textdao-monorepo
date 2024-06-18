@@ -17,10 +17,11 @@ contract RawFulfillRandomWordsTest is MCTest {
         _use(RawFulfillRandomWords.rawFulfillRandomWords.selector, address(new RawFulfillRandomWords()));
     }
 
-    function test_rawFulfillRandomWords_success(Schema.Member[] calldata members, uint256 proposalId, uint256 requestId, uint256[] calldata randomWords) public {
+    function test_rawFulfillRandomWords_success(Schema.Member[] calldata members, uint256 requestId, uint256[] calldata randomWords) public {
         vm.assume(members.length > 0);
 
-        Storage.$VRF().requests[requestId].proposalId = proposalId;
+        // proposalId = 0
+        Storage.$VRF().requests[requestId].proposalId = 0;
 
         Schema.MemberJoinProtectedStorage storage $member = Storage.$Members();
         for (uint i; i < members.length; ++i) {
@@ -28,7 +29,7 @@ contract RawFulfillRandomWordsTest is MCTest {
         }
         $member.nextMemberId = members.length;
 
-        Schema.ProposalMeta storage $proposalMeta = Storage.DAOState().proposals[proposalId].proposalMeta;
+        Schema.ProposalMeta storage $proposalMeta = Storage.DAOState().proposals.push().proposalMeta;
         assertEq($proposalMeta.reps.length, 0);
 
         TestUtils.setMsgSenderAsVrfCoordinator();

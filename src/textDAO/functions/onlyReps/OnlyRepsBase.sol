@@ -7,6 +7,7 @@ abstract contract OnlyRepsBase {
     error YouAreNotTheRep();
 
     modifier onlyReps(uint pid) {
+        // TODO ProposalNotFound
         address[] storage $reps = Storage.DAOState().proposals[pid].proposalMeta.reps;
 
         bool result;

@@ -28,7 +28,6 @@ contract TextDAOTest is MCTest {
     }
 
     function test_execute_successWithText() public {
-        uint pid = 0;
         uint textId = 0;
 
         // Note: Array variable is only available as function args.
@@ -37,7 +36,8 @@ contract TextDAOTest is MCTest {
         metadataURIs[1] = bytes32(uint256(2));
 
         Schema.DAOState storage $ = Storage.DAOState();
-        Schema.Proposal storage $p = $.proposals[pid];
+        Schema.Proposal storage $p = $.proposals.push();
+        uint pid = 0;
 
         Schema.Text storage $text = Storage.$Texts().texts[textId];
 
@@ -48,6 +48,7 @@ contract TextDAOTest is MCTest {
         Schema.Action storage $action = $cmd.actions[0];
 
         $action.func = "saveText(uint256,uint256,bytes32[])";
+        // TODO Check if the given pid is same or not
         $action.abiParams = abi.encode(pid, textId, metadataURIs);
 
         $p.proposalMeta.cmdRank.push(); // Note: initialize for storage array
@@ -65,8 +66,6 @@ contract TextDAOTest is MCTest {
 
 
     function test_execute_successWithJoin() public {
-        uint pid = 0;
-
         Schema.Member[] memory candidates = new Schema.Member[](2);
         Schema.Member memory member1;
         member1.id = 0;
@@ -78,7 +77,9 @@ contract TextDAOTest is MCTest {
         candidates[1] = member2;
 
         Schema.DAOState storage $ = Storage.DAOState();
-        Schema.Proposal storage $p = $.proposals[pid];
+        Schema.Proposal storage $p = $.proposals.push();
+        uint pid = 0;
+
         Schema.MemberJoinProtectedStorage storage $m = Storage.$Members();
 
         $p.cmds.push(); // Note: initialize for storage array
