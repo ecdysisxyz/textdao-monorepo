@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import "@chainlink/vrf/VRFConsumerBaseV2.sol";
-import "@chainlink/vrf/interfaces/VRFCoordinatorV2Interface.sol";
 import {Schema} from "bundle/textDAO/storages/Schema.sol";
 import {BaseSlots} from "bundle/textDAO/storages/BaseSlots.sol";
 
@@ -10,14 +8,14 @@ import {BaseSlots} from "bundle/textDAO/storages/BaseSlots.sol";
  * @title StorageLib v0.1.0
  */
 library Storage {
-    bytes32 internal constant baseslot_ProposeStorage = BaseSlots.baseslot_ProposeStorage;
+    bytes32 internal constant baseslot_DAOState = BaseSlots.baseslot_DAOState;
     bytes32 internal constant baseslot_TextSaveProtectedStorage = BaseSlots.baseslot_TextSaveProtectedStorage;
     bytes32 internal constant baseslot_MemberJoinProtectedStorage = BaseSlots.baseslot_MemberJoinProtectedStorage;
     bytes32 internal constant baseslot_VRFStorage = BaseSlots.baseslot_VRFStorage;
     bytes32 internal constant baseslot_ConfigOverrideStorage = BaseSlots.baseslot_ConfigOverrideStorage;
 
     function DAOState() internal pure returns (Schema.DAOState storage $) {
-        bytes32 slot = baseslot_ProposeStorage;
+        bytes32 slot = baseslot_DAOState;
         assembly { $.slot := slot }
     }
 

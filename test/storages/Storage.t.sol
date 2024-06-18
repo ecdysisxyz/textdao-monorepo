@@ -15,10 +15,10 @@ contract StorageTest is MCTest {
             address(this)
         );
 
-        bytes32 SLOT_ProposeStorage_nextProposal = bytes32(uint256(BaseSlots.baseslot_ProposeStorage)+1);
-        assertEq(writes[0], SLOT_ProposeStorage_nextProposal);
+        bytes32 SLOT_DAOState_nextProposal = bytes32(uint256(BaseSlots.baseslot_DAOState)+1);
+        assertEq(writes[0], SLOT_DAOState_nextProposal);
         assertEq(
-            uint256(vm.load(address(this), SLOT_ProposeStorage_nextProposal)),
+            uint256(vm.load(address(this), SLOT_DAOState_nextProposal)),
             1
         );
     }

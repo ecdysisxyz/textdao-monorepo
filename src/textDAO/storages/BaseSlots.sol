@@ -2,13 +2,14 @@
 pragma solidity ^0.8.24;
 
 /**
- * StorageSlot v0.1.0
+ * @title StorageSlot v0.1.0
+ *
  * keccak256(abi.encode(uint256(keccak256("<corresponded URL in the Schema.sol>")) - 1)) & ~bytes32(uint256(0xff));
  */
 
 library BaseSlots {
-    bytes32 public constant baseslot_ProposeStorage =
-        0x9a70c69f78b954ec2ace8c62308c5ea2ed35f782ee583f10b56d88886fa99300;
+    bytes32 public constant baseslot_DAOState =
+        0xe889cf6ef4c0b3e042bbf100ec9f5916e3cdbbc8d72066eb1501d905d151d000;
     bytes32 public constant baseslot_TextSaveProtectedStorage =
         0x00c2b62a56d6a36d26f9b1ee520f3f92694a04313c94e467f10a03b080d77900;
     bytes32 public constant baseslot_MemberJoinProtectedStorage =
