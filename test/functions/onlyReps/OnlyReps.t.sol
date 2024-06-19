@@ -9,6 +9,7 @@ import {
     Storage,
     Schema
 } from "bundle/textDAO/functions/onlyReps/OnlyRepsBase.sol";
+import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
 
 contract OnlyReps is OnlyRepsBase {
     function doSomething(uint256 pid) public onlyReps(pid) returns(bool) {
@@ -46,7 +47,7 @@ contract OnlyRepsTest is MCTest {
             vm.assume(reps[i] != caller);
         }
         vm.prank(caller);
-        vm.expectRevert(OnlyRepsBase.YouAreNotTheRep.selector);
+        vm.expectRevert(TextDAOErrors.YouAreNotTheRep.selector);
         OnlyReps(target).doSomething(0);
     }
 

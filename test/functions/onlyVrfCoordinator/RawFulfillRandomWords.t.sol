@@ -7,9 +7,9 @@ import {TestUtils} from "test/fixtures/TestUtils.sol";
 import {
     RawFulfillRandomWords,
     Storage,
-    Schema,
-    OnlyVrfCoordinatorBase
+    Schema
 } from "bundle/textDAO/functions/onlyVrfCoordinator/RawFulfillRandomWords.sol";
+import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
 
 contract RawFulfillRandomWordsTest is MCTest {
 
@@ -39,7 +39,7 @@ contract RawFulfillRandomWordsTest is MCTest {
     }
 
     function test_rawFulfillRandomWords_revert_notVrfCoordinator() public {
-        vm.expectRevert(OnlyVrfCoordinatorBase.YouAreNotTheVrfCoordinator.selector);
+        vm.expectRevert(TextDAOErrors.YouAreNotTheVrfCoordinator.selector);
         RawFulfillRandomWords(target).rawFulfillRandomWords(0, new uint256[](1));
     }
 

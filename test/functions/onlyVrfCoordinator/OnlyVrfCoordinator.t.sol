@@ -8,6 +8,7 @@ import {
     OnlyVrfCoordinatorBase,
     Storage
 } from "bundle/textDAO/functions/onlyVrfCoordinator/OnlyVrfCoordinatorBase.sol";
+import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
 
 contract OnlyVrfCoordinator is OnlyVrfCoordinatorBase {
     function doSomething() public onlyVrfCoordinator returns(bool) {
@@ -30,7 +31,7 @@ contract OnlyVrfCoordinatorTest is MCTest {
 
         vm.assume(vrfCoordinator != caller);
         vm.prank(caller);
-        vm.expectRevert(OnlyVrfCoordinatorBase.YouAreNotTheVrfCoordinator.selector);
+        vm.expectRevert(TextDAOErrors.YouAreNotTheVrfCoordinator.selector);
         OnlyVrfCoordinator(target).doSomething();
     }
 

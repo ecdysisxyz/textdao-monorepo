@@ -2,13 +2,13 @@
 pragma solidity ^0.8.24;
 
 import {Storage} from "bundle/textDAO/storages/Storage.sol";
+import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
 
 abstract contract OnlyVrfCoordinatorBase {
-    error YouAreNotTheVrfCoordinator();
-
     modifier onlyVrfCoordinator() {
-        if (Storage.$VRF().config.vrfCoordinator != msg.sender) revert YouAreNotTheVrfCoordinator();
+        if (Storage.$VRF().config.vrfCoordinator != msg.sender) {
+            revert TextDAOErrors.YouAreNotTheVrfCoordinator();
+        }
         _;
     }
-
 }

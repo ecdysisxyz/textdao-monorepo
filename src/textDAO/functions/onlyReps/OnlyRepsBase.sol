@@ -2,9 +2,9 @@
 pragma solidity ^0.8.24;
 
 import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
+import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
 
 abstract contract OnlyRepsBase {
-    error YouAreNotTheRep();
 
     modifier onlyReps(uint pid) {
         // TODO ProposalNotFound
@@ -17,7 +17,7 @@ abstract contract OnlyRepsBase {
                 break;
             }
         }
-        if (!result) revert YouAreNotTheRep();
+        if (!result) revert TextDAOErrors.YouAreNotTheRep();
 
         _;
     }

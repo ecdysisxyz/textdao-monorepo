@@ -2,16 +2,12 @@
 pragma solidity ^0.8.24;
 
 import {OnlyMemberBase} from "bundle/textDAO/functions/onlyMember/OnlyMemberBase.sol";
-import { console2 } from "forge-std/console2.sol";
-import { Storage } from "bundle/textDAO/storages/Storage.sol";
-import { Schema } from "bundle/textDAO/storages/Schema.sol";
-import { Types } from "bundle/textDAO/storages/Types.sol";
+import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
+import {Types} from "bundle/textDAO/storages/Types.sol";
+import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
 import "@chainlink/vrf/interfaces/VRFCoordinatorV2Interface.sol";
 
 contract Propose is OnlyMemberBase {
-    event HeaderProposed(uint pid, Schema.Header header);
-    event CommandProposed(uint pid, Schema.Command cmd);
-
     function propose(Types.ProposalArg calldata _p) external onlyMember returns (uint proposalId) {
         Schema.DAOState storage $DAOState = Storage.DAOState();
 
@@ -20,11 +16,11 @@ contract Propose is OnlyMemberBase {
         Schema.Proposal storage $proposal = $DAOState.proposals.push();
         if (_p.header.metadataURI.length > 0) {
             $proposal.headers.push(_p.header);
-            emit HeaderProposed(proposalId, _p.header);
+            emit TextDAOEvents.HeaderProposed(proposalId, _p.header);
         }
         if (_p.cmd.actions.length > 0) {
             $proposal.cmds.push(_p.cmd);
-            emit CommandProposed(proposalId, _p.cmd);
+            emit TextDAOEvents.CommandProposed(proposalId, _p.cmd);
         }
         $proposal.proposalMeta.createdAt = block.timestamp;
 

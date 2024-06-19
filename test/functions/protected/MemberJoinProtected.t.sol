@@ -8,7 +8,7 @@ import {
     Storage,
     Schema
 } from "bundle/textDAO/functions/protected/MemberJoinProtected.sol";
-import {ProtectionBase} from "bundle/textDAO/functions/protected/ProtectionBase.sol";
+import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
 
 contract MemberJoinProtectedTest is MCTest {
 
@@ -46,7 +46,7 @@ contract MemberJoinProtectedTest is MCTest {
         vm.assume(execTime <= expiryTime);
         vm.warp(execTime);
 
-        vm.expectRevert(ProtectionBase.ProposalNotExpiredYet.selector);
+        vm.expectRevert(TextDAOErrors.ProposalNotExpiredYet.selector);
         MemberJoinProtected(address(this)).memberJoin({
             pid: 0,
             candidates: new Schema.Member[](1)
@@ -56,7 +56,7 @@ contract MemberJoinProtectedTest is MCTest {
     function test_memberJoin_revert_notTalliedYet() public {
         Storage.DAOState().proposals.push();
 
-        vm.expectRevert(ProtectionBase.ProposalNotTalliedYet.selector);
+        vm.expectRevert(TextDAOErrors.ProposalNotTalliedYet.selector);
         MemberJoinProtected(address(this)).memberJoin({
             pid: 0,
             candidates: new Schema.Member[](1)

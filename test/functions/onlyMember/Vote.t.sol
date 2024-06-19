@@ -9,7 +9,7 @@ import {
     Storage,
     Schema
 } from "bundle/textDAO/functions/onlyMember/Vote.sol";
-import {OnlyMemberBase} from "bundle/textDAO/functions/onlyMember/OnlyMemberBase.sol";
+import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
 
 contract VoteTest is MCTest {
     function setUp() public {
@@ -44,7 +44,7 @@ contract VoteTest is MCTest {
     }
 
     function test_voteHeaders_revert_notMember() public {
-        vm.expectRevert(OnlyMemberBase.YouAreNotTheMember.selector);
+        vm.expectRevert(TextDAOErrors.YouAreNotTheMember.selector);
         Vote(address(this)).voteHeaders(0, [uint(0), 1, 2]);
     }
 
@@ -75,7 +75,7 @@ contract VoteTest is MCTest {
     }
 
     function test_voteCmds_revert_notMember() public {
-        vm.expectRevert(OnlyMemberBase.YouAreNotTheMember.selector);
+        vm.expectRevert(TextDAOErrors.YouAreNotTheMember.selector);
         Vote(address(this)).voteCmds(0, [uint(0), 1, 2]);
     }
 

@@ -2,10 +2,9 @@
 pragma solidity ^0.8.24;
 
 import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
+import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
 
 abstract contract OnlyMemberBase {
-    error YouAreNotTheMember();
-
     modifier onlyMember() {
         Schema.Member[] storage $members = Storage.Members().members;
 
@@ -16,7 +15,7 @@ abstract contract OnlyMemberBase {
                 break;
             }
         }
-        if (!result) revert YouAreNotTheMember();
+        if (!result) revert TextDAOErrors.YouAreNotTheMember();
 
         _;
     }

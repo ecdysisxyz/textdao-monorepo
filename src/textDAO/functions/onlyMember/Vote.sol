@@ -3,11 +3,9 @@ pragma solidity ^0.8.24;
 
 import {OnlyMemberBase} from "bundle/textDAO/functions/onlyMember/OnlyMemberBase.sol";
 import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
+import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
 
 contract Vote is OnlyMemberBase {
-    event HeaderScored(uint pid, uint headerId, uint currentScore);
-    event CmdScored(uint pid, uint cmdId, uint currentScore);
-
     function voteHeaders(uint pid, uint[3] calldata headerIds) external onlyMember returns (bool) {
         // TODO ProposalNotFound
         Schema.Proposal storage $p = Storage.DAOState().proposals[pid];
@@ -16,19 +14,19 @@ contract Vote is OnlyMemberBase {
 
         if ($p.headers[0].id == headerIds[0]) {
             $p.headers[headerIds[0]].currentScore += 3;
-            emit HeaderScored(pid, headerIds[0], $p.headers[headerIds[0]].currentScore);
+            emit TextDAOEvents.HeaderScored(pid, headerIds[0], $p.headers[headerIds[0]].currentScore);
         } else if ($p.headers[1].id == headerIds[0]) {
             $p.headers[headerIds[0]].currentScore += 3;
             $p.headers[headerIds[1]].currentScore += 2;
-            emit HeaderScored(pid, headerIds[0], $p.headers[headerIds[0]].currentScore);
-            emit HeaderScored(pid, headerIds[1], $p.headers[headerIds[1]].currentScore);
+            emit TextDAOEvents.HeaderScored(pid, headerIds[0], $p.headers[headerIds[0]].currentScore);
+            emit TextDAOEvents.HeaderScored(pid, headerIds[1], $p.headers[headerIds[1]].currentScore);
         } else {
             $p.headers[headerIds[0]].currentScore += 3;
             $p.headers[headerIds[1]].currentScore += 2;
             $p.headers[headerIds[2]].currentScore += 1;
-            emit HeaderScored(pid, headerIds[0], $p.headers[headerIds[0]].currentScore);
-            emit HeaderScored(pid, headerIds[1], $p.headers[headerIds[1]].currentScore);
-            emit HeaderScored(pid, headerIds[2], $p.headers[headerIds[2]].currentScore);
+            emit TextDAOEvents.HeaderScored(pid, headerIds[0], $p.headers[headerIds[0]].currentScore);
+            emit TextDAOEvents.HeaderScored(pid, headerIds[1], $p.headers[headerIds[1]].currentScore);
+            emit TextDAOEvents.HeaderScored(pid, headerIds[2], $p.headers[headerIds[2]].currentScore);
         }
     }
 
@@ -40,19 +38,19 @@ contract Vote is OnlyMemberBase {
 
         if ($p.cmds[0].id == cmdIds[0]) {
             $p.cmds[cmdIds[0]].currentScore += 3;
-            emit CmdScored(pid, cmdIds[0], $p.cmds[cmdIds[0]].currentScore);
+            emit TextDAOEvents.CmdScored(pid, cmdIds[0], $p.cmds[cmdIds[0]].currentScore);
         } else if ($p.cmds[1].id == cmdIds[0]) {
             $p.cmds[cmdIds[0]].currentScore += 3;
             $p.cmds[cmdIds[1]].currentScore += 2;
-            emit CmdScored(pid, cmdIds[0], $p.cmds[cmdIds[0]].currentScore);
-            emit CmdScored(pid, cmdIds[1], $p.cmds[cmdIds[1]].currentScore);
+            emit TextDAOEvents.CmdScored(pid, cmdIds[0], $p.cmds[cmdIds[0]].currentScore);
+            emit TextDAOEvents.CmdScored(pid, cmdIds[1], $p.cmds[cmdIds[1]].currentScore);
         } else {
             $p.cmds[cmdIds[0]].currentScore += 3;
             $p.cmds[cmdIds[1]].currentScore += 2;
             $p.cmds[cmdIds[2]].currentScore += 1;
-            emit CmdScored(pid, cmdIds[0], $p.cmds[cmdIds[0]].currentScore);
-            emit CmdScored(pid, cmdIds[1], $p.cmds[cmdIds[1]].currentScore);
-            emit CmdScored(pid, cmdIds[2], $p.cmds[cmdIds[2]].currentScore);
+            emit TextDAOEvents.CmdScored(pid, cmdIds[0], $p.cmds[cmdIds[0]].currentScore);
+            emit TextDAOEvents.CmdScored(pid, cmdIds[1], $p.cmds[cmdIds[1]].currentScore);
+            emit TextDAOEvents.CmdScored(pid, cmdIds[2], $p.cmds[cmdIds[2]].currentScore);
         }
     }
 

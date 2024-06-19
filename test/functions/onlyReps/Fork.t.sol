@@ -8,9 +8,9 @@ import {
     Fork,
     Storage,
     Schema,
-    Types,
-    OnlyRepsBase
+    Types
 } from "bundle/textDAO/functions/onlyReps/Fork.sol";
+import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
 
 contract ForkTest is MCTest {
 
@@ -43,7 +43,7 @@ contract ForkTest is MCTest {
         p.header.metadataURI = "Qc.....xh";
         p.cmd.actions = new Schema.Action[](1);
 
-        vm.expectRevert(OnlyRepsBase.YouAreNotTheRep.selector);
+        vm.expectRevert(TextDAOErrors.YouAreNotTheRep.selector);
         Fork(address(this)).fork(0, p);
     }
 

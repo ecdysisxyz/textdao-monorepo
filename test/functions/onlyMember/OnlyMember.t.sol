@@ -6,7 +6,8 @@ import {MCTest} from "@devkit/Flattened.sol";
 import {
     OnlyMemberBase,
     Storage,
-    Schema
+    Schema,
+    TextDAOErrors
 } from "bundle/textDAO/functions/onlyMember/OnlyMemberBase.sol";
 import {TestUtils} from "test/fixtures/TestUtils.sol";
 
@@ -39,7 +40,7 @@ contract OnlyMemberTest is MCTest {
 
     function test_onlyMember_revert_notMember(address caller) public {
         vm.prank(caller);
-        vm.expectRevert(OnlyMemberBase.YouAreNotTheMember.selector);
+        vm.expectRevert(TextDAOErrors.YouAreNotTheMember.selector);
         OnlyMember(target).doSomething();
     }
 

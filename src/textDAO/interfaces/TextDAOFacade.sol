@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import { Schema } from "bundle/textDAO/storages/Schema.sol";
-import { Types } from "bundle/textDAO/storages/Types.sol";
+import {Schema} from "bundle/textDAO/storages/Schema.sol";
+import {Types} from "bundle/textDAO/storages/Types.sol";
 import {Getter} from "bundle/textDAO/functions/Getter.sol";
+import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
+import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
 
-contract TextDAOFacade {
+contract TextDAOFacade is TextDAOErrors, TextDAOEvents {
     function clone(address _target) public {}
     function initialize(Schema.Member[] calldata initialMembers, Schema.DeliberationConfig calldata pConfig) public {}
     function propose(Types.ProposalArg calldata _p) public returns (uint) {}
