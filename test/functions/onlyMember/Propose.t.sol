@@ -26,12 +26,6 @@ import {VRFCoordinatorV2Interface} from "@chainlink/vrf/interfaces/VRFCoordinato
  */
 contract ProposeTest is MCTest {
 
-    struct StateDiff {
-        uint256 vrfRequestId;
-        uint256 vrfProposalId;
-        uint256 vrfNextId;
-    }
-
     function setUp() public {
         _use(Propose.propose.selector, address(new Propose()));
     }
@@ -74,12 +68,8 @@ contract ProposeTest is MCTest {
                 $vrf.config.numWords
             )));
 
-        // Store pre-state
-        StateDiff memory _preState = StateDiff({
-            vrfRequestId: $vrf.requests[$vrf.nextId].requestId,
-            vrfProposalId: $vrf.requests[$vrf.nextId].proposalId,
-            vrfNextId: $vrf.nextId
-        });
+        // Assert pre-state
+        assertEq($vrf.requests[_requestId].proposalId, 0);
 
         // Act & Record
         uint256 _proposedTime = block.timestamp;
@@ -87,12 +77,9 @@ contract ProposeTest is MCTest {
         uint256 pid = Propose(address(this)).propose(p);
         (, bytes32[] memory writes) = vm.accesses(address(this));
 
-        assertEq(writes.length, 10);
+        assertEq(writes.length, 9);
 
-        assertEq(_preState.vrfRequestId, 0);
-        assertEq($vrf.requests[_preState.vrfRequestId].requestId, _requestId);
-        assertEq($vrf.requests[_preState.vrfRequestId].proposalId, pid);
-        assertEq(_preState.vrfNextId + 1, $vrf.nextId);
+        assertEq($vrf.requests[_requestId].proposalId, pid);
 
         Schema.Proposal storage $p = Storage.DAOState().proposals[pid];
 
@@ -144,24 +131,18 @@ contract ProposeTest is MCTest {
             ))
         );
 
-        // Store pre-state
-        StateDiff memory _preState = StateDiff({
-            vrfRequestId: $vrf.requests[$vrf.nextId].requestId,
-            vrfProposalId: $vrf.requests[$vrf.nextId].proposalId,
-            vrfNextId: $vrf.nextId
-        });
+        // Assert pre-state
+        assertEq($vrf.requests[_requestId].proposalId, 0);
 
         // Act & Record
         vm.record();
         uint pid = Propose(address(this)).propose(p);
         (, bytes32[] memory writes) = vm.accesses(address(this));
 
-        assertEq(writes.length, 10);
+        assertEq(writes.length, 9);
 
-        assertEq(_preState.vrfRequestId, 0);
-        assertEq($vrf.requests[_preState.vrfRequestId].requestId, _requestId);
-        assertEq($vrf.requests[_preState.vrfRequestId].proposalId, pid);
-        assertEq(_preState.vrfNextId + 1, $vrf.nextId);
+        assertEq($vrf.requests[_requestId].proposalId, pid);
+        // assertEq(_preState.vrfNextId + 1, $vrf.nextId);
 
         Schema.Proposal storage $p = Storage.DAOState().proposals[pid];
 

@@ -27,8 +27,8 @@ contract TextDAOFacade {
     function getTexts() external view returns (Schema.Text[] memory) {}
     function getMember(uint id) external view returns (Schema.Member memory) {}
     function getMembers() external view returns (Schema.Member[] memory) {}
-    function getVRFRequest(uint id) external view returns (Schema.Request memory) {}
-    function getNextVRFId() external view returns (uint) {}
+    // function getVRFRequest(uint id) external view returns (Schema.Request memory) {}
+    // function getNextVRFId() external view returns (uint) {}
     function getSubscriptionId() external view returns (uint64) {}
     function getVRFConfig() external view returns (Schema.VRFConfig memory) {}
     function getConfigOverride(bytes4 sig) external view returns (Schema.ConfigOverride memory) {}

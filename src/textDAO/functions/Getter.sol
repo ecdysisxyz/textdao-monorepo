@@ -48,13 +48,13 @@ contract Getter {
         return Storage.Members().members;
     }
 
-    function getVRFRequest(uint id) external view returns (Schema.Request memory) {
-        return Storage.$VRF().requests[id];
-    }
+    // function getVRFRequest(uint id) external view returns (Schema.Request memory) {
+    //     return Storage.$VRF().requests[id];
+    // }
 
-    function getNextVRFId() external view returns (uint) {
-        return Storage.$VRF().nextId;
-    }
+    // function getNextVRFId() external view returns (uint) {
+    //     return Storage.$VRF().nextId;
+    // }
 
     function getSubscriptionId() external view returns (uint64) {
         return Storage.$VRF().subscriptionId;

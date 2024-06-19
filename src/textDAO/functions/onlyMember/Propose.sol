@@ -55,9 +55,11 @@ contract Propose is OnlyMemberBase {
                 $vrf.config.numWords
             );
 
-            $vrf.requests[$vrf.nextId].requestId = requestId;
-            $vrf.requests[$vrf.nextId].proposalId = proposalId;
-            $vrf.nextId++;
+            $proposal.proposalMeta.vrfRequestId = requestId;
+            $vrf.requests[requestId].proposalId = proposalId;
+            // $vrf.requests[$vrf.nextId].requestId = requestId;
+            // $vrf.requests[$vrf.nextId].proposalId = proposalId;
+            // $vrf.nextId++;
         } else {
             for (uint i; i < $members.length; ++i) {
                 $proposal.proposalMeta.reps.push($members[i].addr);

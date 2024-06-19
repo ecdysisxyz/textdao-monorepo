@@ -46,6 +46,7 @@ library Schema {
         address[] reps;
         uint nextRepId;
         uint createdAt;
+        uint vrfRequestId;
     }
 
 
@@ -70,14 +71,13 @@ library Schema {
 
     /// @custom:storage-location erc7201:textDAO.VRFStorage
     struct VRFStorage {
-        mapping(uint => Request) requests;
-        uint nextId;
+        mapping(uint requestId => VRFRequest) requests;
         uint64 subscriptionId;
         VRFConfig config;
     }
-    struct Request {
-        uint requestId;
+    struct VRFRequest {
         uint proposalId;
+        uint256[] randomWords;
     }
     struct VRFConfig {
         address vrfCoordinator;
@@ -96,6 +96,7 @@ library Schema {
     struct ConfigOverride {
         uint quorumScore;
     }
+
 
     /// @custom:storage-location erc7201:textDAO.TagStorage
     struct TagStorage {

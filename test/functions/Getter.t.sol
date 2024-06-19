@@ -19,8 +19,8 @@ contract GetterTest is MCTest {
         _use(Getter.getTexts.selector, getter);
         _use(Getter.getMember.selector, getter);
         _use(Getter.getMembers.selector, getter);
-        _use(Getter.getVRFRequest.selector, getter);
-        _use(Getter.getNextVRFId.selector, getter);
+        // _use(Getter.getVRFRequest.selector, getter);
+        // _use(Getter.getNextVRFId.selector, getter);
         _use(Getter.getSubscriptionId.selector, getter);
         _use(Getter.getVRFConfig.selector, getter);
         _use(Getter.getConfigOverride.selector, getter);
@@ -85,16 +85,16 @@ contract GetterTest is MCTest {
     function test_VRF_success() public {
         Schema.VRFStorage storage $ = Storage.$VRF();
 
-        $.requests[1].requestId = 1;
-        $.nextId = 1;
+        // $.requests[1].requestId = 1;
+        // $.nextId = 1;
         $.subscriptionId = 1;
         $.config.vrfCoordinator = address(1);
 
-        Schema.Request memory resRequest = Getter(address(this)).getVRFRequest(1);
-        assertEq(resRequest.requestId, 1);
+        // Schema.Request memory resRequest = Getter(address(this)).getVRFRequest(1);
+        // assertEq(resRequest.requestId, 1);
 
-        uint resNextVRFId = Getter(address(this)).getNextVRFId();
-        assertEq(resNextVRFId, 1);
+        // uint resNextVRFId = Getter(address(this)).getNextVRFId();
+        // assertEq(resNextVRFId, 1);
 
         uint resSubscriptionIdId = Getter(address(this)).getSubscriptionId();
         assertEq(resSubscriptionIdId, 1);

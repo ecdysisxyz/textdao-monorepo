@@ -136,7 +136,8 @@ contract TextDAOScenarioTest is MCTest {
             nextCmdTallyFrom: 0,
             reps: new address[](1),
             nextRepId: 0,
-            createdAt: block.timestamp
+            createdAt: block.timestamp,
+            vrfRequestId: 0
         });
         proposalMeta.reps[0] = address(this);
         proposalMeta.nextRepId = 1;
