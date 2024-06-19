@@ -34,7 +34,7 @@ library Schema {
         uint currentScore;
     }
     struct Action {
-        string func;
+        string funcSig;
         bytes abiParams;
     }
     struct ProposalMeta {

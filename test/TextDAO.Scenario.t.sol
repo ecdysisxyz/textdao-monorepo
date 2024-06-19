@@ -44,7 +44,7 @@ contract TextDAOScenarioTest is MCTest {
         _p.header.metadataURI = "Qm...";
         _p.cmd.actions = new Schema.Action[](1);
         _p.cmd.actions[0] = Schema.Action({
-            func: "memberJoin(uint256,(address,string)[])",
+            funcSig: "memberJoin(uint256,(address,string)[])",
             abiParams: abi.encode(pid1, new Schema.Member[](1))
         });
 
@@ -52,7 +52,7 @@ contract TextDAOScenarioTest is MCTest {
         _p2.header.metadataURI = "Qm.......";
         _p2.cmd.actions = new Schema.Action[](1);
         _p2.cmd.actions[0] = Schema.Action({
-            func: "saveText(uint256,uint256,string[])",
+            funcSig: "saveText(uint256,uint256,string[])",
             abiParams: abi.encode(1, 1, new string[](1))
         });
 
@@ -60,7 +60,7 @@ contract TextDAOScenarioTest is MCTest {
         _p3.header.metadataURI = "Qm.......";
         _p3.cmd.actions = new Schema.Action[](1);
         _p3.cmd.actions[0] = Schema.Action({
-            func: "saveText(uint256,uint256,string[])",
+            funcSig: "saveText(uint256,uint256,string[])",
             abiParams: abi.encode(pid0, new Schema.Member[](1)) // TODO Oops...
         });
 
@@ -162,7 +162,7 @@ contract TextDAOScenarioTest is MCTest {
         });
 
         proposalArg.cmd.actions[0] = Schema.Action({
-            func: "memberJoin(uint256,(address,string)[])",
+            funcSig: "memberJoin(uint256,(address,string)[])",
             abiParams: abi.encode(plannedProposalId, candidates)
         });
         uint proposalId = textDAO.propose(proposalArg);

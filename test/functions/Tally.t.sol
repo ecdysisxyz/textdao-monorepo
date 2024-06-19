@@ -28,7 +28,7 @@ contract TallyTest is MCTest {
             $cmds.push();
             $cmds[i].actions.push();
             Schema.Action storage $action = $cmds[i].actions[0];
-            $action.func = "tally(uint256)";
+            $action.funcSig = "tally(uint256)";
         }
         $cmds.push();
 
@@ -70,7 +70,7 @@ contract TallyTest is MCTest {
             $cmds.push();
             $cmds[i].actions.push();
             Schema.Action storage $action = $cmds[i].actions[0];
-            $action.func = "tally(uint256)";
+            $action.funcSig = "tally(uint256)";
         }
         $cmds.push();
 

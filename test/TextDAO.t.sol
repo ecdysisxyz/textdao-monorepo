@@ -45,7 +45,7 @@ contract TextDAOTest is MCTest {
         $cmd.actions.push(); // Note: initialize for storage array
         Schema.Action storage $action = $cmd.actions[0];
 
-        $action.func = "saveText(uint256,uint256,string[])";
+        $action.funcSig = "saveText(uint256,uint256,string[])";
         // TODO Check if the given pid is same or not
         $action.abiParams = abi.encode(pid, textId, metadataURIs);
 
@@ -86,7 +86,7 @@ contract TextDAOTest is MCTest {
         $cmd.actions.push(); // Note: initialize for storage array
         Schema.Action storage $action = $cmd.actions[0];
 
-        $action.func = "memberJoin(uint256,(address,string)[])";
+        $action.funcSig = "memberJoin(uint256,(address,string)[])";
         $action.abiParams = abi.encode(pid, candidates);
 
         $p.proposalMeta.cmdRank.push(); // Note: initialize for storage array

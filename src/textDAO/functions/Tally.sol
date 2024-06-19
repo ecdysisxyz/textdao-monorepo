@@ -37,7 +37,7 @@ contract Tally {
         vars.cmdCondSum;
         for (uint i; i < $topCmd.actions.length; i++) {
             Schema.Action storage $action = $topCmd.actions[i];
-            uint quorumOverride = $configOverride.overrides[SelectorLib.selector($action.func)].quorumScore;
+            uint quorumOverride = $configOverride.overrides[SelectorLib.selector($action.funcSig)].quorumScore;
             if (quorumOverride > 0) {
                 vars.cmdConds[i] = cmdTopScore >= quorumOverride; // Special quorum
             } else {
@@ -102,7 +102,7 @@ contract Tally {
 
             $p.cmds[vars.cmdRank2].id = vars.topCommands[i].id;
             for (uint j; j < vars.topCommands[i].actions.length; j++) {
-                $p.cmds[vars.cmdRank2].actions[j].func = vars.topCommands[i].actions[j].func;
+                $p.cmds[vars.cmdRank2].actions[j].funcSig = vars.topCommands[i].actions[j].funcSig;
                 $p.cmds[vars.cmdRank2].actions[j].abiParams = vars.topCommands[i].actions[j].abiParams;
             }
             $p.cmds[vars.cmdRank2].currentScore = vars.topCommands[i].currentScore;

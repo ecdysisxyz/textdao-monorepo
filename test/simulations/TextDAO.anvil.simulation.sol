@@ -72,7 +72,7 @@ contract TextDAOAnvilSimulation is MCTest {
         });
 
         proposalArg.cmd.actions[0] = Schema.Action({
-            func: "memberJoin(uint256,(address,string)[])",
+            funcSig: "memberJoin(uint256,(address,string)[])",
             abiParams: abi.encode(plannedProposalId, candidates)
         });
         uint proposalId = textDAO.propose(proposalArg);

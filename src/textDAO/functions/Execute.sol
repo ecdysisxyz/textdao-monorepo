@@ -23,7 +23,7 @@ contract Execute {
             Schema.Action memory action = $actions[i];
             // Note: Is msg.value of this proxy consistent among all delegatecalls?
             (bool success, bytes memory data) = address(this).delegatecall(bytes.concat(
-                bytes4(keccak256(bytes(action.func))),
+                bytes4(keccak256(bytes(action.funcSig))),
                 action.abiParams
             ));
 
