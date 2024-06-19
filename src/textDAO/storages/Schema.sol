@@ -36,6 +36,12 @@ library Schema {
     struct Action {
         string funcSig;
         bytes abiParams;
+        ActionStatus status;
+    }
+    enum ActionStatus {
+        Proposed,
+        Approved,
+        Executed
     }
     struct ProposalMeta {
         uint currentScore;

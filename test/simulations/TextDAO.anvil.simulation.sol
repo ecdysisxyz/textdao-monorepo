@@ -73,7 +73,8 @@ contract TextDAOAnvilSimulation is MCTest {
 
         proposalArg.cmd.actions[0] = Schema.Action({
             funcSig: "memberJoin(uint256,(address,string)[])",
-            abiParams: abi.encode(plannedProposalId, candidates)
+            abiParams: abi.encode(plannedProposalId, candidates),
+            status: Schema.ActionStatus.Proposed
         });
         uint proposalId = textDAO.propose(proposalArg);
         require(plannedProposalId == proposalId, "Proposal IDs do not match");

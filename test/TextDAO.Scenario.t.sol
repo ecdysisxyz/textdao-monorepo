@@ -45,7 +45,8 @@ contract TextDAOScenarioTest is MCTest {
         _p.cmd.actions = new Schema.Action[](1);
         _p.cmd.actions[0] = Schema.Action({
             funcSig: "memberJoin(uint256,(address,string)[])",
-            abiParams: abi.encode(pid1, new Schema.Member[](1))
+            abiParams: abi.encode(pid1, new Schema.Member[](1)),
+            status: Schema.ActionStatus.Proposed
         });
 
         Types.ProposalArg memory _p2;
@@ -53,7 +54,8 @@ contract TextDAOScenarioTest is MCTest {
         _p2.cmd.actions = new Schema.Action[](1);
         _p2.cmd.actions[0] = Schema.Action({
             funcSig: "saveText(uint256,uint256,string[])",
-            abiParams: abi.encode(1, 1, new string[](1))
+            abiParams: abi.encode(1, 1, new string[](1)),
+            status: Schema.ActionStatus.Proposed
         });
 
         Types.ProposalArg memory _p3;
@@ -61,7 +63,8 @@ contract TextDAOScenarioTest is MCTest {
         _p3.cmd.actions = new Schema.Action[](1);
         _p3.cmd.actions[0] = Schema.Action({
             funcSig: "saveText(uint256,uint256,string[])",
-            abiParams: abi.encode(pid0, new Schema.Member[](1)) // TODO Oops...
+            abiParams: abi.encode(pid0, new Schema.Member[](1)), // TODO Oops...
+            status: Schema.ActionStatus.Proposed
         });
 
         textDAO.fork(pid0, _p);
@@ -163,7 +166,8 @@ contract TextDAOScenarioTest is MCTest {
 
         proposalArg.cmd.actions[0] = Schema.Action({
             funcSig: "memberJoin(uint256,(address,string)[])",
-            abiParams: abi.encode(plannedProposalId, candidates)
+            abiParams: abi.encode(plannedProposalId, candidates),
+            status: Schema.ActionStatus.Proposed
         });
         uint proposalId = textDAO.propose(proposalArg);
         require(plannedProposalId == proposalId, "Proposal IDs do not match");
