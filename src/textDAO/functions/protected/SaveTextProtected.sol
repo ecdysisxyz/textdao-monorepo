@@ -8,12 +8,13 @@ import { ProtectionBase } from "bundle/textDAO/functions/protected/ProtectionBas
 contract SaveTextProtected is ProtectionBase {
     event TextSaved(uint pid, Schema.Text text);
 
-    function saveText(uint pid, uint textId, bytes32[] memory metadataURIs) public protected(pid) returns (bool) {
-        Schema.TextSaveProtectedStorage storage $ = Storage.$Texts();
-        Schema.Text storage $text = $.texts[textId];
-        $text.id = $.nextTextId;
-        $text.metadataURIs = metadataURIs;
-        $.nextTextId++;
+    // TODO CRUD
+    function saveText(uint pid, uint textId, string[] memory metadataURIs) public protected(pid) returns (bool) {
+        Schema.Text storage $text = Storage.Texts().texts.push();
+
+        for (uint i; i < metadataURIs.length; ++i) {
+            $text.metadataURIs.push(metadataURIs[i]);
+        }
         emit TextSaved(pid, $text);
     }
 }

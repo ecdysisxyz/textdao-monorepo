@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {MCTest} from "@devkit/Flattened.sol";
+import {MCTest, console2} from "@devkit/Flattened.sol";
 
 import { Propose } from "bundle/textDAO/functions/onlyMember/Propose.sol";
 import { Fork } from "bundle/textDAO/functions/onlyReps/Fork.sol";
@@ -28,18 +28,16 @@ contract TextDAOTest is MCTest {
     }
 
     function test_execute_successWithText() public {
-        uint textId = 0;
-
         // Note: Array variable is only available as function args.
-        bytes32[] memory metadataURIs = new bytes32[](2);
-        metadataURIs[0] = bytes32(uint256(1));
-        metadataURIs[1] = bytes32(uint256(2));
+        string[] memory metadataURIs = new string[](2);
+        metadataURIs[0] = "1";
+        metadataURIs[1] = "2";
 
         Schema.DAOState storage $ = Storage.DAOState();
         Schema.Proposal storage $p = $.proposals.push();
         uint pid = 0;
 
-        Schema.Text storage $text = Storage.$Texts().texts[textId];
+        uint textId = 0;
 
         $p.cmds.push(); // Note: initialize for storage array
         Schema.Command storage $cmd = $p.cmds[0];
@@ -47,7 +45,7 @@ contract TextDAOTest is MCTest {
         $cmd.actions.push(); // Note: initialize for storage array
         Schema.Action storage $action = $cmd.actions[0];
 
-        $action.func = "saveText(uint256,uint256,bytes32[])";
+        $action.func = "saveText(uint256,uint256,string[])";
         // TODO Check if the given pid is same or not
         $action.abiParams = abi.encode(pid, textId, metadataURIs);
 
@@ -58,8 +56,10 @@ contract TextDAOTest is MCTest {
         $.config.expiryDuration = 0;
         $p.proposalMeta.headerRank.push(); // Note: initialize for storage array
 
-        assertEq($text.metadataURIs.length, 0);
+        // assertEq($text.metadataURIs.length, 0);
         Execute(address(this)).execute(pid);
+
+        Schema.Text storage $text = Storage.Texts().texts[textId];
         assertGt($text.metadataURIs.length, 0);
     }
 

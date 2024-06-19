@@ -48,14 +48,13 @@ library Schema {
         uint createdAt;
     }
 
-    /// @custom:storage-location erc7201:textDAO.TextSaveProtectedStorage
-    struct TextSaveProtectedStorage {
-        mapping(uint => Text) texts;
-        uint nextTextId;
+
+    /// @custom:storage-location erc7201:textDAO.Texts
+    struct Texts {
+        Text[] texts;
     }
     struct Text {
-        uint id;
-        bytes32[] metadataURIs;
+        string[] metadataURIs;
     }
 
 

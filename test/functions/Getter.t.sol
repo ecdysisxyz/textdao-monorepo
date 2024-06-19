@@ -16,7 +16,7 @@ contract GetterTest is MCTest {
         _use(Getter.getProposalCommand.selector, getter);
         _use(Getter.getProposalsConfig.selector, getter);
         _use(Getter.getText.selector, getter);
-        _use(Getter.getNextTextId.selector, getter);
+        _use(Getter.getTexts.selector, getter);
         _use(Getter.getMember.selector, getter);
         _use(Getter.getMembers.selector, getter);
         _use(Getter.getVRFRequest.selector, getter);
@@ -49,16 +49,21 @@ contract GetterTest is MCTest {
     }
 
     function test_Texts_success() public {
-        Schema.TextSaveProtectedStorage storage $ = Storage.$Texts();
+        Schema.Texts storage $ = Storage.Texts();
 
-        $.texts[1].id = 1;
-        $.nextTextId = 1;
+        string[] memory _metadataURIs = new string[](2);
+        _metadataURIs[0] = "pseudo metadata";
+        _metadataURIs[1] = "metadata2";
+        $.texts.push().metadataURIs = _metadataURIs;
 
-        Schema.Text memory resText = Getter(address(this)).getText(1);
-        assertEq(resText.id, 1);
+        Schema.Text memory _resText = Getter(target).getText(0);
+        assertEq(
+            keccak256(abi.encode(_resText.metadataURIs)),
+            keccak256(abi.encode(_metadataURIs))
+        );
 
-        uint resNextTextId = Getter(address(this)).getNextTextId();
-        assertEq(resNextTextId, 1);
+        Schema.Text[] memory _resTexts = Getter(target).getTexts();
+        assertEq(_resTexts.length, 1);
     }
 
     function test_Members_success() public {

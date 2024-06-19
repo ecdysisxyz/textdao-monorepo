@@ -52,15 +52,15 @@ contract TextDAOScenarioTest is MCTest {
         _p2.header.metadataURI = "Qm.......";
         _p2.cmd.actions = new Schema.Action[](1);
         _p2.cmd.actions[0] = Schema.Action({
-            func: "saveText(uint256,uint256,bytes32[])",
-            abiParams: abi.encode(1, 1, new bytes32[](1))
+            func: "saveText(uint256,uint256,string[])",
+            abiParams: abi.encode(1, 1, new string[](1))
         });
 
         Types.ProposalArg memory _p3;
         _p3.header.metadataURI = "Qm.......";
         _p3.cmd.actions = new Schema.Action[](1);
         _p3.cmd.actions[0] = Schema.Action({
-            func: "saveText(uint256,uint256,bytes32[])",
+            func: "saveText(uint256,uint256,string[])",
             abiParams: abi.encode(pid0, new Schema.Member[](1)) // TODO Oops...
         });
 

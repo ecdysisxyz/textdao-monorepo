@@ -44,7 +44,7 @@ library DeployLib {
         mc.use("getProposalCommand", Getter.getProposalCommand.selector, getter);
         mc.use("getProposalsConfig", Getter.getProposalsConfig.selector, getter);
         mc.use("getText", Getter.getText.selector, getter);
-        mc.use("getNextTextId", Getter.getNextTextId.selector, getter);
+        mc.use("getTexts", Getter.getTexts.selector, getter);
         mc.use("getMember", Getter.getMember.selector, getter);
         mc.use("getMembers", Getter.getMembers.selector, getter);
         mc.use("getVRFRequest", Getter.getVRFRequest.selector, getter);

@@ -24,7 +24,7 @@ contract TextDAOFacade {
     function getProposalCommand(uint pid, uint cid) external view returns (Schema.Command memory) {}
     function getProposalsConfig() external view returns (Schema.DeliberationConfig memory) {}
     function getText(uint id) external view returns (Schema.Text memory) {}
-    function getNextTextId() external view returns (uint) {}
+    function getTexts() external view returns (Schema.Text[] memory) {}
     function getMember(uint id) external view returns (Schema.Member memory) {}
     function getMembers() external view returns (Schema.Member[] memory) {}
     function getVRFRequest(uint id) external view returns (Schema.Request memory) {}

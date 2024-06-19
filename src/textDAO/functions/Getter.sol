@@ -33,11 +33,11 @@ contract Getter {
     }
 
     function getText(uint id) external view returns (Schema.Text memory) {
-        return Storage.$Texts().texts[id];
+        return Storage.Texts().texts[id];
     }
 
-    function getNextTextId() external view returns (uint) {
-        return Storage.$Texts().nextTextId;
+    function getTexts() external view returns (Schema.Text[] memory) {
+        return Storage.Texts().texts;
     }
 
     function getMember(uint memberId) external view returns (Schema.Member memory) {
