@@ -15,7 +15,7 @@ library BaseSlots {
     bytes32 public constant baseslot_Members =
         0x8972abadfc8727f472fb0b6beb8d30155bd57415f49dc6c94e9cecdec0ed9200;
     bytes32 public constant baseslot_VRFStorage =
-        0xe4fa6871814422bfe1d10a118a3483c970f3cc6a461f81c9d5701005cfdaf400;
+        0xbacc45d94f3c311c83de7e11ee1a81c3735ba264fe339411bbcc7be5e4317d00;
     bytes32 public constant baseslot_ConfigOverrideStorage =
         0x147a311fe1db87247fe76cc1e6db3134e5d52a59e0824f018dad572e05b14000;
 }

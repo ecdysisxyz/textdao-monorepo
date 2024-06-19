@@ -7,6 +7,15 @@ import {Storage} from "bundle/textdao/storages/Storage.sol";
 import {BaseSlots} from "bundle/textdao/storages/BaseSlots.sol";
 
 contract StorageTest is MCTest {
+    function _erc7201(string memory namespace) internal returns(bytes32) {
+        return keccak256(abi.encode(uint256(keccak256(bytes(namespace))) - 1)) & ~bytes32(uint256(0xff));
+    }
+    function test_baseSlots() public {
+        assertEq(BaseSlots.baseslot_DAOState, _erc7201("textDAO.DAOState"));
+        assertEq(BaseSlots.baseslot_Texts, _erc7201("textDAO.Texts"));
+        assertEq(BaseSlots.baseslot_Members, _erc7201("textDAO.Members"));
+        assertEq(BaseSlots.baseslot_VRFStorage, _erc7201("textDAO.VRFStorage"));
+    }
 
     function test_DAOState() public {
         vm.record();
