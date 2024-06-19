@@ -44,7 +44,6 @@ library Schema {
         uint nextHeaderTallyFrom;
         uint nextCmdTallyFrom;
         address[] reps;
-        uint nextRepId;
         uint createdAt;
         uint vrfRequestId;
     }

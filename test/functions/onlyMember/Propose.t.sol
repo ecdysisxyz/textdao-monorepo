@@ -90,7 +90,6 @@ contract ProposeTest is MCTest {
         assertEq($p.proposalMeta.nextHeaderTallyFrom, 0);
         assertEq($p.proposalMeta.nextCmdTallyFrom, 0);
         assertEq($p.proposalMeta.reps.length, 0);
-        assertEq($p.proposalMeta.nextRepId, 0);
         assertEq($p.proposalMeta.createdAt, _proposedTime);
         assertEq($p.headers[0].metadataURI, p.header.metadataURI);
     }

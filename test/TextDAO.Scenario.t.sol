@@ -135,12 +135,10 @@ contract TextDAOScenarioTest is MCTest {
             nextHeaderTallyFrom: 0,
             nextCmdTallyFrom: 0,
             reps: new address[](1),
-            nextRepId: 0,
             createdAt: block.timestamp,
             vrfRequestId: 0
         });
         proposalMeta.reps[0] = address(this);
-        proposalMeta.nextRepId = 1;
         Types.ProposalArg memory proposalArg = Types.ProposalArg({
             header: Schema.Header({
                 id: 0,

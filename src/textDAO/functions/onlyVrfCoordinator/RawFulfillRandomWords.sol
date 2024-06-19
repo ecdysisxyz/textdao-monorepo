@@ -16,7 +16,6 @@ contract RawFulfillRandomWords is VRFConsumerV2Interface, OnlyVrfCoordinatorBase
         for (uint i; i < randomWords.length; i++) {
             uint pickedIndex = uint256(randomWords[i]) % $members.length;
             $p.proposalMeta.reps.push($members[pickedIndex].addr);
-            $p.proposalMeta.nextRepId++;
         }
     }
 }
