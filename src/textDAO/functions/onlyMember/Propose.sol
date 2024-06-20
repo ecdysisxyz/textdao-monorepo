@@ -6,14 +6,17 @@ import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
 import {Types} from "bundle/textDAO/storages/Types.sol";
 import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
 import "@chainlink/vrf/interfaces/VRFCoordinatorV2Interface.sol";
+import {DeliberationLib} from "bundle/textDAO/storages/utils/DeliberationLib.sol";
 
 contract Propose is OnlyMemberBase {
+    using DeliberationLib for Schema.Deliberation;
+
     function propose(Types.ProposalArg calldata _p) external onlyMember returns (uint proposalId) {
-        Schema.DAOState storage $DAOState = Storage.DAOState();
+        Schema.Deliberation storage $Deliberation = Storage.Deliberation();
 
-        proposalId = $DAOState.proposals.length;
+        proposalId = $Deliberation.proposals.length;
 
-        Schema.Proposal storage $proposal = $DAOState.proposals.push();
+        Schema.Proposal storage $proposal = $Deliberation.createProposal();
         if (_p.header.metadataURI.length > 0) {
             $proposal.headers.push(_p.header);
             emit TextDAOEvents.HeaderProposed(proposalId, _p.header);
@@ -22,13 +25,12 @@ contract Propose is OnlyMemberBase {
             $proposal.cmds.push(_p.cmd);
             emit TextDAOEvents.CommandProposed(proposalId, _p.cmd);
         }
-        $proposal.proposalMeta.createdAt = block.timestamp;
 
 
         Schema.VRFStorage storage $vrf = Storage.$VRF();
         Schema.Member[] storage $members = Storage.Members().members;
 
-        if ($DAOState.config.repsNum < $members.length) { // TODO check
+        if ($Deliberation.config.repsNum < $members.length) { // TODO check
             /*
                 VRF Request to choose reps
             */

@@ -10,6 +10,11 @@ import {
 } from "bundle/textDAO/functions/protected/MemberJoinProtected.sol";
 import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
 
+import {DeliberationLib} from "bundle/textDAO/storages/utils/DeliberationLib.sol";
+using DeliberationLib for Schema.Deliberation;
+import {CommandLib} from "bundle/textDAO/storages/utils/CommandLib.sol";
+using CommandLib for Schema.Command;
+
 contract MemberJoinProtectedTest is MCTest {
 
     function setUp() public {
@@ -17,15 +22,18 @@ contract MemberJoinProtectedTest is MCTest {
     }
 
     function test_memberJoin_success(uint256 proposeTime, uint256 expiryTime, uint256 execTime, Schema.Member[] memory candidates) public {
-        Storage.DAOState().proposals.push().proposalMeta.createdAt = proposeTime;
+        vm.warp(proposeTime);
+        Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
+        // Storage.Deliberation().proposals.push().proposalMeta.createdAt = proposeTime;
         vm.assume(expiryTime >= proposeTime);
-        Storage.DAOState().config.expiryDuration = expiryTime - proposeTime;
+        Storage.Deliberation().config.expiryDuration = expiryTime - proposeTime;
         vm.assume(expiryTime < execTime);
         vm.warp(execTime);
 
-        Storage.DAOState().proposals[0].proposalMeta.cmdRank.push();
+        $proposal.proposalMeta.cmdRank = [uint256(1), 0, 0];
+        $proposal.cmds.push().createMemberJoinAction(0, candidates).status = Schema.ActionStatus.Approved;
 
-        MemberJoinProtected(address(this)).memberJoin({
+        MemberJoinProtected(target).memberJoin({
             pid: 0,
             candidates: candidates
         });
@@ -39,25 +47,25 @@ contract MemberJoinProtectedTest is MCTest {
         assertEq(candidates.length, Storage.Members().members.length);
     }
 
-    function test_memberJoin_revert_notExpiredYet(uint256 proposeTime, uint256 expiryTime, uint256 execTime) public {
-        Storage.DAOState().proposals.push().proposalMeta.createdAt = proposeTime;
-        vm.assume(expiryTime >= proposeTime);
-        Storage.DAOState().config.expiryDuration = expiryTime - proposeTime;
-        vm.assume(execTime <= expiryTime);
-        vm.warp(execTime);
+    function test_memberJoin_revert_notApprovedYet() public {
+        Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
+        $proposal.proposalMeta.cmdRank = [uint256(1), 0, 0];
+        $proposal.cmds.push().createMemberJoinAction(0, new Schema.Member[](1));
 
-        vm.expectRevert(TextDAOErrors.ProposalNotExpiredYet.selector);
-        MemberJoinProtected(address(this)).memberJoin({
+        vm.expectRevert(TextDAOErrors.ActionNotApprovedYet.selector);
+        MemberJoinProtected(target).memberJoin({
             pid: 0,
             candidates: new Schema.Member[](1)
         });
     }
 
-    function test_memberJoin_revert_notTalliedYet() public {
-        Storage.DAOState().proposals.push();
+    function test_memberJoin_revert_alreadyExecuted() public {
+        Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
+        $proposal.proposalMeta.cmdRank = [uint256(1), 0, 0];
+        $proposal.cmds.push().createMemberJoinAction(0, new Schema.Member[](1)).status = Schema.ActionStatus.Executed;
 
-        vm.expectRevert(TextDAOErrors.ProposalNotTalliedYet.selector);
-        MemberJoinProtected(address(this)).memberJoin({
+        vm.expectRevert(TextDAOErrors.ActionAlreadyExecuted.selector);
+        MemberJoinProtected(target).memberJoin({
             pid: 0,
             candidates: new Schema.Member[](1)
         });

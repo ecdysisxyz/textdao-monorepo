@@ -12,8 +12,12 @@ import { Storage } from "bundle/textDAO/storages/Storage.sol";
 import { Schema } from "bundle/textDAO/storages/Schema.sol";
 import { SaveTextProtected } from "bundle/textDAO/functions/protected/SaveTextProtected.sol";
 import { MemberJoinProtected } from "bundle/textDAO/functions/protected/MemberJoinProtected.sol";
+import {DeliberationLib} from "bundle/textDAO/storages/utils/DeliberationLib.sol";
+import {CommandLib} from "bundle/textDAO/storages/utils/CommandLib.sol";
 
 contract TextDAOTest is MCTest {
+    using DeliberationLib for Schema.Deliberation;
+    using CommandLib for Schema.Command;
 
     function setUp() public {
         _use(Propose.propose.selector, address(new Propose()));
@@ -33,28 +37,14 @@ contract TextDAOTest is MCTest {
         metadataURIs[0] = "1";
         metadataURIs[1] = "2";
 
-        Schema.DAOState storage $ = Storage.DAOState();
-        Schema.Proposal storage $p = $.proposals.push();
-        uint pid = 0;
+        Schema.Deliberation storage $Deliberation = Storage.Deliberation();
+        Schema.Proposal storage $proposal = $Deliberation.createProposal();
 
+        uint pid = 0;
         uint textId = 0;
 
-        $p.cmds.push(); // Note: initialize for storage array
-        Schema.Command storage $cmd = $p.cmds[0];
-        $cmd.id = 0;
-        $cmd.actions.push(); // Note: initialize for storage array
-        Schema.Action storage $action = $cmd.actions[0];
-
-        $action.funcSig = "saveText(uint256,uint256,string[])";
-        // TODO Check if the given pid is same or not
-        $action.abiParams = abi.encode(pid, textId, metadataURIs);
-
-        $p.proposalMeta.cmdRank.push(); // Note: initialize for storage array
-        $p.proposalMeta.cmdRank[0] = $cmd.id;
-
-        $p.proposalMeta.createdAt = 0;
-        $.config.expiryDuration = 0;
-        $p.proposalMeta.headerRank.push(); // Note: initialize for storage array
+        $proposal.cmds.push().createSaveTextAction(pid, textId, metadataURIs).status = Schema.ActionStatus.Approved; // Note: initialize for storage array
+        $proposal.proposalMeta.cmdRank = [uint256(1), 0, 0]; // Note: initialize for storage array
 
         // assertEq($text.metadataURIs.length, 0);
         Execute(address(this)).execute(pid);
@@ -74,27 +64,16 @@ contract TextDAOTest is MCTest {
         member2.addr = address(2);
         candidates[1] = member2;
 
-        Schema.DAOState storage $ = Storage.DAOState();
-        Schema.Proposal storage $p = $.proposals.push();
+        Schema.Deliberation storage $Deliberation = Storage.Deliberation();
+        Schema.Proposal storage $proposal = $Deliberation.createProposal();
+
         uint pid = 0;
 
         Schema.Members storage $m = Storage.Members();
 
-        $p.cmds.push(); // Note: initialize for storage array
-        Schema.Command storage $cmd = $p.cmds[0];
-        $cmd.id = 0;
-        $cmd.actions.push(); // Note: initialize for storage array
-        Schema.Action storage $action = $cmd.actions[0];
+        $proposal.cmds.push().createMemberJoinAction(pid, candidates).status = Schema.ActionStatus.Approved; // Note: initialize for storage array
 
-        $action.funcSig = "memberJoin(uint256,(address,string)[])";
-        $action.abiParams = abi.encode(pid, candidates);
-
-        $p.proposalMeta.cmdRank.push(); // Note: initialize for storage array
-        $p.proposalMeta.cmdRank[0] = $cmd.id;
-
-        $p.proposalMeta.createdAt = 0;
-        $.config.expiryDuration = 0;
-        $p.proposalMeta.headerRank.push(); // Note: initialize for storage array
+        $proposal.proposalMeta.cmdRank = [uint256(1), 0, 0]; // Note: initialize for storage array
 
         // assertEq($m.members[0].addr, address(0));
         // assertEq($m.members[1].addr, address(0));
