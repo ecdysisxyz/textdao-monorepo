@@ -28,7 +28,7 @@ contract InitializeTest is MCTest {
             );
         }
 
-        Schema.DeliberationConfig storage $pConfig = Storage.DAOState().config;
+        Schema.DeliberationConfig storage $pConfig = Storage.Deliberation().config;
         assertEq(
             keccak256(abi.encode($pConfig)),
             keccak256(abi.encode(pConfig))

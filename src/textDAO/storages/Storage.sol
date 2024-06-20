@@ -8,14 +8,14 @@ import {BaseSlots} from "bundle/textDAO/storages/BaseSlots.sol";
  * @title StorageLib v0.1.0
  */
 library Storage {
-    bytes32 internal constant baseslot_DAOState = BaseSlots.baseslot_DAOState;
+    bytes32 internal constant baseslot_Deliberation = BaseSlots.baseslot_Deliberation;
     bytes32 internal constant baseslot_Texts = BaseSlots.baseslot_Texts;
     bytes32 internal constant baseslot_Members = BaseSlots.baseslot_Members;
     bytes32 internal constant baseslot_VRFStorage = BaseSlots.baseslot_VRFStorage;
     bytes32 internal constant baseslot_ConfigOverrideStorage = BaseSlots.baseslot_ConfigOverrideStorage;
 
-    function DAOState() internal pure returns (Schema.DAOState storage $) {
-        bytes32 slot = baseslot_DAOState;
+    function Deliberation() internal pure returns (Schema.Deliberation storage $) {
+        bytes32 slot = baseslot_Deliberation;
         assembly { $.slot := slot }
     }
 

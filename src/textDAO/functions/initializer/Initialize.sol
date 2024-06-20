@@ -13,7 +13,7 @@ contract Initialize is Initializable {
         }
 
         // 2. Set Initial DeliberationConfig
-        Schema.DeliberationConfig storage $config = Storage.DAOState().config = _initialConfig;
+        Schema.DeliberationConfig storage $config = Storage.Deliberation().config = _initialConfig;
         // $config.expiryDuration = _initialConfig.expiryDuration;
         // $config.tallyInterval = _initialConfig.tallyInterval;
         // $config.repsNum = _initialConfig.repsNum;

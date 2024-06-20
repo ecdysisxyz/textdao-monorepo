@@ -12,7 +12,7 @@ contract Getter {
         uint256 cmdsLength;
     }
     function getProposal(uint id) external view returns (ProposalInfo memory) {
-        Schema.Proposal storage proposal = Storage.DAOState().proposals[id];
+        Schema.Proposal storage proposal = Storage.Deliberation().proposals[id];
         return ProposalInfo({
             headersLength: proposal.headers.length,
             cmdsLength: proposal.cmds.length,
@@ -21,15 +21,15 @@ contract Getter {
     }
 
     function getProposalHeaders(uint pid) external view returns(Schema.Header[] memory) {
-        return Storage.DAOState().proposals[pid].headers;
+        return Storage.Deliberation().proposals[pid].headers;
     }
 
     function getProposalCommand(uint pid, uint cid) external view returns(Schema.Command memory) {
-        return Storage.DAOState().proposals[pid].cmds[cid];
+        return Storage.Deliberation().proposals[pid].cmds[cid];
     }
 
     function getProposalsConfig() external view returns (Schema.DeliberationConfig memory) {
-        return Storage.DAOState().config;
+        return Storage.Deliberation().config;
     }
 
     function getText(uint id) external view returns (Schema.Text memory) {

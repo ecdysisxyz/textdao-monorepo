@@ -22,7 +22,7 @@ contract VoteTest is MCTest {
         uint fork1stId = 9;
         uint fork2ndId = 1;
         uint fork3rdId = 5;
-        Schema.Header[] storage $headers = Storage.DAOState().proposals.push().headers;
+        Schema.Header[] storage $headers = Storage.Deliberation().proposals.push().headers;
         for (uint i; i < 10; i++) {
             $headers.push();
         }
@@ -52,7 +52,7 @@ contract VoteTest is MCTest {
         uint fork1stId = 7;
         uint fork2ndId = 6;
         uint fork3rdId = 5;
-        Schema.Proposal storage $p = Storage.DAOState().proposals.push();
+        Schema.Proposal storage $p = Storage.Deliberation().proposals.push();
         Schema.Command[] storage $cmds = $p.cmds;
         for (uint i; i < 10; i++) {
             $cmds.push();

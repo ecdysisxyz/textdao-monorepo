@@ -13,7 +13,7 @@ contract TallyTest is MCTest {
     }
 
     function test_tally_success() public {
-        Schema.DAOState storage $ = Storage.DAOState();
+        Schema.Deliberation storage $ = Storage.Deliberation();
         Schema.Proposal storage $p = $.proposals.push();
 
         $p.proposalMeta.createdAt = 0;
@@ -54,7 +54,7 @@ contract TallyTest is MCTest {
     }
 
     function test_tally_failCommandQuorumWithOverride() public {
-        Schema.DAOState storage $ = Storage.DAOState();
+        Schema.Deliberation storage $ = Storage.Deliberation();
         Schema.Proposal storage $p = $.proposals.push();
         Schema.ConfigOverrideStorage storage $configOverride = Storage.$ConfigOverride();
 
@@ -100,9 +100,9 @@ contract TallyTest is MCTest {
     function test_tally_revert_expired(uint256 executionBlockTime, uint256 createdAt, uint256 expirationTime) public {
         vm.assume(expirationTime >= createdAt);
         uint256 expiryDuration = expirationTime - createdAt;
-        Storage.DAOState().config.expiryDuration = expiryDuration;
-        Storage.DAOState().config.tallyInterval = 1;
-        Storage.DAOState().proposals.push().proposalMeta.createdAt = createdAt;
+        Storage.Deliberation().config.expiryDuration = expiryDuration;
+        Storage.Deliberation().config.tallyInterval = 1;
+        Storage.Deliberation().proposals.push().proposalMeta.createdAt = createdAt;
 
         vm.assume(executionBlockTime >= expirationTime);
 

@@ -10,7 +10,7 @@ library TestUtils {
     }
 
     function setMsgSenderAsRep(uint256 pid) internal {
-        Storage.DAOState().proposals[pid].proposalMeta.reps.push(ForgeHelper.msgSender());
+        Storage.Deliberation().proposals[pid].proposalMeta.reps.push(ForgeHelper.msgSender());
     }
 
     function setMsgSenderAsVrfCoordinator() internal {

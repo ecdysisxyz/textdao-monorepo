@@ -27,7 +27,7 @@ contract GetterTest is MCTest {
     }
 
     function test_Proposals_success() public {
-        Schema.DAOState storage $ = Storage.DAOState();
+        Schema.Deliberation storage $ = Storage.Deliberation();
         $.proposals.push();
         Schema.Proposal storage $proposal = $.proposals.push();
         $proposal.headers.push();

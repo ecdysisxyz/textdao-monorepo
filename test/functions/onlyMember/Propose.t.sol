@@ -79,11 +79,11 @@ contract ProposeTest is MCTest {
         uint256 pid = Propose(address(this)).propose(p);
         (, bytes32[] memory writes) = vm.accesses(address(this));
 
-        assertEq(writes.length, 9);
+        assertEq(writes.length, 12);
 
         assertEq($vrf.requests[_requestId].proposalId, pid);
 
-        Schema.Proposal storage $p = Storage.DAOState().proposals[pid];
+        Schema.Proposal storage $p = Storage.Deliberation().proposals[pid];
 
         assertEq(pid, 0);
         assertEq($p.proposalMeta.currentScore, 0);
@@ -93,7 +93,7 @@ contract ProposeTest is MCTest {
         assertEq($p.proposalMeta.nextCmdTallyFrom, 0);
         assertEq($p.proposalMeta.reps.length, 0);
         assertEq($p.proposalMeta.createdAt, _proposedTime);
-        assertEq($p.headers[0].metadataURI, p.header.metadataURI);
+        assertEq($p.headers[1].metadataURI, p.header.metadataURI);
     }
 
     function test_propose_success_2nd() public {
@@ -140,25 +140,25 @@ contract ProposeTest is MCTest {
         uint pid = Propose(address(this)).propose(p);
         (, bytes32[] memory writes) = vm.accesses(address(this));
 
-        assertEq(writes.length, 9);
+        assertEq(writes.length, 12);
 
         assertEq($vrf.requests[_requestId].proposalId, pid);
         // assertEq(_preState.vrfNextId + 1, $vrf.nextId);
 
-        Schema.Proposal storage $p = Storage.DAOState().proposals[pid];
+        Schema.Proposal storage $p = Storage.Deliberation().proposals[pid];
 
         assertEq(pid, 0);
         assertEq($p.proposalMeta.headerRank.length, 0);
         assertEq($p.proposalMeta.cmdRank.length, 0);
-        assertEq($p.headers[0].metadataURI, p.header.metadataURI);
+        assertEq($p.headers[1].metadataURI, p.header.metadataURI);
 
         uint pid2 = Propose(address(this)).propose(p);
-        Schema.Proposal storage $p2 = Storage.DAOState().proposals[pid2];
+        Schema.Proposal storage $p2 = Storage.Deliberation().proposals[pid2];
 
         assertEq(pid, 0);
         assertEq($p2.proposalMeta.headerRank.length, 0);
         assertEq($p2.proposalMeta.cmdRank.length, 0);
-        assertEq($p2.headers[0].metadataURI, p.header.metadataURI);
+        assertEq($p2.headers[1].metadataURI, p.header.metadataURI);
 
     }
 

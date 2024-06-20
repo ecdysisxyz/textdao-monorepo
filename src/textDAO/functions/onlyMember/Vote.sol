@@ -8,7 +8,7 @@ import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
 contract Vote is OnlyMemberBase {
     function voteHeaders(uint pid, uint[3] calldata headerIds) external onlyMember returns (bool) {
         // TODO ProposalNotFound
-        Schema.Proposal storage $p = Storage.DAOState().proposals[pid];
+        Schema.Proposal storage $p = Storage.Deliberation().proposals[pid];
 
         require($p.headers.length > 0, "No headers for this proposal.");
 
@@ -32,7 +32,7 @@ contract Vote is OnlyMemberBase {
 
     function voteCmds(uint pid, uint[3] calldata cmdIds) external onlyMember returns (bool) {
         // TODO ProposalNotFound
-        Schema.Proposal storage $p = Storage.DAOState().proposals[pid];
+        Schema.Proposal storage $p = Storage.Deliberation().proposals[pid];
 
         require($p.cmds.length > 0, "No cmds for this proposal.");
 

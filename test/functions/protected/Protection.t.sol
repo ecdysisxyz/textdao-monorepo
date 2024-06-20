@@ -23,11 +23,13 @@ contract ProtectedTest is MCTest {
     }
 
     function test_protected_success() public {
-        Storage.DAOState().proposals.push().cmds.push().actions.push(Schema.Action({
+        Schema.Proposal storage $proposal = Storage.Deliberation().proposals.push();
+        $proposal.cmds.push().actions.push(Schema.Action({
             funcSig: "doSomething(uint256)",
             abiParams: abi.encode(0),
             status: Schema.ActionStatus.Approved
         }));
+        $proposal.proposalMeta.cmdRank = new uint[](3);
 
         assertTrue(Protected(target).doSomething(0));
     }

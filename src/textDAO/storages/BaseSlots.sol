@@ -8,8 +8,8 @@ pragma solidity ^0.8.24;
  */
 
 library BaseSlots {
-    bytes32 public constant baseslot_DAOState =
-        0xe889cf6ef4c0b3e042bbf100ec9f5916e3cdbbc8d72066eb1501d905d151d000;
+    bytes32 public constant baseslot_Deliberation =
+        0x51e64ee84f491aad402ff73401b25fa2058a87e9d027403050c951c19bbb7800;
     bytes32 public constant baseslot_Texts =
         0x1936e448f24d50cf45d061362b8b2abea6f76fd415e7ceb5fe96d540deb60400;
     bytes32 public constant baseslot_Members =

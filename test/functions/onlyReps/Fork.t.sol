@@ -20,7 +20,7 @@ contract ForkTest is MCTest {
 
     function test_fork_success() public {
         uint pid = 0;
-        Schema.Proposal storage $p = Storage.DAOState().proposals.push();
+        Schema.Proposal storage $p = Storage.Deliberation().proposals.push();
 
         Types.ProposalArg memory p;
         p.header.metadataURI = "Qc.....xh";
@@ -37,7 +37,7 @@ contract ForkTest is MCTest {
     }
 
     function test_fork_revert_notRep() public {
-        Storage.DAOState().proposals.push();
+        Storage.Deliberation().proposals.push();
 
         Types.ProposalArg memory p;
         p.header.metadataURI = "Qc.....xh";

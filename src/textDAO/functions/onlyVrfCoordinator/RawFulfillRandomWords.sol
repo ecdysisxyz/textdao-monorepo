@@ -10,7 +10,7 @@ contract RawFulfillRandomWords is VRFConsumerV2Interface, OnlyVrfCoordinatorBase
         Storage.$VRF().requests[requestId].randomWords = randomWords;
 
         uint256 proposalId = Storage.$VRF().requests[requestId].proposalId;
-        Schema.Proposal storage $p = Storage.DAOState().proposals[proposalId];
+        Schema.Proposal storage $p = Storage.Deliberation().proposals[proposalId];
         Schema.Member[] storage $members = Storage.Members().members;
 
         for (uint i; i < randomWords.length; i++) {

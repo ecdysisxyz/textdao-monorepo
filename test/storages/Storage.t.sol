@@ -11,43 +11,43 @@ contract StorageTest is MCTest {
         return keccak256(abi.encode(uint256(keccak256(bytes(namespace))) - 1)) & ~bytes32(uint256(0xff));
     }
     function test_baseSlots() public {
-        assertEq(BaseSlots.baseslot_DAOState, _erc7201("textDAO.DAOState"));
+        assertEq(BaseSlots.baseslot_Deliberation, _erc7201("textDAO.Deliberation"));
         assertEq(BaseSlots.baseslot_Texts, _erc7201("textDAO.Texts"));
         assertEq(BaseSlots.baseslot_Members, _erc7201("textDAO.Members"));
         assertEq(BaseSlots.baseslot_VRFStorage, _erc7201("textDAO.VRFStorage"));
     }
 
-    function test_DAOState() public {
+    function test_Deliberation() public {
         vm.record();
-        Storage.DAOState().proposals.push();
-        Storage.DAOState().config.expiryDuration = 10;
-        Storage.DAOState().config.tallyInterval = 20;
-        Storage.DAOState().config.repsNum = 30;
-        Storage.DAOState().config.quorumScore = 40;
+        Storage.Deliberation().proposals.push();
+        Storage.Deliberation().config.expiryDuration = 10;
+        Storage.Deliberation().config.tallyInterval = 20;
+        Storage.Deliberation().config.repsNum = 30;
+        Storage.Deliberation().config.quorumScore = 40;
         (, bytes32[] memory writes) = vm.accesses(
             address(this)
         );
 
         // proposals
-        bytes32 DAOState_proposals_baseSlot = bytes32(uint256(BaseSlots.baseslot_DAOState)+0);
-        bytes32 DAOState_proposals_length_slot = bytes32(uint256(DAOState_proposals_baseSlot)+0);
-        assertEq(writes[0], DAOState_proposals_length_slot);
-        assertEq(uint256(vm.load(address(this), DAOState_proposals_length_slot)), 1);
+        bytes32 Deliberation_proposals_baseSlot = bytes32(uint256(BaseSlots.baseslot_Deliberation)+0);
+        bytes32 Deliberation_proposals_length_slot = bytes32(uint256(Deliberation_proposals_baseSlot)+0);
+        assertEq(writes[0], Deliberation_proposals_length_slot);
+        assertEq(uint256(vm.load(address(this), Deliberation_proposals_length_slot)), 1);
 
         // config
-        bytes32 DAOState_config_baseSlot = bytes32(uint256(BaseSlots.baseslot_DAOState)+1);
-        bytes32 DAOState_config_expiryDuration_slot = bytes32(uint256(DAOState_config_baseSlot)+0);
-        bytes32 DAOState_config_tallyInternal_slot = bytes32(uint256(DAOState_config_baseSlot)+1);
-        bytes32 DAOState_config_repsNum_slot = bytes32(uint256(DAOState_config_baseSlot)+2);
-        bytes32 DAOState_config_quorumScore_slot = bytes32(uint256(DAOState_config_baseSlot)+3);
-        assertEq(writes[1], DAOState_config_expiryDuration_slot);
-        assertEq(uint256(vm.load(address(this), DAOState_config_expiryDuration_slot)), 10);
-        assertEq(writes[2], DAOState_config_tallyInternal_slot);
-        assertEq(uint256(vm.load(address(this), DAOState_config_tallyInternal_slot)), 20);
-        assertEq(writes[3], DAOState_config_repsNum_slot);
-        assertEq(uint256(vm.load(address(this), DAOState_config_repsNum_slot)), 30);
-        assertEq(writes[4], DAOState_config_quorumScore_slot);
-        assertEq(uint256(vm.load(address(this), DAOState_config_quorumScore_slot)), 40);
+        bytes32 Deliberation_config_baseSlot = bytes32(uint256(BaseSlots.baseslot_Deliberation)+1);
+        bytes32 Deliberation_config_expiryDuration_slot = bytes32(uint256(Deliberation_config_baseSlot)+0);
+        bytes32 Deliberation_config_tallyInternal_slot = bytes32(uint256(Deliberation_config_baseSlot)+1);
+        bytes32 Deliberation_config_repsNum_slot = bytes32(uint256(Deliberation_config_baseSlot)+2);
+        bytes32 Deliberation_config_quorumScore_slot = bytes32(uint256(Deliberation_config_baseSlot)+3);
+        assertEq(writes[1], Deliberation_config_expiryDuration_slot);
+        assertEq(uint256(vm.load(address(this), Deliberation_config_expiryDuration_slot)), 10);
+        assertEq(writes[2], Deliberation_config_tallyInternal_slot);
+        assertEq(uint256(vm.load(address(this), Deliberation_config_tallyInternal_slot)), 20);
+        assertEq(writes[3], Deliberation_config_repsNum_slot);
+        assertEq(uint256(vm.load(address(this), Deliberation_config_repsNum_slot)), 30);
+        assertEq(writes[4], Deliberation_config_quorumScore_slot);
+        assertEq(uint256(vm.load(address(this), Deliberation_config_quorumScore_slot)), 40);
     }
 
 }

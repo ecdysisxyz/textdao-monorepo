@@ -5,8 +5,8 @@ pragma solidity ^0.8.24;
  * @title TextDAO Schema v0.1.0
  */
 library Schema {
-    /// @custom:storage-location erc7201:textDAO.DAOState
-    struct DAOState {
+    /// @custom:storage-location erc7201:textDAO.Deliberation
+    struct Deliberation {
         Proposal[] proposals;
         DeliberationConfig config;
     }
@@ -51,6 +51,7 @@ library Schema {
         uint nextCmdTallyFrom;
         address[] reps;
         uint createdAt;
+        uint expirationTime;
         uint vrfRequestId;
     }
 

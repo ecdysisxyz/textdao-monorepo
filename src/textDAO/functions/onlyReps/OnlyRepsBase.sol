@@ -8,7 +8,7 @@ abstract contract OnlyRepsBase {
 
     modifier onlyReps(uint pid) {
         // TODO ProposalNotFound
-        address[] storage $reps = Storage.DAOState().proposals[pid].proposalMeta.reps;
+        address[] storage $reps = Storage.Deliberation().proposals[pid].proposalMeta.reps;
 
         bool result;
         for (uint i; i < $reps.length; ++i) {

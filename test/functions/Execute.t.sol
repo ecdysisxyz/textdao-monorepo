@@ -13,25 +13,25 @@ contract ExecuteTest is MCTest {
     }
 
     function test_execute_success(uint256 executionBlockTime) public {
-        Schema.Proposal storage $p = Storage.DAOState().proposals.push();
+        Schema.Proposal storage $p = Storage.Deliberation().proposals.push();
         $p.cmds.push();
         $p.proposalMeta.cmdRank = new uint[](3);
 
-        vm.assume(executionBlockTime >= Storage.DAOState().config.expiryDuration + $p.proposalMeta.createdAt);
+        vm.assume(executionBlockTime >= Storage.Deliberation().config.expiryDuration + $p.proposalMeta.createdAt);
         vm.warp(executionBlockTime);
 
-        Execute(address(this)).execute(0);
+        Execute(target).execute(0);
     }
 
     function test_execute_revert_beforeExpiration(uint256 expiryDuration, uint256 executionBlockTime) public {
-        Storage.DAOState().proposals.push();
-        Storage.DAOState().config.expiryDuration = expiryDuration;
+        Storage.Deliberation().proposals.push();
+        Storage.Deliberation().config.expiryDuration = expiryDuration;
 
         vm.assume(executionBlockTime < expiryDuration);
         vm.warp(executionBlockTime);
 
         vm.expectRevert("Proposal must be finished.");
-        Execute(address(this)).execute(0);
+        Execute(target).execute(0);
     }
 
 }

@@ -40,6 +40,7 @@ contract Filler is Script {
             nextCmdTallyFrom: 0,
             reps: new address[](1),
             createdAt: block.timestamp,
+            expirationTime: block.timestamp + 2 minutes,
             vrfRequestId: 0
         });
         proposalMeta.reps[0] = address(this);
