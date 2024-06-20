@@ -3,13 +3,13 @@ pragma solidity ^0.8.24;
 
 import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
 import {Types} from "bundle/textDAO/storages/Types.sol";
-import {SortLib} from "bundle/textDAO/functions/_utils/SortLib.sol";
+import {SortLib} from "bundle/textDAO/storages/utils/SortLib.sol";
 import {SelectorLib} from "bundle/textDAO/functions/_utils/SelectorLib.sol";
 import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
 
 contract Tally {
     function tally(uint pid) external onlyOncePerInterval(pid) returns (bool) {
-        Schema.DAOState storage $ = Storage.DAOState();
+        Schema.Deliberation storage $ = Storage.Deliberation();
         Schema.Proposal storage $p = $.proposals[pid];
         Schema.Header[] storage $headers = $p.headers;
         Schema.Command[] storage $cmds = $p.cmds;
@@ -113,7 +113,7 @@ contract Tally {
     }
 
     modifier onlyOncePerInterval(uint pid) {
-        Schema.DAOState storage $ = Storage.DAOState();
+        Schema.Deliberation storage $ = Storage.Deliberation();
         Schema.Proposal storage $p = $.proposals[pid];
         require($.config.tallyInterval > 0, "Set tally interval at config.");
         require(!$p.tallied[block.timestamp / $.config.tallyInterval], "This interval is already tallied.");
