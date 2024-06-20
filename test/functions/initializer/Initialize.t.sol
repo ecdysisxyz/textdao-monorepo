@@ -15,37 +15,37 @@ contract InitializeTest is MCTest {
         _use(Initialize.initialize.selector, address(new Initialize()));
     }
 
-    function test_initialize_success(Schema.Member[] calldata initialMembers, Schema.DeliberationConfig calldata pConfig) public {
+    function test_initialize_success(Schema.Member[] calldata _initialMembers, Schema.DeliberationConfig calldata _initialConfig) public {
         vm.expectEmit();
         emit Initializable.Initialized(1);
-        Initialize(target).initialize(initialMembers, pConfig);
+        Initialize(target).initialize(_initialMembers, _initialConfig);
 
         Schema.Member[] storage $members = Storage.Members().members;
-        for (uint i; i < initialMembers.length; ++i) {
+        for (uint i; i < _initialMembers.length; ++i) {
             assertEq(
                 keccak256(abi.encode($members[i])),
-                keccak256(abi.encode(initialMembers[i]))
+                keccak256(abi.encode(_initialMembers[i]))
             );
         }
 
-        Schema.DeliberationConfig storage $pConfig = Storage.Deliberation().config;
+        Schema.DeliberationConfig storage $config = Storage.Deliberation().config;
         assertEq(
-            keccak256(abi.encode($pConfig)),
-            keccak256(abi.encode(pConfig))
+            keccak256(abi.encode($config)),
+            keccak256(abi.encode(_initialConfig))
         );
     }
 
     function test_initialize_revert_InvalidInitialization() public {
-        Schema.DeliberationConfig memory pConfig = Schema.DeliberationConfig({
+        Schema.DeliberationConfig memory _config = Schema.DeliberationConfig({
             expiryDuration: 2 minutes,
             tallyInterval: 1 minutes,
             repsNum: 1000,
             quorumScore: 3
         });
-        Initialize(target).initialize(new Schema.Member[](1), pConfig);
+        Initialize(target).initialize(new Schema.Member[](1), _config);
 
         vm.expectRevert(Initializable.InvalidInitialization.selector);
-        Initialize(target).initialize(new Schema.Member[](2), pConfig);
+        Initialize(target).initialize(new Schema.Member[](2), _config);
     }
 
 }
