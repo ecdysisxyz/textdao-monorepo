@@ -9,6 +9,6 @@ interface TextDAOErrors {
     // OnlyVrfCoordinator
     error YouAreNotTheVrfCoordinator();
     // Protection
-    error ProposalNotExpiredYet();
-    error ProposalNotTalliedYet();
+    error ActionNotApprovedYet();
+    error ActionAlreadyExecuted();
 }
