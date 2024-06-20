@@ -7,24 +7,32 @@ import {Schema} from "bundle/textDAO/storages/Schema.sol";
  * @title MembersLib v0.1.0
  */
 library MembersLib {
-    function addMember(Schema.Members storage $members, Schema.Member memory newMember) internal returns(Schema.Member storage) {
-        return $members.members.push() = newMember;
+    function addMember(Schema.Members storage $, Schema.Member memory newMember) internal returns(Schema.Member storage) {
+        return $.members.push() = newMember;
     }
 
-    function addMembers(Schema.Members storage $members, Schema.Member[] memory newMembers) internal returns(Schema.Members storage) {
+    function addMembers(Schema.Members storage $, Schema.Member[] memory newMembers) internal returns(Schema.Members storage) {
         for (uint i; i < newMembers.length; ++i) {
-            addMember($members, newMembers[i]);
+            addMember($, newMembers[i]);
         }
-        return $members;
+        return $;
     }
 
     error OnlyYouCanModifyYourOwnProfile();
     event MemberProfileUpdated(string newMetadataURI);
-    function updateMemberInfo(Schema.Members storage $members, uint mid, string memory newMetadataURI) internal {
-        Schema.Member storage target = $members.members[mid];
+    function updateMemberInfo(Schema.Members storage $, uint mid, string memory newMetadataURI) internal {
+        Schema.Member storage target = $.members[mid];
         if (msg.sender != target.addr) revert OnlyYouCanModifyYourOwnProfile();
         target.metadataURI = newMetadataURI;
         emit MemberProfileUpdated(newMetadataURI);
     }
 
+    function isMember(Schema.Members storage $, address _checkAddress) internal view returns(bool result) {
+        for (uint i; i < $.members.length; ++i) {
+            if ($.members[i].addr == _checkAddress) {
+                result = true;
+                break;
+            }
+        }
+    }
 }
