@@ -17,4 +17,6 @@ interface TextDAOEvents {
     event ProposalTallied(uint pid, Schema.ProposalMeta proposalMeta);
     // SaveText
     event TextSaved(uint pid, Schema.Text text);
+    /// @dev From Initializable @ openzeppelin-contracts~5.0.0
+    event Initialized(uint64 version);
 }

@@ -6,9 +6,10 @@ import {MCTest, console2} from "@devkit/Flattened.sol";
 import {
     Initialize,
     Storage,
-    Schema,
-    Initializable
+    Schema
 } from "bundle/textDAO/functions/initializer/Initialize.sol";
+import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
+import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
 
 contract InitializeTest is MCTest {
     function setUp() public {
@@ -17,7 +18,7 @@ contract InitializeTest is MCTest {
 
     function test_initialize_success(Schema.Member[] calldata _initialMembers, Schema.DeliberationConfig calldata _initialConfig) public {
         vm.expectEmit();
-        emit Initializable.Initialized(1);
+        emit TextDAOEvents.Initialized(1);
         Initialize(target).initialize(_initialMembers, _initialConfig);
 
         Schema.Member[] storage $members = Storage.Members().members;
@@ -44,7 +45,7 @@ contract InitializeTest is MCTest {
         });
         Initialize(target).initialize(new Schema.Member[](1), _config);
 
-        vm.expectRevert(Initializable.InvalidInitialization.selector);
+        vm.expectRevert(TextDAOErrors.InvalidInitialization.selector);
         Initialize(target).initialize(new Schema.Member[](2), _config);
     }
 

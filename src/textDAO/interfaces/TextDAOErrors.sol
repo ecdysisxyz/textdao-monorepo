@@ -11,4 +11,7 @@ interface TextDAOErrors {
     // Protection
     error ActionNotApprovedYet();
     error ActionAlreadyExecuted();
+    /// @dev From Initializable @ openzeppelin-contracts~5.0.0
+    error InvalidInitialization();
+    error NotInitializing();
 }
