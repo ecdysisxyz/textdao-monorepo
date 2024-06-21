@@ -15,7 +15,7 @@ library Types {
         bool[] cmdConds;
         bool cmdCondSum;
         Schema.Header[3] topHeaders;
-        Schema.Command[3] topCommands;
+        // Schema.Command[3] topCommands;
         uint headerRank2;
         uint cmdRank2;
     }

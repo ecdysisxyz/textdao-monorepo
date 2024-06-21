@@ -4,7 +4,7 @@ pragma solidity ^0.8.24;
 /**
  * @title TextDAO Schema v0.1.0
  */
-library Schema {
+interface Schema {
     /// @custom:storage-location erc7201:textDAO.Deliberation
     struct Deliberation {
         Proposal[] proposals;
@@ -23,20 +23,18 @@ library Schema {
         ProposalMeta proposalMeta;
     }
     struct Header {
-        uint id;
         uint currentScore;
-        bytes32 metadataURI;
+        string metadataURI;
         uint[] tagIds;
     }
     struct Command {
-        uint id;
         Action[] actions;
+        mapping(uint actionId => ActionStatus) actionStatuses;
         uint currentScore;
     }
     struct Action {
         string funcSig;
         bytes abiParams;
-        ActionStatus status;
     }
     enum ActionStatus {
         Proposed,

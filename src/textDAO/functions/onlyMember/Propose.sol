@@ -5,26 +5,31 @@ import {OnlyMemberBase} from "bundle/textDAO/functions/onlyMember/OnlyMemberBase
 import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
 import {Types} from "bundle/textDAO/storages/Types.sol";
 import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
+import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
 import "@chainlink/vrf/interfaces/VRFCoordinatorV2Interface.sol";
 import {DeliberationLib} from "bundle/textDAO/storages/utils/DeliberationLib.sol";
+import {ProposalLib} from "bundle/textDAO/storages/utils/ProposalLib.sol";
+import {IPropose} from "bundle/textDAO/interfaces/TextDAOFunctions.sol";
 
-contract Propose is OnlyMemberBase {
+contract Propose is OnlyMemberBase, IPropose {
     using DeliberationLib for Schema.Deliberation;
+    using ProposalLib for Schema.Proposal;
 
-    function propose(Types.ProposalArg calldata _p) external onlyMember returns (uint proposalId) {
+    function propose(ProposeArgs calldata _args) external onlyMember returns (uint proposalId) {
         Schema.Deliberation storage $Deliberation = Storage.Deliberation();
+
+        if (bytes(_args.headerMetadataURI).length == 0) revert TextDAOErrors.HeaderMetadataIsRequired();
 
         proposalId = $Deliberation.proposals.length;
 
         Schema.Proposal storage $proposal = $Deliberation.createProposal();
-        if (_p.header.metadataURI.length > 0) {
-            $proposal.headers.push(_p.header);
-            emit TextDAOEvents.HeaderProposed(proposalId, _p.header);
-        }
-        if (_p.cmd.actions.length > 0) {
-            $proposal.cmds.push(_p.cmd);
-            emit TextDAOEvents.CommandProposed(proposalId, _p.cmd);
-        }
+
+        $proposal.createHeader(_args.headerMetadataURI);
+        emit TextDAOEvents.HeaderProposed(proposalId, _args.headerMetadataURI);
+
+        // TODO Check ignore no action
+        $proposal.createCommand(_args.actions);
+        emit TextDAOEvents.CommandProposed(proposalId, _args.actions);
 
 
         Schema.VRFStorage storage $vrf = Storage.$VRF();

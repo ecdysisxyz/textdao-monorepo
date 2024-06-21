@@ -20,14 +20,15 @@ contract ProtectionBase {
         Schema.Action[] storage actions = $proposal.cmds[$proposalMeta.cmdRank[0]].actions;
         bool approved;
         for (uint i; i < actions.length; ++i) {
+            Schema.ActionStatus actionStatus = $proposal.cmds[$proposalMeta.cmdRank[0]].actionStatuses[i];
             if (
                 keccak256(bytes.concat(SelectorLib.selector(actions[i].funcSig), actions[i].abiParams)) ==
                 keccak256(msg.data)
             ) {
-                if (actions[i].status == Schema.ActionStatus.Executed) {
+                if (actionStatus == Schema.ActionStatus.Executed) {
                     revert TextDAOErrors.ActionAlreadyExecuted();
                 }
-                if (actions[i].status == Schema.ActionStatus.Approved) {
+                if (actionStatus == Schema.ActionStatus.Approved) {
                     approved = true;
                 }
             }

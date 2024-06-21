@@ -35,7 +35,7 @@ library SortLib {
         return indices;
     }
 
-    function rankCmds(Schema.Command[] memory _cmds, uint nextCmdTallyFrom) internal pure returns (uint[] memory) {
+    function rankCmds(Schema.Command[] storage _cmds, uint nextCmdTallyFrom) internal view returns (uint[] memory) {
         uint cmdsLength = _cmds.length;
         if(nextCmdTallyFrom >= cmdsLength) return new uint[](0); // Return empty if out of bounds
 

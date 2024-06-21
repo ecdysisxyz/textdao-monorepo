@@ -10,8 +10,7 @@ library CommandLib {
     function createAction(Schema.Command storage cmd, string memory funcSig, bytes memory abiParams) internal returns(Schema.Action storage) {
         return cmd.actions.push() = Schema.Action({
             funcSig: funcSig,
-            abiParams: abiParams,
-            status: Schema.ActionStatus.Proposed
+            abiParams: abiParams
         });
     }
 
