@@ -15,7 +15,7 @@ import {MemberJoinProtected} from "bundle/textDAO/functions/protected/MemberJoin
 import {SaveTextProtected} from "bundle/textDAO/functions/protected/SaveTextProtected.sol";
 import {SetConfigsProtected} from "bundle/textDAO/functions/protected/SetConfigsProtected.sol";
 import {Execute} from "bundle/textDAO/functions/Execute.sol";
-import {Getter} from "bundle/textDAO/functions/Getter.sol";
+// import {Getter} from "bundle/textDAO/functions/Getter.sol";
 import {Tally} from "bundle/textDAO/functions/Tally.sol";
 
 import {TextDAOFacade} from "bundle/textDAO/interfaces/TextDAOFacade.sol";
@@ -38,20 +38,20 @@ library DeployLib {
         mc.use("SetConfigsProtected", SetConfigsProtected.setProposalsConfig.selector, address(new SetConfigsProtected()));
         mc.use("ConfigOverrideProtected", ConfigOverrideProtected.overrideProposalsConfig.selector, address(new ConfigOverrideProtected()));
         mc.use("SaveTextProtected", SaveTextProtected.saveText.selector, address(new SaveTextProtected()));
-        address getter = address(new Getter());
-        mc.use("getProposal", Getter.getProposal.selector, getter);
-        mc.use("getProposalHeaders", Getter.getProposalHeaders.selector, getter);
-        // mc.use("getProposalCommand", Getter.getProposalCommand.selector, getter);
-        mc.use("getProposalsConfig", Getter.getProposalsConfig.selector, getter);
-        mc.use("getText", Getter.getText.selector, getter);
-        mc.use("getTexts", Getter.getTexts.selector, getter);
-        mc.use("getMember", Getter.getMember.selector, getter);
-        mc.use("getMembers", Getter.getMembers.selector, getter);
-        // mc.use("getVRFRequest", Getter.getVRFRequest.selector, getter);
-        // mc.use("getNextVRFId", Getter.getNextVRFId.selector, getter);
-        mc.use("getSubscriptionId", Getter.getSubscriptionId.selector, getter);
-        mc.use("getVRFConfig", Getter.getVRFConfig.selector, getter);
-        mc.use("getConfigOverride", Getter.getConfigOverride.selector, getter);
+        // address getter = address(new Getter());
+        // mc.use("getProposal", Getter.getProposal.selector, getter);
+        // mc.use("getProposalHeaders", Getter.getProposalHeaders.selector, getter);
+        // // mc.use("getProposalCommand", Getter.getProposalCommand.selector, getter);
+        // mc.use("getProposalsConfig", Getter.getProposalsConfig.selector, getter);
+        // mc.use("getText", Getter.getText.selector, getter);
+        // mc.use("getTexts", Getter.getTexts.selector, getter);
+        // mc.use("getMember", Getter.getMember.selector, getter);
+        // mc.use("getMembers", Getter.getMembers.selector, getter);
+        // // mc.use("getVRFRequest", Getter.getVRFRequest.selector, getter);
+        // // mc.use("getNextVRFId", Getter.getNextVRFId.selector, getter);
+        // mc.use("getSubscriptionId", Getter.getSubscriptionId.selector, getter);
+        // mc.use("getVRFConfig", Getter.getVRFConfig.selector, getter);
+        // mc.use("getConfigOverride", Getter.getConfigOverride.selector, getter);
 
         mc.useFacade(address(new TextDAOFacade())); // for Etherscan proxy read/write
 

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {Getter} from "bundle/textDAO/functions/Getter.sol";
+// import {Getter} from "bundle/textDAO/functions/Getter.sol";
 
 import {ITextDAO} from "bundle/textDAO/interfaces/ITextDAO.sol";
 
@@ -20,15 +20,15 @@ contract TextDAOFacade is ITextDAO {
     function saveText(uint _proposalId, string calldata _text) external {}
 
     // Getters
-    function getProposal(uint id) external view returns (Getter.ProposalInfo memory) {}
-    function getProposalHeaders(uint id) external view returns (Header[] memory) {}
-    // function getProposalCommand(uint pid, uint cid) external view returns (Command memory) {}
-    function getProposalsConfig() external view returns (DeliberationConfig memory) {}
-    function getText(uint id) external view returns (Text memory) {}
-    function getTexts() external view returns (Text[] memory) {}
-    function getMember(uint id) external view returns (Member memory) {}
-    function getMembers() external view returns (Member[] memory) {}
-    function getSubscriptionId() external view returns (uint64) {}
-    function getVRFConfig() external view returns (VRFConfig memory) {}
-    function getConfigOverride(bytes4 sig) external view returns (ConfigOverride memory) {}
+    // function getProposal(uint id) external view returns (Getter.ProposalInfo memory) {}
+    // function getProposalHeaders(uint id) external view returns (Header[] memory) {}
+    // // function getProposalCommand(uint pid, uint cid) external view returns (Command memory) {}
+    // function getProposalsConfig() external view returns (DeliberationConfig memory) {}
+    // function getText(uint id) external view returns (Text memory) {}
+    // function getTexts() external view returns (Text[] memory) {}
+    // function getMember(uint id) external view returns (Member memory) {}
+    // function getMembers() external view returns (Member[] memory) {}
+    // function getSubscriptionId() external view returns (uint64) {}
+    // function getVRFConfig() external view returns (VRFConfig memory) {}
+    // function getConfigOverride(bytes4 sig) external view returns (ConfigOverride memory) {}
 }
