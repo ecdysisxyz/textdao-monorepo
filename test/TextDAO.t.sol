@@ -3,15 +3,15 @@ pragma solidity ^0.8.24;
 
 import {MCTest, console2} from "@devkit/Flattened.sol";
 
-import { Propose } from "bundle/textDAO/functions/onlyMember/Propose.sol";
-import { Fork } from "bundle/textDAO/functions/onlyReps/Fork.sol";
-import { Vote } from "bundle/textDAO/functions/onlyMember/Vote.sol";
-import { Execute } from "bundle/textDAO/functions/Execute.sol";
-import { Tally } from "bundle/textDAO/functions/Tally.sol";
-import { Storage } from "bundle/textDAO/storages/Storage.sol";
-import { Schema } from "bundle/textDAO/storages/Schema.sol";
-import { SaveTextProtected } from "bundle/textDAO/functions/protected/SaveTextProtected.sol";
-import { MemberJoinProtected } from "bundle/textDAO/functions/protected/MemberJoinProtected.sol";
+import {Propose} from "bundle/textDAO/functions/onlyMember/Propose.sol";
+import {Fork} from "bundle/textDAO/functions/onlyReps/Fork.sol";
+import {Vote} from "bundle/textDAO/functions/onlyReps/Vote.sol";
+import {Execute} from "bundle/textDAO/functions/Execute.sol";
+import {Tally} from "bundle/textDAO/functions/Tally.sol";
+import {Storage} from "bundle/textDAO/storages/Storage.sol";
+import {Schema} from "bundle/textDAO/storages/Schema.sol";
+import {SaveTextProtected} from "bundle/textDAO/functions/protected/SaveTextProtected.sol";
+import {MemberJoinProtected} from "bundle/textDAO/functions/protected/MemberJoinProtected.sol";
 import {DeliberationLib} from "bundle/textDAO/storages/utils/DeliberationLib.sol";
 import {CommandLib} from "bundle/textDAO/storages/utils/CommandLib.sol";
 

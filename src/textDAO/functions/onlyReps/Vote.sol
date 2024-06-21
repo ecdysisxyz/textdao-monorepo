@@ -2,15 +2,15 @@
 pragma solidity ^0.8.24;
 
 // Access Control
-import {OnlyMemberBase} from "bundle/textDAO/functions/onlyMember/OnlyMemberBase.sol";
+import {OnlyRepsBase} from "bundle/textDAO/functions/onlyReps/OnlyRepsBase.sol";
 // Storage
 import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
 // Interface
 import {IVote} from "bundle/textDAO/interfaces/TextDAOFunctions.sol";
 import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
 
-contract Vote is IVote, OnlyMemberBase {
-    function voteHeaders(uint pid, uint[3] calldata headerIds) external onlyMember {
+contract Vote is IVote, OnlyRepsBase {
+    function voteHeaders(uint pid, uint[3] calldata headerIds) external onlyReps(pid) {
         // TODO ProposalNotFound
         Schema.Proposal storage $p = Storage.Deliberation().proposals[pid];
 
@@ -34,7 +34,7 @@ contract Vote is IVote, OnlyMemberBase {
         // }
     }
 
-    function voteCmds(uint pid, uint[3] calldata cmdIds) external onlyMember {
+    function voteCmds(uint pid, uint[3] calldata cmdIds) external onlyReps(pid) {
         // TODO ProposalNotFound
         Schema.Proposal storage $p = Storage.Deliberation().proposals[pid];
 

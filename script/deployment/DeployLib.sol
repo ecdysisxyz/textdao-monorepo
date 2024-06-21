@@ -7,8 +7,8 @@ import {Clone} from "@mc-std/functions/Clone.sol";
 
 import {Initialize} from "bundle/textDAO/functions/initializer/Initialize.sol";
 import {Propose} from "bundle/textDAO/functions/onlyMember/Propose.sol";
-import {Vote} from "bundle/textDAO/functions/onlyMember/Vote.sol";
 import {Fork} from "bundle/textDAO/functions/onlyReps/Fork.sol";
+import {Vote} from "bundle/textDAO/functions/onlyReps/Vote.sol";
 import {RawFulfillRandomWords} from "bundle/textDAO/functions/onlyVrfCoordinator/RawFulfillRandomWords.sol";
 import {ConfigOverrideProtected} from "bundle/textDAO/functions/protected/ConfigOverrideProtected.sol";
 import {MemberJoinProtected} from "bundle/textDAO/functions/protected/MemberJoinProtected.sol";
