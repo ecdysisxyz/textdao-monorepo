@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import { Schema } from "bundle/textDAO/storages/Schema.sol";
-import { Storage } from "bundle/textDAO/storages/Storage.sol";
+// Storage
+import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
 
 // External getter functions
 contract Getter {

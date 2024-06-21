@@ -2,9 +2,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import { Storage } from "bundle/textDAO/storages/Storage.sol";
-import { Schema } from "bundle/textDAO/storages/Schema.sol";
-import { ProtectionBase } from "bundle/textDAO/functions/protected/ProtectionBase.sol";
+// Access Control
+import {ProtectionBase} from "bundle/textDAO/functions/protected/ProtectionBase.sol";
+// Storage
+import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
+
 import { Tally } from "bundle/textDAO/functions/Tally.sol";
 
 contract ConfigOverrideProtected is ProtectionBase {

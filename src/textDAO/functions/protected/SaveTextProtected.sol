@@ -1,8 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
+// Access Control
 import {ProtectionBase} from "bundle/textDAO/functions/protected/ProtectionBase.sol";
+// Storage
 import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
+// Interface
 import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
 
 contract SaveTextProtected is ProtectionBase {

@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
+// Storage
 import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
-import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
 import {SelectorLib} from "bundle/textDAO/functions/_utils/SelectorLib.sol";
+// Interface
+import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
 
-contract ProtectionBase {
+abstract contract ProtectionBase {
     /**
     * 1. MUST Approved
     * 2. MUST NOT Executed yet

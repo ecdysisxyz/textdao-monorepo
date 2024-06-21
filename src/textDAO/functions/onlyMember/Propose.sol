@@ -1,17 +1,20 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
+// Access Control
 import {OnlyMemberBase} from "bundle/textDAO/functions/onlyMember/OnlyMemberBase.sol";
+// Storage
 import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
-import {Types} from "bundle/textDAO/storages/Types.sol";
-import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
-import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
-import "@chainlink/vrf/interfaces/VRFCoordinatorV2Interface.sol";
 import {DeliberationLib} from "bundle/textDAO/storages/utils/DeliberationLib.sol";
 import {ProposalLib} from "bundle/textDAO/storages/utils/ProposalLib.sol";
+// Interface
 import {IPropose} from "bundle/textDAO/interfaces/TextDAOFunctions.sol";
+import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
+import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
 
-contract Propose is OnlyMemberBase, IPropose {
+import "@chainlink/vrf/interfaces/VRFCoordinatorV2Interface.sol";
+
+contract Propose is IPropose, OnlyMemberBase {
     using DeliberationLib for Schema.Deliberation;
     using ProposalLib for Schema.Proposal;
 

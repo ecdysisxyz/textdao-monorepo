@@ -1,9 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {VRFConsumerV2Interface} from "bundle/textDAO/interfaces/VRFConsumerV2Interface.sol";
+// Access Control
 import {OnlyVrfCoordinatorBase} from "bundle/textDAO/functions/onlyVrfCoordinator/OnlyVrfCoordinatorBase.sol";
+// Storage
 import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
+// Interface
+import {VRFConsumerV2Interface} from "bundle/textDAO/interfaces/VRFConsumerV2Interface.sol";
 
 contract RawFulfillRandomWords is VRFConsumerV2Interface, OnlyVrfCoordinatorBase {
     function rawFulfillRandomWords(uint256 requestId, uint256[] memory randomWords) external onlyVrfCoordinator {
