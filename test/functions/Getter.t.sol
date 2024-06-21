@@ -13,7 +13,7 @@ contract GetterTest is MCTest {
         address getter = address(new Getter());
         _use(Getter.getProposal.selector, getter);
         _use(Getter.getProposalHeaders.selector, getter);
-        _use(Getter.getProposalCommand.selector, getter);
+        // _use(Getter.getProposalCommand.selector, getter);
         _use(Getter.getProposalsConfig.selector, getter);
         _use(Getter.getText.selector, getter);
         _use(Getter.getTexts.selector, getter);
@@ -41,8 +41,8 @@ contract GetterTest is MCTest {
         Schema.Header[] memory headers = Getter(address(this)).getProposalHeaders(1);
         assertEq(headers.length, 1);
 
-        Schema.Command memory cmd = Getter(address(this)).getProposalCommand(1, 0);
-        assertEq(cmd.actions.length, 1);
+        // Schema.Command memory cmd = Getter(address(this)).getProposalCommand(1, 0);
+        // assertEq(cmd.actions.length, 1);
 
         Schema.DeliberationConfig memory resProposalsConfig = Getter(address(this)).getProposalsConfig();
         assertEq(resProposalsConfig.expiryDuration, 1);

@@ -1,22 +1,32 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
+// Access Control
 import {OnlyRepsBase} from "bundle/textDAO/functions/onlyReps/OnlyRepsBase.sol";
+// Storage
 import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
-import {Types} from "bundle/textDAO/storages/Types.sol";
+import {ProposalLib} from "bundle/textDAO/storages/utils/ProposalLib.sol";
+// Interface
+import {IFork} from "bundle/textDAO/interfaces/TextDAOFunctions.sol";
 import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
 
-contract Fork is OnlyRepsBase {
-    function fork(uint pid, Types.ProposalArg calldata _p) external onlyReps(pid) {
-        Schema.Proposal storage $p = Storage.Deliberation().proposals[pid];
+/**
+ * @title Fork function
+ * @custom:version interface:0.1
+ */
+contract Fork is IFork, OnlyRepsBase {
+    using ProposalLib for Schema.Proposal;
 
-        if (_p.header.metadataURI.length > 0) {
-            $p.headers.push(_p.header);
-            emit TextDAOEvents.HeaderForked(pid, _p.header);
+    function fork(uint pid, string calldata headerMetadataURI, Schema.Action[] calldata actions) external onlyReps(pid) {
+        Schema.Proposal storage $proposal = Storage.Deliberation().proposals[pid];
+
+        if (bytes(headerMetadataURI).length > 0) {
+            $proposal.createHeader(headerMetadataURI);
+            emit TextDAOEvents.HeaderForked(pid, headerMetadataURI);
         }
-        if (_p.cmd.actions.length > 0) {
-            $p.cmds.push(_p.cmd);
-            emit TextDAOEvents.CommandForked(pid, _p.cmd);
+        if (actions.length > 0) {
+            $proposal.createCommand(actions);
+            emit TextDAOEvents.CommandForked(pid, actions);
         }
         // Note: Shadow(sender, timestamp)
     }

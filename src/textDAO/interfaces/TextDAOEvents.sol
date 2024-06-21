@@ -5,14 +5,14 @@ import {Schema} from "bundle/textDAO/storages/Schema.sol";
 
 interface TextDAOEvents {
     // Propose
-    event HeaderProposed(uint pid, Schema.Header header);
-    event CommandProposed(uint pid, Schema.Command cmd);
+    event HeaderProposed(uint pid, string metadataURI);
+    event CommandProposed(uint pid, Schema.Action[] actions);
+    // Fork
+    event HeaderForked(uint pid, string metadataURI);
+    event CommandForked(uint pid, Schema.Action[] actions);
     // Vote
     event HeaderScored(uint pid, uint headerId, uint currentScore);
     event CmdScored(uint pid, uint cmdId, uint currentScore);
-    // Fork
-    event HeaderForked(uint pid, Schema.Header header);
-    event CommandForked(uint pid, Schema.Command cmd);
     // Tally
     event ProposalTallied(uint pid, Schema.ProposalMeta proposalMeta);
     // SaveText

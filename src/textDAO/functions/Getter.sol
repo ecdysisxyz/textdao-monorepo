@@ -24,9 +24,9 @@ contract Getter {
         return Storage.Deliberation().proposals[pid].headers;
     }
 
-    function getProposalCommand(uint pid, uint cid) external view returns(Schema.Command memory) {
-        return Storage.Deliberation().proposals[pid].cmds[cid];
-    }
+    // function getProposalCommand(uint pid, uint cid) external view returns(Schema.Command memory) {
+    //     return Storage.Deliberation().proposals[pid].cmds[cid];
+    // }
 
     function getProposalsConfig() external view returns (Schema.DeliberationConfig memory) {
         return Storage.Deliberation().config;

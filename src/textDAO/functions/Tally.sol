@@ -1,14 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
+// Storage
 import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
-import {Types} from "bundle/textDAO/storages/Types.sol";
 import {SortLib} from "bundle/textDAO/storages/utils/SortLib.sol";
-import {SelectorLib} from "bundle/textDAO/functions/_utils/SelectorLib.sol";
+// Interface
+import {ITally} from "bundle/textDAO/interfaces/TextDAOFunctions.sol";
 import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
 
-contract Tally {
-    function tally(uint pid) external onlyOncePerInterval(pid) returns (bool) {
+import {Types} from "bundle/textDAO/storages/Types.sol";
+import {SelectorLib} from "bundle/textDAO/functions/_utils/SelectorLib.sol";
+
+contract Tally is ITally {
+    function tally(uint pid) external onlyOncePerInterval(pid) {
         Schema.Deliberation storage $ = Storage.Deliberation();
         Schema.Proposal storage $p = $.proposals[pid];
         Schema.Header[] storage $headers = $p.headers;
@@ -84,27 +88,27 @@ contract Tally {
             }
 
             if(vars.cmdRank2 < $p.cmds.length){
-                vars.topCommands[i] = $p.cmds[vars.cmdRank2];
+                // vars.topCommands[i] = $p.cmds[vars.cmdRank2];
             }
         }
 
         // Re-populate with top ranked items
         // next{Header,Cmd}TallyFrom effectively remains these top-3 elements
-        for (uint i = 0; i < 3; ++i) {
-            $p.headers[vars.headerRank2].id = vars.topHeaders[i].id;
-            $p.headers[vars.headerRank2].currentScore = vars.topHeaders[i].currentScore;
-            $p.headers[vars.headerRank2].metadataURI = vars.topHeaders[i].metadataURI;
-            for (uint j; j < vars.topHeaders[i].tagIds.length; j++) {
-                $p.headers[vars.headerRank2].tagIds[j] = vars.topHeaders[i].tagIds[j];
-            }
+        // for (uint i = 0; i < 3; ++i) {
+        //     $p.headers[vars.headerRank2].id = vars.topHeaders[i].id;
+        //     $p.headers[vars.headerRank2].currentScore = vars.topHeaders[i].currentScore;
+        //     $p.headers[vars.headerRank2].metadataURI = vars.topHeaders[i].metadataURI;
+        //     for (uint j; j < vars.topHeaders[i].tagIds.length; j++) {
+        //         $p.headers[vars.headerRank2].tagIds[j] = vars.topHeaders[i].tagIds[j];
+        //     }
 
-            $p.cmds[vars.cmdRank2].id = vars.topCommands[i].id;
-            for (uint j; j < vars.topCommands[i].actions.length; j++) {
-                $p.cmds[vars.cmdRank2].actions[j].funcSig = vars.topCommands[i].actions[j].funcSig;
-                $p.cmds[vars.cmdRank2].actions[j].abiParams = vars.topCommands[i].actions[j].abiParams;
-            }
-            $p.cmds[vars.cmdRank2].currentScore = vars.topCommands[i].currentScore;
-        }
+        //     $p.cmds[vars.cmdRank2].id = vars.topCommands[i].id;
+        //     for (uint j; j < vars.topCommands[i].actions.length; j++) {
+        //         $p.cmds[vars.cmdRank2].actions[j].funcSig = vars.topCommands[i].actions[j].funcSig;
+        //         $p.cmds[vars.cmdRank2].actions[j].abiParams = vars.topCommands[i].actions[j].abiParams;
+        //     }
+        //     $p.cmds[vars.cmdRank2].currentScore = vars.topCommands[i].currentScore;
+        // }
 
         // interval flag
         require($.config.tallyInterval > 0, "Set tally interval at config.");

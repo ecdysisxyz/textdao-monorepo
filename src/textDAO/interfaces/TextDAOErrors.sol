@@ -2,6 +2,8 @@
 pragma solidity ^0.8.24;
 
 interface TextDAOErrors {
+    // Propose
+    error HeaderMetadataIsRequired();
     // OnlyMember
     error YouAreNotTheMember();
     // OnlyReps

@@ -31,7 +31,9 @@ contract MemberJoinProtectedTest is MCTest {
         vm.warp(execTime);
 
         $proposal.proposalMeta.cmdRank = [uint256(1), 0, 0];
-        $proposal.cmds.push().createMemberJoinAction(0, candidates).status = Schema.ActionStatus.Approved;
+        Schema.Command storage $cmd = $proposal.cmds.push();
+        $cmd.createMemberJoinAction(0, candidates);
+        $cmd.actionStatuses[0] = Schema.ActionStatus.Approved;
 
         MemberJoinProtected(target).memberJoin({
             pid: 0,
@@ -62,7 +64,9 @@ contract MemberJoinProtectedTest is MCTest {
     function test_memberJoin_revert_alreadyExecuted() public {
         Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
         $proposal.proposalMeta.cmdRank = [uint256(1), 0, 0];
-        $proposal.cmds.push().createMemberJoinAction(0, new Schema.Member[](1)).status = Schema.ActionStatus.Executed;
+        Schema.Command storage $cmd = $proposal.cmds.push();
+        $cmd.createMemberJoinAction(0, new Schema.Member[](1));
+        $cmd.actionStatuses[0] = Schema.ActionStatus.Executed;
 
         vm.expectRevert(TextDAOErrors.ActionAlreadyExecuted.selector);
         MemberJoinProtected(target).memberJoin({

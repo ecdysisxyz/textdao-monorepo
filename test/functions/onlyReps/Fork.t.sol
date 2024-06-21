@@ -6,9 +6,9 @@ import {TestUtils} from "test/fixtures/TestUtils.sol";
 
 import {
     Fork,
+    IFork,
     Storage,
-    Schema,
-    Types
+    Schema
 } from "bundle/textDAO/functions/onlyReps/Fork.sol";
 import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
 
@@ -22,15 +22,15 @@ contract ForkTest is MCTest {
         uint pid = 0;
         Schema.Proposal storage $p = Storage.Deliberation().proposals.push();
 
-        Types.ProposalArg memory p;
-        p.header.metadataURI = "Qc.....xh";
-        p.cmd.actions = new Schema.Action[](1);
-
         assertEq($p.headers.length, 0);
         assertEq($p.cmds.length, 0);
 
         TestUtils.setMsgSenderAsRep(pid);
-        Fork(address(this)).fork(pid, p);
+        Fork(target).fork({
+            pid: pid,
+            headerMetadataURI: "Qc.....xh",
+            actions: new Schema.Action[](1)
+        });
 
         assertEq($p.headers.length, 1);
         assertEq($p.cmds.length, 1);
@@ -39,12 +39,12 @@ contract ForkTest is MCTest {
     function test_fork_revert_notRep() public {
         Storage.Deliberation().proposals.push();
 
-        Types.ProposalArg memory p;
-        p.header.metadataURI = "Qc.....xh";
-        p.cmd.actions = new Schema.Action[](1);
-
         vm.expectRevert(TextDAOErrors.YouAreNotTheRep.selector);
-        Fork(address(this)).fork(0, p);
+        Fork(target).fork({
+            pid: 0,
+            headerMetadataURI: "Qc.....xh",
+            actions: new Schema.Action[](1)
+        });
     }
 
 }

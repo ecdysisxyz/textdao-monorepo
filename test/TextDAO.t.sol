@@ -43,7 +43,9 @@ contract TextDAOTest is MCTest {
         uint pid = 0;
         uint textId = 0;
 
-        $proposal.cmds.push().createSaveTextAction(pid, textId, metadataURIs).status = Schema.ActionStatus.Approved; // Note: initialize for storage array
+        Schema.Command storage $cmd = $proposal.cmds.push();
+        $cmd.createSaveTextAction(pid, textId, metadataURIs);
+        $cmd.actionStatuses[0] = Schema.ActionStatus.Approved; // Note: initialize for storage array
         $proposal.proposalMeta.cmdRank = [uint256(1), 0, 0]; // Note: initialize for storage array
 
         // assertEq($text.metadataURIs.length, 0);
@@ -71,7 +73,9 @@ contract TextDAOTest is MCTest {
 
         Schema.Members storage $m = Storage.Members();
 
-        $proposal.cmds.push().createMemberJoinAction(pid, candidates).status = Schema.ActionStatus.Approved; // Note: initialize for storage array
+        Schema.Command storage $cmd = $proposal.cmds.push();
+        $cmd.createMemberJoinAction(pid, candidates);
+        $cmd.actionStatuses[0] = Schema.ActionStatus.Approved; // Note: initialize for storage array
 
         $proposal.proposalMeta.cmdRank = [uint256(1), 0, 0]; // Note: initialize for storage array
 

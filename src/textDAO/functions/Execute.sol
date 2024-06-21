@@ -1,12 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import { Storage } from "bundle/textDAO/storages/Storage.sol";
-import { Schema } from "bundle/textDAO/storages/Schema.sol";
+// Storage
+import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
+// Interface
+import {IExecute} from "bundle/textDAO/interfaces/TextDAOFunctions.sol";
+
 import { DecodeErrorString } from "@devkit/system/message/DecodeErrorString.sol";
 
-contract Execute {
-    function execute(uint pid) external returns (bool) {
+contract Execute is IExecute {
+    function execute(uint pid) external {
         // TODO ProposalNotFound
         Schema.Deliberation storage $ = Storage.Deliberation();
         Schema.Proposal storage $p = $.proposals[pid];

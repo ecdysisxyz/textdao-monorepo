@@ -4,17 +4,18 @@ pragma solidity ^0.8.24;
 import {MCTest, console2} from "@devkit/Flattened.sol";
 
 import {DeployLib} from "script/deployment/DeployLib.sol";
-import {TextDAOFacade, Schema} from "bundle/textDAO/interfaces/TextDAOFacade.sol";
+import {ITextDAO, Schema} from "bundle/textDAO/interfaces/ITextDAO.sol";
+import {IPropose, IFork} from "bundle/textDAO/interfaces/TextDAOFunctions.sol";
 
 import {Types} from "bundle/textDAO/storages/Types.sol";
 
 import {MemberJoinProtected} from "bundle/textDAO/functions/protected/MemberJoinProtected.sol";
 
 contract TextDAOScenarioTest is MCTest {
-    TextDAOFacade textDAO;
+    ITextDAO textDAO;
 
     function setUp() public {
-        textDAO = TextDAOFacade(DeployLib.deployTextDAO(mc));
+        textDAO = ITextDAO(DeployLib.deployTextDAO(mc));
     }
 
     function test_scenario_withoutVrf() public {
@@ -33,52 +34,46 @@ contract TextDAOScenarioTest is MCTest {
 
 
         // 2. propose
-        Types.ProposalArg memory _p;
+        IPropose.ProposeArgs memory _pArgs;
+        _pArgs.headerMetadataURI = "cid:XXX";
 
-        uint256 pid0 = textDAO.propose(_p);
-        uint256 pid1 = textDAO.propose(_p);
-        uint256 pid2 = textDAO.propose(_p);
+        uint256 pid0 = textDAO.propose(_pArgs);
+        uint256 pid1 = textDAO.propose(_pArgs);
+        uint256 pid2 = textDAO.propose(_pArgs);
 
 
         // 3. fork
-        _p.header.metadataURI = "Qm...";
-        _p.cmd.actions = new Schema.Action[](1);
-        _p.cmd.actions[0] = Schema.Action({
-            funcSig: "memberJoin(uint256,(address,string)[])",
-            abiParams: abi.encode(pid1, new Schema.Member[](1)),
-            status: Schema.ActionStatus.Proposed
+        string memory headerMetadataURI1 = "Qm...";
+        string memory headerMetadataURI2 = "Qm.......";
+        string memory headerMetadataURI3 = "Qm.......aaa";
+        Schema.Action[] memory actions1 = new Schema.Action[](1);
+        actions1[0] = Schema.Action({
+                funcSig: "memberJoin(uint256,(address,string)[])",
+                abiParams: abi.encode(pid1, new Schema.Member[](1))
         });
-
-        Types.ProposalArg memory _p2;
-        _p2.header.metadataURI = "Qm.......";
-        _p2.cmd.actions = new Schema.Action[](1);
-        _p2.cmd.actions[0] = Schema.Action({
+        Schema.Action[] memory actions2 = new Schema.Action[](1);
+        actions2[0] = Schema.Action({
             funcSig: "saveText(uint256,uint256,string[])",
-            abiParams: abi.encode(1, 1, new string[](1)),
-            status: Schema.ActionStatus.Proposed
+            abiParams: abi.encode(1, 1, new string[](1))
         });
-
-        Types.ProposalArg memory _p3;
-        _p3.header.metadataURI = "Qm.......";
-        _p3.cmd.actions = new Schema.Action[](1);
-        _p3.cmd.actions[0] = Schema.Action({
+        Schema.Action[] memory actions3 = new Schema.Action[](1);
+        actions3[0] = Schema.Action({
             funcSig: "saveText(uint256,uint256,string[])",
-            abiParams: abi.encode(pid0, new Schema.Member[](1)), // TODO Oops...
-            status: Schema.ActionStatus.Proposed
+            abiParams: abi.encode(pid0, new Schema.Member[](1)) // TODO Oops...
         });
 
-        textDAO.fork(pid0, _p);
-        textDAO.fork(pid0, _p);
-        textDAO.fork(pid1, _p2);
-        textDAO.fork(pid0, _p);
-        textDAO.fork(pid0, _p);
-        textDAO.fork(pid1, _p);
-        textDAO.fork(pid1, _p);
-        textDAO.fork(pid0, _p);
-        textDAO.fork(pid0, _p);
-        textDAO.fork(pid2, _p3); // TODO need at least 3 forks to tally
-        textDAO.fork(pid2, _p3);
-        textDAO.fork(pid2, _p3);
+        textDAO.fork(pid0, headerMetadataURI1, actions1);
+        textDAO.fork(pid0, headerMetadataURI1, actions1);
+        textDAO.fork(pid1, headerMetadataURI2, actions2);
+        textDAO.fork(pid0, headerMetadataURI1, actions1);
+        textDAO.fork(pid0, headerMetadataURI1, actions1);
+        textDAO.fork(pid1, headerMetadataURI1, actions1);
+        textDAO.fork(pid1, headerMetadataURI1, actions1);
+        textDAO.fork(pid0, headerMetadataURI1, actions1);
+        textDAO.fork(pid0, headerMetadataURI1, actions1);
+        textDAO.fork(pid2, headerMetadataURI3, actions3); // TODO need at least 3 forks to tally
+        textDAO.fork(pid2, headerMetadataURI3, actions3);
+        textDAO.fork(pid2, headerMetadataURI3, actions3);
 
 
         // 4. vote
@@ -143,19 +138,10 @@ contract TextDAOScenarioTest is MCTest {
             vrfRequestId: 0
         });
         proposalMeta.reps[0] = address(this);
-        Types.ProposalArg memory proposalArg = Types.ProposalArg({
-            header: Schema.Header({
-                id: 0,
-                currentScore: 0,
-                metadataURI: bytes32("Implement MemberJoinProtected"),
-                tagIds: new uint[](0)
-            }),
-            cmd: Schema.Command({
-                id: 0,
-                actions: new Schema.Action[](1),
-                currentScore: 0
-            }),
-            proposalMeta: proposalMeta
+
+        IPropose.ProposeArgs memory _proposeArgs = IPropose.ProposeArgs({
+            headerMetadataURI: "Implement MemberJoinProtected",
+            actions: new Schema.Action[](1)
         });
 
         uint plannedProposalId = 0;
@@ -165,12 +151,11 @@ contract TextDAOScenarioTest is MCTest {
             metadataURI: "exampleURI" // Example metadata URI
         });
 
-        proposalArg.cmd.actions[0] = Schema.Action({
+        _proposeArgs.actions[0] = Schema.Action({
             funcSig: "memberJoin(uint256,(address,string)[])",
-            abiParams: abi.encode(plannedProposalId, candidates),
-            status: Schema.ActionStatus.Proposed
+            abiParams: abi.encode(plannedProposalId, candidates)
         });
-        uint proposalId = textDAO.propose(proposalArg);
+        uint proposalId = textDAO.propose(_proposeArgs);
         require(plannedProposalId == proposalId, "Proposal IDs do not match");
 
 

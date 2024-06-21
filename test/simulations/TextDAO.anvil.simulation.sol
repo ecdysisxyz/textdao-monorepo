@@ -6,12 +6,13 @@ import {MCTest, console2, StdChains} from "@devkit/Flattened.sol";
 import {TestUtils} from "test/fixtures/TestUtils.sol";
 
 import {DeployLib} from "script/deployment/DeployLib.sol";
-import {TextDAOFacade, Schema} from "bundle/textDAO/interfaces/TextDAOFacade.sol";
+import {ITextDAO, Schema} from "bundle/textDAO/interfaces/ITextDAO.sol";
 
+import {IPropose} from "bundle/textDAO/functions/onlyMember/Propose.sol";
 import {Types} from "bundle/textDAO/storages/Types.sol";
 
 contract TextDAOAnvilSimulation is MCTest {
-    TextDAOFacade textDAO;
+    ITextDAO textDAO;
 
     function setUp() public {
         StdChains.Chain memory chain = getChain("anvil");
@@ -19,7 +20,7 @@ contract TextDAOAnvilSimulation is MCTest {
         string memory envKey = string.concat("TEXT_DAO_ADDR_", vm.toString(chain.chainId));
         address textDAOAddr = vm.envAddress(envKey);
         if (textDAOAddr.code.length == 0) revert("TextDAO Not Deployed Yet");
-        textDAO = TextDAOFacade(textDAOAddr);
+        textDAO = ITextDAO(textDAOAddr);
     }
 
     function test_scenario() public {
@@ -50,19 +51,9 @@ contract TextDAOAnvilSimulation is MCTest {
             vrfRequestId: 0
         });
         proposalMeta.reps[0] = address(this);
-        Types.ProposalArg memory proposalArg = Types.ProposalArg({
-            header: Schema.Header({
-                id: 0,
-                currentScore: 0,
-                metadataURI: bytes32("Implement MemberJoinProtected"),
-                tagIds: new uint[](0)
-            }),
-            cmd: Schema.Command({
-                id: 0,
-                actions: new Schema.Action[](1),
-                currentScore: 0
-            }),
-            proposalMeta: proposalMeta
+        IPropose.ProposeArgs memory _proposeArgs = IPropose.ProposeArgs({
+            headerMetadataURI: "Implement MemberJoinProtected",
+            actions: new Schema.Action[](1)
         });
 
         uint plannedProposalId = 0;
@@ -72,12 +63,11 @@ contract TextDAOAnvilSimulation is MCTest {
             metadataURI: "exampleURI" // Example metadata URI
         });
 
-        proposalArg.cmd.actions[0] = Schema.Action({
+        _proposeArgs.actions[0] = Schema.Action({
             funcSig: "memberJoin(uint256,(address,string)[])",
-            abiParams: abi.encode(plannedProposalId, candidates),
-            status: Schema.ActionStatus.Proposed
+            abiParams: abi.encode(plannedProposalId, candidates)
         });
-        uint proposalId = textDAO.propose(proposalArg);
+        uint proposalId = textDAO.propose(_proposeArgs);
         require(plannedProposalId == proposalId, "Proposal IDs do not match");
 
 
