@@ -29,7 +29,7 @@ export class CommandProposed__Params {
 
   get cmd(): CommandProposedCmdStruct {
     return changetype<CommandProposedCmdStruct>(
-      this._event.parameters[1].value.toTuple(),
+      this._event.parameters[1].value.toTuple()
     );
   }
 }
@@ -77,7 +77,7 @@ export class HeaderProposed__Params {
 
   get header(): HeaderProposedHeaderStruct {
     return changetype<HeaderProposedHeaderStruct>(
-      this._event.parameters[1].value.toTuple(),
+      this._event.parameters[1].value.toTuple()
     );
   }
 }
@@ -111,7 +111,7 @@ export class Propose__proposeInput_pStruct extends ethereum.Tuple {
 
   get proposalMeta(): Propose__proposeInput_pProposalMetaStruct {
     return changetype<Propose__proposeInput_pProposalMetaStruct>(
-      this[2].toTuple(),
+      this[2].toTuple()
     );
   }
 }
@@ -201,7 +201,7 @@ export class Propose extends ethereum.SmartContract {
     let result = super.call(
       "propose",
       "propose(((uint256,uint256,bytes32,uint256[]),(uint256,(string,bytes)[],uint256),(uint256,uint256[],uint256[],uint256,uint256,address[],uint256,uint256))):(uint256)",
-      [ethereum.Value.fromTuple(_p)],
+      [ethereum.Value.fromTuple(_p)]
     );
 
     return result[0].toBigInt();
@@ -211,7 +211,7 @@ export class Propose extends ethereum.SmartContract {
     let result = super.tryCall(
       "propose",
       "propose(((uint256,uint256,bytes32,uint256[]),(uint256,(string,bytes)[],uint256),(uint256,uint256[],uint256[],uint256,uint256,address[],uint256,uint256))):(uint256)",
-      [ethereum.Value.fromTuple(_p)],
+      [ethereum.Value.fromTuple(_p)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -240,7 +240,7 @@ export class ProposeCall__Inputs {
 
   get _p(): ProposeCall_pStruct {
     return changetype<ProposeCall_pStruct>(
-      this._call.inputValues[0].value.toTuple(),
+      this._call.inputValues[0].value.toTuple()
     );
   }
 }

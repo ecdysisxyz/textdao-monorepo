@@ -5,8 +5,13 @@ import {
 import { Header, Command, Action } from "../generated/schema";
 
 export function handleHeaderProposed(event: HeaderProposedEvent): void {
-  let header = new Header(event.params.header.id.toHex());
-  header.proposal = event.params.pid.toHex();
+  const id = event.params.header.id.toString();
+  let header = Header.load(id);
+  if (header == null) {
+    header = new Header(event.params.header.id.toString());
+  }
+
+  header.proposal = event.params.pid.toString();
   header.currentScore = event.params.header.currentScore;
   header.metadataURI = event.params.header.metadataURI;
   header.tagIds = event.params.header.tagIds;
