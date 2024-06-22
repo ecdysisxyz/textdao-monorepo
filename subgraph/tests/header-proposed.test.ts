@@ -16,9 +16,8 @@ describe("HeaderProposed", () => {
 
   test("create and store Header", () => {
     assert.entityCount("Header", 0);
-    let uriHex = Bytes.fromUTF8("uri").toHex();
-    let event = createHeaderProposed(1, 2, 3, uriHex, 4, 5);
-    handleHeaderProposed(event);
+    const uriHex = Bytes.fromUTF8("uri").toHex();
+    handleHeaderProposed(createHeaderProposed(1, 2, 3, uriHex, 4, 5));
     assert.entityCount("Header", 1);
 
     assert.fieldEquals("Header", "1", "id", "1");
@@ -30,7 +29,7 @@ describe("HeaderProposed", () => {
 
   test("create or update Header", () => {
     assert.entityCount("Header", 0);
-    let uriHex = Bytes.fromUTF8("uri").toHex();
+    const uriHex = Bytes.fromUTF8("uri").toHex();
     handleHeaderProposed(createHeaderProposed(1, 2, 3, uriHex, 4, 5));
     handleHeaderProposed(createHeaderProposed(1, 12, 13, uriHex, 14, 15));
     assert.entityCount("Header", 1);
@@ -44,7 +43,7 @@ describe("HeaderProposed", () => {
 
   test("create 2 Header", () => {
     assert.entityCount("Header", 0);
-    let uriHex = Bytes.fromUTF8("uri").toHex();
+    const uriHex = Bytes.fromUTF8("uri").toHex();
     handleHeaderProposed(createHeaderProposed(1, 2, 3, uriHex, 4, 5));
     handleHeaderProposed(createHeaderProposed(2, 12, 13, uriHex, 14, 15));
     assert.entityCount("Header", 2);

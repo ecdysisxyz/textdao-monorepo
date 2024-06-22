@@ -3,12 +3,13 @@ import {
   CommandProposed as CommandProposedEvent,
 } from "../generated/Propose/Propose";
 import { Header, Command, Action } from "../generated/schema";
+import { store } from "@graphprotocol/graph-ts";
 
 export function handleHeaderProposed(event: HeaderProposedEvent): void {
   const id = event.params.header.id.toString();
   let header = Header.load(id);
   if (header == null) {
-    header = new Header(event.params.header.id.toString());
+    header = new Header(id);
   }
 
   header.proposal = event.params.pid.toString();
@@ -18,17 +19,28 @@ export function handleHeaderProposed(event: HeaderProposedEvent): void {
   header.save();
 }
 export function handleCommandProposed(event: CommandProposedEvent): void {
-  let command = new Command(event.params.cmd.id.toHex());
-  command.proposal = event.params.pid.toHex();
+  const id = event.params.cmd.id.toString();
+  let command = Command.load(id);
+  if (command == null) {
+    command = new Command(id);
+  }
+
+  let actions = command.actions.load();
+  for (let i: i32 = 0; i < actions.length; i++) {
+    let action = actions[i];
+    store.remove("Action", action.id);
+  }
+
+  command.proposal = event.params.pid.toString();
   command.currentScore = event.params.cmd.currentScore;
   command.save();
-  event.params.cmd.actions.forEach((params, index) => {
+  for (let i: i32 = 0; i < event.params.cmd.actions.length; i++) {
     let action = new Action(
-      event.transaction.hash.toHex() + "-" + index.toString()
+      event.transaction.hash.toHex() + "-" + i.toString()
     );
     action.command = command.id;
-    action.func = params.func;
-    action.abiParams = params.abiParams;
+    action.func = event.params.cmd.actions[i].func;
+    action.abiParams = event.params.cmd.actions[i].abiParams;
     action.save();
-  });
+  }
 }
