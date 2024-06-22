@@ -1,28 +1,30 @@
 type Proposal @entity {
-    id: BigInt!
+    id: ID!
     headers: [Header!]! @derivedFrom(field: "proposal")
     cmds: [Command!]! @derivedFrom(field: "proposal")
     proposalMeta: ProposalMeta @derivedFrom(field: "proposal")
 }
 type Header @entity {
-    id: BigInt!
+    id: ID!
     proposal: Proposal!
     currentScore: BigInt!
     metadataURI: Bytes!
     tagIds: [BigInt!]!
 }
 type Command @entity {
-    id: BigInt!
+    id: ID!
     proposal: Proposal!
     actions: [Action!]! @derivedFrom(field: "command")
     currentScore: BigInt!
 }
 type Action @entity {
+    id: ID!  # fill from thagraph
     command: Command!
     func: String!
     abiParams: Bytes!
 }
 type ProposalMeta @entity {
+    id: ID!  # fill from thagraph
     proposal: Proposal!
     currentScore: BigInt!
     headerRank: [BigInt!]!
@@ -34,12 +36,12 @@ type ProposalMeta @entity {
     createdAt: BigInt!
 }
 type Text @entity {
-    id: BigInt!
+    id: ID!
     metadataURIs: [Bytes!]!
-    bodies: [String]!
+    bodies: [String!]!
 }
 type Member @entity {
-    id: BigInt!
+    id: ID!
     addr: Bytes!
     metadataURI: Bytes!
 }

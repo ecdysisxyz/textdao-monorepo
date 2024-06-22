@@ -1,0 +1,33 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Propose
+    network: mainnet
+    source:
+      startBlock: 5041207
+      abi: Propose
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Proposal
+        - Header
+        - Command
+        - Action
+        - ProposalMeta
+        - Text
+        - Member
+      abis:
+        - name: Propose
+          file: ../out/Propose.sol/Propose.json
+      eventHandlers:
+        - event: HeaderProposed(uint256,(uint256,uint256,bytes32,uint256[]))
+          handler: handleHeaderProposed
+        - event: CommandProposed(uint256,(uint256,(string,bytes)[],uint256))
+          handler: handleCommandProposed
+      file: ./src/mapping.ts
