@@ -21,7 +21,7 @@ contract Tally is ITally {
     function tally(uint pid) external {
         Schema.Proposal storage $proposal = Storage.Deliberation().proposals[pid];
 
-        if (block.timestamp <= $proposal.proposalMeta.expirationTime) revert TextDAOErrors.ProposalNotExpiredYet();
+        if (!$proposal.isExpired()) revert TextDAOErrors.ProposalNotExpiredYet();
 
         (uint[] memory _headerVotes, uint[] memory _commandVotes) = $proposal.calcVotes();
 

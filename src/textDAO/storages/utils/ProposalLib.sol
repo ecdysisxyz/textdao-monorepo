@@ -39,4 +39,8 @@ library ProposalLib {
         }
     }
 
+    function isExpired(Schema.Proposal storage $proposal) internal view returns(bool) {
+        return $proposal.proposalMeta.expirationTime < block.timestamp;
+    }
+
 }
