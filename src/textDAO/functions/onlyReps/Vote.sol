@@ -10,6 +10,15 @@ import {IVote} from "bundle/textDAO/interfaces/TextDAOFunctions.sol";
 import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
 
 contract Vote is IVote, OnlyRepsBase {
+    function vote(uint pid, Schema.Vote calldata repVote) external onlyReps(pid) {
+        Schema.Proposal storage $proposal = Storage.Deliberation().proposals[pid];
+
+        // TODO validate not expired
+        // TODO validate correct headerId & commandId
+
+        $proposal.proposalMeta.votes[msg.sender] = repVote;
+    }
+
     function voteHeaders(uint pid, uint[3] calldata headerIds) external onlyReps(pid) {
         // TODO ProposalNotFound
         Schema.Proposal storage $p = Storage.Deliberation().proposals[pid];

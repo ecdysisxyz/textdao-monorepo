@@ -42,15 +42,25 @@ interface Schema {
         Executed
     }
     struct ProposalMeta {
+        address[] reps;
+        mapping(address rep => Vote) votes;
+        uint[] headerScores;
+        uint[] commandScores;
+        uint approvedHeaderId;
+        uint approvedCommandId;
+        uint expirationTime;
+        uint vrfRequestId;
+
         uint currentScore;
         uint[] headerRank;
         uint[] cmdRank;
         uint nextHeaderTallyFrom;
         uint nextCmdTallyFrom;
-        address[] reps;
         uint createdAt;
-        uint expirationTime;
-        uint vrfRequestId;
+    }
+    struct Vote {
+        uint[3] rankedHeaderIds;
+        uint[3] rankedCommandIds;
     }
 
 

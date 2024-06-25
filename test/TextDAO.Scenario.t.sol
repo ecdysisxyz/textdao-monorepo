@@ -97,13 +97,13 @@ contract TextDAOScenarioTest is MCTest {
 
 
         // 5. tally
+        vm.warp(block.timestamp + pConfig.expiryDuration + 1);
         textDAO.tally(pid0);
         textDAO.tally(pid1);
         textDAO.tally(pid2);
 
 
         // 6. execute
-        vm.warp(block.timestamp + pConfig.expiryDuration + 1);
         textDAO.execute(pid0);
         textDAO.execute(pid1);
         textDAO.execute(pid2);
@@ -126,18 +126,18 @@ contract TextDAOScenarioTest is MCTest {
         vm.warp(block.timestamp + 20);
 
 
-        Schema.ProposalMeta memory proposalMeta = Schema.ProposalMeta({
-            currentScore: 0,
-            headerRank: new uint[](0),
-            cmdRank: new uint[](0),
-            nextHeaderTallyFrom: 0,
-            nextCmdTallyFrom: 0,
-            reps: new address[](1),
-            createdAt: block.timestamp,
-            expirationTime: block.timestamp + 2 minutes,
-            vrfRequestId: 0
-        });
-        proposalMeta.reps[0] = address(this);
+        // Schema.ProposalMeta memory proposalMeta = Schema.ProposalMeta({
+        //     currentScore: 0,
+        //     headerRank: new uint[](0),
+        //     cmdRank: new uint[](0),
+        //     nextHeaderTallyFrom: 0,
+        //     nextCmdTallyFrom: 0,
+        //     reps: new address[](1),
+        //     createdAt: block.timestamp,
+        //     expirationTime: block.timestamp + 2 minutes,
+        //     vrfRequestId: 0
+        // });
+        // proposalMeta.reps[0] = address(this);
 
         IPropose.ProposeArgs memory _proposeArgs = IPropose.ProposeArgs({
             headerMetadataURI: "Implement MemberJoinProtected",

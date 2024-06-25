@@ -39,18 +39,18 @@ contract TextDAOAnvilSimulation is MCTest {
         vm.warp(block.timestamp + 20);
 
 
-        Schema.ProposalMeta memory proposalMeta = Schema.ProposalMeta({
-            currentScore: 0,
-            headerRank: new uint[](0),
-            cmdRank: new uint[](0),
-            nextHeaderTallyFrom: 0,
-            nextCmdTallyFrom: 0,
-            reps: new address[](1),
-            createdAt: block.timestamp,
-            expirationTime: block.timestamp + 2 minutes,
-            vrfRequestId: 0
-        });
-        proposalMeta.reps[0] = address(this);
+        // Schema.ProposalMeta memory proposalMeta = Schema.ProposalMeta({
+        //     currentScore: 0,
+        //     headerRank: new uint[](0),
+        //     cmdRank: new uint[](0),
+        //     nextHeaderTallyFrom: 0,
+        //     nextCmdTallyFrom: 0,
+        //     reps: new address[](1),
+        //     createdAt: block.timestamp,
+        //     expirationTime: block.timestamp + 2 minutes,
+        //     vrfRequestId: 0
+        // });
+        // proposalMeta.reps[0] = address(this);
         IPropose.ProposeArgs memory _proposeArgs = IPropose.ProposeArgs({
             headerMetadataURI: "Implement MemberJoinProtected",
             actions: new Schema.Action[](1)
