@@ -2,6 +2,10 @@ import {
   HeaderProposed as HeaderProposedEvent,
   CommandProposed as CommandProposedEvent,
 } from "../generated/Propose/Propose";
+import {
+  HeaderScored as HeaderScoredEvent,
+  CommandScored as CommandScoredEvent,
+} from "../generated/Vote/Vote";
 import { Header, Command, Action } from "../generated/schema";
 import { store } from "@graphprotocol/graph-ts";
 
@@ -43,4 +47,24 @@ export function handleCommandProposed(event: CommandProposedEvent): void {
     action.abiParams = event.params.cmd.actions[i].abiParams;
     action.save();
   }
+}
+export function handleHeaderScored(event: HeaderScoredEvent): void {
+  const id = event.params.headerId.toString();
+  let header = Header.load(id);
+  if (header == null) {
+    header = new Header(id);
+  }
+  header.proposal = event.params.pid.toString();
+  header.currentScore = event.params.currentScore;
+  header.save();
+}
+export function handleCommandScored(event: CommandScoredEvent): void {
+  const id = event.params.cmdId.toString();
+  let command = Command.load(id);
+  if (command == null) {
+    command = new Command(id);
+  }
+  command.proposal = event.params.pid.toString();
+  command.currentScore = event.params.currentScore;
+  command.save();
 }

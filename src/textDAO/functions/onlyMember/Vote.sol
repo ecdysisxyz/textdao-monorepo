@@ -6,7 +6,7 @@ import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
 
 contract Vote is OnlyMemberBase {
     event HeaderScored(uint pid, uint headerId, uint currentScore);
-    event CmdScored(uint pid, uint cmdId, uint currentScore);
+    event CommandScored(uint pid, uint cmdId, uint currentScore);
 
     function voteHeaders(uint pid, uint[3] calldata headerIds) external onlyMember returns (bool) {
         // TODO ProposalNotFound
@@ -40,19 +40,19 @@ contract Vote is OnlyMemberBase {
 
         if ($p.cmds[0].id == cmdIds[0]) {
             $p.cmds[cmdIds[0]].currentScore += 3;
-            emit CmdScored(pid, cmdIds[0], $p.cmds[cmdIds[0]].currentScore);
+            emit CommandScored(pid, cmdIds[0], $p.cmds[cmdIds[0]].currentScore);
         } else if ($p.cmds[1].id == cmdIds[0]) {
             $p.cmds[cmdIds[0]].currentScore += 3;
             $p.cmds[cmdIds[1]].currentScore += 2;
-            emit CmdScored(pid, cmdIds[0], $p.cmds[cmdIds[0]].currentScore);
-            emit CmdScored(pid, cmdIds[1], $p.cmds[cmdIds[1]].currentScore);
+            emit CommandScored(pid, cmdIds[0], $p.cmds[cmdIds[0]].currentScore);
+            emit CommandScored(pid, cmdIds[1], $p.cmds[cmdIds[1]].currentScore);
         } else {
             $p.cmds[cmdIds[0]].currentScore += 3;
             $p.cmds[cmdIds[1]].currentScore += 2;
             $p.cmds[cmdIds[2]].currentScore += 1;
-            emit CmdScored(pid, cmdIds[0], $p.cmds[cmdIds[0]].currentScore);
-            emit CmdScored(pid, cmdIds[1], $p.cmds[cmdIds[1]].currentScore);
-            emit CmdScored(pid, cmdIds[2], $p.cmds[cmdIds[2]].currentScore);
+            emit CommandScored(pid, cmdIds[0], $p.cmds[cmdIds[0]].currentScore);
+            emit CommandScored(pid, cmdIds[1], $p.cmds[cmdIds[1]].currentScore);
+            emit CommandScored(pid, cmdIds[2], $p.cmds[cmdIds[2]].currentScore);
         }
     }
 

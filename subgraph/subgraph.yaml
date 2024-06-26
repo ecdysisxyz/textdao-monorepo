@@ -31,3 +31,30 @@ dataSources:
         - event: CommandProposed(uint256,(uint256,(string,bytes)[],uint256))
           handler: handleCommandProposed
       file: ./src/mapping.ts
+  - kind: ethereum
+    name: Vote
+    network: mainnet
+    source:
+      startBlock: 5041207
+      abi: Vote
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Proposal
+        - Header
+        - Command
+        - Action
+        - ProposalMeta
+        - Text
+        - Member
+      abis:
+        - name: Vote
+          file: ../out/Vote.sol/Vote.json
+      eventHandlers:
+        - event: HeaderScored(uint256,uint256,uint256)
+          handler: handleHeaderScored
+        - event: CommandScored(uint256,uint256,uint256)
+          handler: handleCommandScored
+      file: ./src/mapping.ts

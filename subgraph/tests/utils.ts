@@ -1,6 +1,7 @@
 import { newMockEvent } from "matchstick-as";
 import { ethereum, Bytes, BigInt } from "@graphprotocol/graph-ts";
 import { CommandProposed, HeaderProposed } from "../generated/Propose/Propose";
+import { CommandScored, HeaderScored } from "../generated/Vote/Vote";
 
 export function createHeaderProposed(
   id: i32,
@@ -75,5 +76,61 @@ export function createCommandProposed(
   );
   event.transaction.hash = Bytes.fromHexString(txHash);
 
+  return event;
+}
+
+export function createHeaderScored(
+  id: i32,
+  pid: i32,
+  currentScore: i32
+): HeaderScored {
+  let event = changetype<HeaderScored>(newMockEvent());
+  event.parameters = new Array();
+  event.parameters.push(
+    new ethereum.EventParam(
+      "pid",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(pid))
+    )
+  );
+  event.parameters.push(
+    new ethereum.EventParam(
+      "id",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(id))
+    )
+  );
+  event.parameters.push(
+    new ethereum.EventParam(
+      "currentScore",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(currentScore))
+    )
+  );
+  return event;
+}
+
+export function createCommandScored(
+  id: i32,
+  pid: i32,
+  currentScore: i32
+): CommandScored {
+  let event = changetype<CommandScored>(newMockEvent());
+  event.parameters = new Array();
+  event.parameters.push(
+    new ethereum.EventParam(
+      "pid",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(pid))
+    )
+  );
+  event.parameters.push(
+    new ethereum.EventParam(
+      "id",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(id))
+    )
+  );
+  event.parameters.push(
+    new ethereum.EventParam(
+      "currentScore",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(currentScore))
+    )
+  );
   return event;
 }
