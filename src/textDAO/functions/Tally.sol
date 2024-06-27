@@ -36,6 +36,10 @@ contract Tally is ITally {
 
         $proposal.proposalMeta.approvedHeaderId = _bestHeaderIds[0];
         $proposal.proposalMeta.approvedCommandId = _bestCommandIds[0];
+        Schema.Action[] storage $actions = $proposal.cmds[_bestCommandIds[0]].actions;
+        for (uint i; i < $actions.length; ++i) {
+            $proposal.proposalMeta.actionStatuses[i] = Schema.ActionStatus.Approved;
+        }
         emit TextDAOEvents.ProposalTallied(pid, _bestHeaderIds[0], _bestCommandIds[0]);
     }
 

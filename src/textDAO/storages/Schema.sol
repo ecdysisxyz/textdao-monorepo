@@ -29,7 +29,6 @@ interface Schema {
     }
     struct Command {
         Action[] actions;
-        mapping(uint actionId => ActionStatus) actionStatuses;
         uint currentScore;
     }
     struct Action {
@@ -48,6 +47,8 @@ interface Schema {
         uint[] commandScores;
         uint approvedHeaderId;
         uint approvedCommandId;
+        mapping(uint actionId => ActionStatus) actionStatuses;
+        bool fullyExecuted;
         uint expirationTime;
         uint vrfRequestId;
 
