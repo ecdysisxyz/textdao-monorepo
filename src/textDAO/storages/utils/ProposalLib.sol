@@ -30,12 +30,14 @@ library ProposalLib {
 
         for (uint i; i < $proposal.proposalMeta.reps.length; ++i) {
             Schema.Vote memory _repVote = $proposal.proposalMeta.votes[$proposal.proposalMeta.reps[i]];
-            _headerVotes[_repVote.rankedHeaderIds[0]] += 3;
-            _headerVotes[_repVote.rankedHeaderIds[1]] += 2;
-            _headerVotes[_repVote.rankedHeaderIds[2]] += 1;
-            _commandVotes[_repVote.rankedCommandIds[0]] += 3;
-            _commandVotes[_repVote.rankedCommandIds[1]] += 2;
-            _commandVotes[_repVote.rankedCommandIds[2]] += 1;
+
+            if (_repVote.rankedHeaderIds[0] != 0) _headerVotes[_repVote.rankedHeaderIds[0]] += 3;
+            if (_repVote.rankedHeaderIds[1] != 0) _headerVotes[_repVote.rankedHeaderIds[1]] += 2;
+            if (_repVote.rankedHeaderIds[2] != 0) _headerVotes[_repVote.rankedHeaderIds[2]] += 1;
+
+            if (_repVote.rankedCommandIds[0] != 0) _commandVotes[_repVote.rankedCommandIds[0]] += 3;
+            if (_repVote.rankedCommandIds[1] != 0) _commandVotes[_repVote.rankedCommandIds[1]] += 2;
+            if (_repVote.rankedCommandIds[2] != 0) _commandVotes[_repVote.rankedCommandIds[2]] += 1;
         }
     }
 
