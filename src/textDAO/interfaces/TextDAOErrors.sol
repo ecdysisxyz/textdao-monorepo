@@ -2,10 +2,17 @@
 pragma solidity ^0.8.24;
 
 interface TextDAOErrors {
+    error ProposalNotFound();
     // Propose
     error HeaderMetadataIsRequired();
     // Tally
     error ProposalNotExpiredYet();
+    // Execute
+    error ProposalNotApproved();
+    error ActionNotFound();
+    error NoActionToBeExecuted();
+    error ActionExecutionFailed(uint actionId);
+    error ProposalAlreadyFullyExecuted();
     // OnlyMember
     error YouAreNotTheMember();
     // OnlyReps

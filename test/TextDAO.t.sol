@@ -32,60 +32,58 @@ contract TextDAOTest is MCTest {
     }
 
     function test_execute_successWithText() public {
+        Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
+
+        uint pid = 0;
+        uint textId = 0;
+
         // Note: Array variable is only available as function args.
         string[] memory metadataURIs = new string[](2);
         metadataURIs[0] = "1";
         metadataURIs[1] = "2";
 
-        Schema.Deliberation storage $Deliberation = Storage.Deliberation();
-        Schema.Proposal storage $proposal = $Deliberation.createProposal();
-
-        uint pid = 0;
-        uint textId = 0;
-
         Schema.Command storage $cmd = $proposal.cmds.push();
         $cmd.createSaveTextAction(pid, textId, metadataURIs);
-        $cmd.actionStatuses[0] = Schema.ActionStatus.Approved; // Note: initialize for storage array
-        $proposal.proposalMeta.cmdRank = [uint256(1), 0, 0]; // Note: initialize for storage array
 
-        // assertEq($text.metadataURIs.length, 0);
-        Execute(address(this)).execute(pid);
+        uint _actionId = 0;
+        uint _approvedCommandId = 1;
 
-        Schema.Text storage $text = Storage.Texts().texts[textId];
-        assertGt($text.metadataURIs.length, 0);
+        $proposal.proposalMeta.actionStatuses[_actionId] = Schema.ActionStatus.Approved;
+        $proposal.proposalMeta.approvedCommandId = _approvedCommandId;
+
+        Schema.Text[] storage $texts = Storage.Texts().texts;
+
+        assertEq($texts.length, 0);
+
+        Execute(target).execute(pid);
+
+        assertEq($texts.length, 1);
     }
 
 
 
     function test_execute_successWithJoin() public {
-        Schema.Member[] memory candidates = new Schema.Member[](2);
-        Schema.Member memory member1;
-        member1.addr = address(1);
-        candidates[0] = member1;
-        Schema.Member memory member2;
-        member2.addr = address(2);
-        candidates[1] = member2;
-
-        Schema.Deliberation storage $Deliberation = Storage.Deliberation();
-        Schema.Proposal storage $proposal = $Deliberation.createProposal();
+        Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
 
         uint pid = 0;
 
+        Schema.Member[] memory candidates = new Schema.Member[](2);
+        candidates[0].addr = address(1);
+        candidates[1].addr = address(2);
+
+        $proposal.cmds.push().createMemberJoinAction(pid, candidates);
+        $proposal.proposalMeta.actionStatuses[0] = Schema.ActionStatus.Approved;
+        $proposal.proposalMeta.approvedCommandId = 1;
+
         Schema.Members storage $m = Storage.Members();
 
-        Schema.Command storage $cmd = $proposal.cmds.push();
-        $cmd.createMemberJoinAction(pid, candidates);
-        $cmd.actionStatuses[0] = Schema.ActionStatus.Approved; // Note: initialize for storage array
-
-        $proposal.proposalMeta.cmdRank = [uint256(1), 0, 0]; // Note: initialize for storage array
-
-        // assertEq($m.members[0].addr, address(0));
-        // assertEq($m.members[1].addr, address(0));
         assertEq($m.members.length, 0);
-        Execute(address(this)).execute(pid);
+
+        Execute(target).execute(pid);
+
+        assertEq($m.members.length, candidates.length);
         assertEq($m.members[0].addr, address(1));
         assertEq($m.members[1].addr, address(2));
-        assertEq($m.members.length, candidates.length);
     }
 
 }

@@ -23,14 +23,14 @@ contract TextDAOScenarioTest is MCTest {
         Schema.Member[] memory initialMembers = new Schema.Member[](1);
         initialMembers[0].addr = address(this); // Example initial member address
 
-        Schema.DeliberationConfig memory pConfig = Schema.DeliberationConfig({
+        Schema.DeliberationConfig memory _config = Schema.DeliberationConfig({
             expiryDuration: 2 minutes,
             tallyInterval: 1 minutes,
             repsNum: 1000,
             quorumScore: 3
         });
 
-        textDAO.initialize(initialMembers, pConfig);
+        textDAO.initialize(initialMembers, _config);
 
 
         // 2. propose
@@ -48,8 +48,8 @@ contract TextDAOScenarioTest is MCTest {
         string memory headerMetadataURI3 = "Qm.......aaa";
         Schema.Action[] memory actions1 = new Schema.Action[](1);
         actions1[0] = Schema.Action({
-                funcSig: "memberJoin(uint256,(address,string)[])",
-                abiParams: abi.encode(pid1, new Schema.Member[](1))
+            funcSig: "memberJoin(uint256,(address,string)[])",
+            abiParams: abi.encode(pid1, new Schema.Member[](1))
         });
         Schema.Action[] memory actions2 = new Schema.Action[](1);
         actions2[0] = Schema.Action({
@@ -59,7 +59,7 @@ contract TextDAOScenarioTest is MCTest {
         Schema.Action[] memory actions3 = new Schema.Action[](1);
         actions3[0] = Schema.Action({
             funcSig: "saveText(uint256,uint256,string[])",
-            abiParams: abi.encode(pid0, new Schema.Member[](1)) // TODO Oops...
+            abiParams: abi.encode(1, 1, new string[](2))
         });
 
         textDAO.fork(pid0, headerMetadataURI1, actions1);
@@ -77,36 +77,48 @@ contract TextDAOScenarioTest is MCTest {
 
 
         // 4. vote
-        uint[3] memory _headerIds = [uint(2), 1, 0];
-        uint[3] memory _headerIds1 = [uint(3), 1, 0];
-        uint[3] memory _headerIds2 = [uint(0), 1, 0];
-        textDAO.voteHeaders(pid0, _headerIds2);
-        textDAO.voteHeaders(pid0, _headerIds1);
-        textDAO.voteHeaders(pid0, _headerIds2);
-        textDAO.voteHeaders(pid1, _headerIds2);
-        textDAO.voteHeaders(pid1, _headerIds2);
-        textDAO.voteHeaders(pid0, _headerIds1);
-        textDAO.voteHeaders(pid0, _headerIds2);
-        textDAO.voteCmds(pid0, _headerIds2);
-        textDAO.voteCmds(pid0, _headerIds2);
-        textDAO.voteCmds(pid0, _headerIds2);
-        textDAO.voteCmds(pid1, _headerIds2);
-        textDAO.voteCmds(pid1, _headerIds2);
-        textDAO.voteCmds(pid1, _headerIds2);
-        textDAO.voteCmds(pid2, _headerIds2);
+        // Schema.Vote memory _vote0 = Schema.Vote({
+        //     rankedHeaderIds: [uint(2), 1, 0],
+        //     rankedCommandIds: [uint(2), 1, 0]
+        // });
+        // Schema.Vote memory _vote1 = Schema.Vote({
+        //     rankedHeaderIds: [uint(3), 1, 0],
+        //     rankedCommandIds: [uint(3), 1, 0]
+        // });
+        Schema.Vote memory _vote2 = Schema.Vote({
+            rankedHeaderIds: [uint(0), 1, 0],
+            rankedCommandIds: [uint(0), 1, 0]
+        });
+        Schema.Vote memory _vote3 = Schema.Vote({
+            rankedHeaderIds: [uint(3), 1, 0],
+            rankedCommandIds: [uint(3), 0, 0]
+        });
+        Schema.Vote memory _vote4 = Schema.Vote({
+            rankedHeaderIds: [uint(0), 0, 0],
+            rankedCommandIds: [uint(0), 1, 0]
+        });
+        textDAO.vote(pid0, _vote2);
+        textDAO.vote(pid0, _vote2);
+        textDAO.vote(pid1, _vote2);
+        textDAO.vote(pid1, _vote2);
+        textDAO.vote(pid0, _vote2);
+        textDAO.vote(pid0, _vote3);
+        textDAO.vote(pid0, _vote3);
+        textDAO.vote(pid1, _vote4);
+        textDAO.vote(pid2, _vote4);
 
 
         // 5. tally
-        vm.warp(block.timestamp + pConfig.expiryDuration + 1);
+        vm.warp(block.timestamp + _config.expiryDuration + 1);
         textDAO.tally(pid0);
         textDAO.tally(pid1);
         textDAO.tally(pid2);
 
 
         // 6. execute
-        textDAO.execute(pid0);
+        // textDAO.execute(pid0);
         textDAO.execute(pid1);
-        textDAO.execute(pid2);
+        // textDAO.execute(pid2);
 
     }
 

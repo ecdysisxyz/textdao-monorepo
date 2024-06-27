@@ -17,6 +17,8 @@ interface TextDAOEvents {
     event ProposalTalliedWithTie(uint pid, uint[] approvedHeaderIds, uint[] approvedCommandIds);
     event ProposalTallied(uint pid, uint approvedHeaderId, uint approvedCommandId);
     // event ProposalTallied(uint pid, uint approvedHeaderId, uint approvedHeaderScore, uint approvedCommandId, uint approvedCommandScore);
+    // Execute
+    event ProposalExecuted(uint pid, uint approvedCommandId);
     // SaveText
     event TextSaved(uint pid, Schema.Text text);
     /// @dev From Initializable @ openzeppelin-contracts~5.0.0

@@ -30,4 +30,12 @@ library CommandLib {
         });
     }
 
+    function calcSelector(Schema.Action memory action) internal pure returns(bytes4) {
+        return bytes4(keccak256(bytes(action.funcSig)));
+    }
+
+    function calcCallData(Schema.Action memory action) internal pure returns(bytes memory) {
+        return abi.encodePacked(calcSelector(action), action.abiParams);
+    }
+
 }

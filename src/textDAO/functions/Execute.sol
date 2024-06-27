@@ -1,39 +1,54 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-// Storage
 import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
-// Interface
+import {DeliberationLib} from "bundle/textDAO/storages/utils/DeliberationLib.sol";
+import {CommandLib} from "bundle/textDAO/storages/utils/CommandLib.sol";
 import {IExecute} from "bundle/textDAO/interfaces/TextDAOFunctions.sol";
+import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
+import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
 
-import { DecodeErrorString } from "@devkit/system/message/DecodeErrorString.sol";
-
+/**
+ * @title Execute
+ * @dev Implements the batch execution logic for approved proposals in TextDAO
+ */
 contract Execute is IExecute {
+    using DeliberationLib for Schema.Deliberation;
+    using CommandLib for Schema.Action;
+
+    /**
+     * @notice Executes all unexecuted actions in the approved command for a given proposal
+     * @param pid The ID of the proposal to execute
+     * @dev This function will revert if the proposal is not approved, already fully executed, or if any action fails
+     */
     function execute(uint pid) external {
-        // TODO ProposalNotFound
-        Schema.Deliberation storage $ = Storage.Deliberation();
-        Schema.Proposal storage $p = $.proposals[pid];
+        Schema.Proposal storage $proposal = Storage.Deliberation().getProposal(pid);
+        uint _approvedCommandId = $proposal.proposalMeta.approvedCommandId;
 
-        // TODO Validate match pid
-        require($p.proposalMeta.createdAt + $.config.expiryDuration <= block.timestamp, "Proposal must be finished.");
-        require($p.cmds.length > 0, "No body forks to execute.");
-        require($p.proposalMeta.cmdRank.length > 0, "Tally must be done at least once.");
+        if (_approvedCommandId == 0) revert TextDAOErrors.ProposalNotApproved();
+        if ($proposal.proposalMeta.fullyExecuted) revert TextDAOErrors.ProposalAlreadyFullyExecuted();
 
-        Schema.Action[] storage $actions = $p.cmds[$p.proposalMeta.cmdRank[0]].actions;
+        Schema.Action[] storage $actions = $proposal.cmds[_approvedCommandId].actions;
+        uint _actionsLength = $actions.length;
+        if (_actionsLength == 0) revert TextDAOErrors.NoActionToBeExecuted();
+        uint _executedCount = 0;
 
-
-        for (uint i; i < $actions.length; i++) {
-            Schema.Action memory action = $actions[i];
-            // Note: Is msg.value of this proxy consistent among all delegatecalls?
-            (bool success, bytes memory data) = address(this).delegatecall(bytes.concat(
-                bytes4(keccak256(bytes(action.funcSig))),
-                action.abiParams
-            ));
-
-            if (success) {
-            } else {
-                revert(DecodeErrorString.decodeRevertReasonAndPanicCode(data));
+        for (uint i; i < _actionsLength; ++i) {
+            if ($proposal.proposalMeta.actionStatuses[i] == Schema.ActionStatus.Executed) {
+                _executedCount++;
+                continue;
             }
+            (bool success, ) = address(this).call($actions[i].calcCallData());
+
+            if (!success) {
+                revert TextDAOErrors.ActionExecutionFailed(i);
+            }
+            _executedCount++;
+        }
+
+        if (_executedCount == _actionsLength) {
+            $proposal.proposalMeta.fullyExecuted = true;
+            emit TextDAOEvents.ProposalExecuted(pid, _approvedCommandId);
         }
     }
 }
