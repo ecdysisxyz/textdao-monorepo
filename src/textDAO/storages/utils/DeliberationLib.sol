@@ -2,6 +2,7 @@
 pragma solidity ^0.8.24;
 
 import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
+import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
 
 /**
  * @title DeliberationLib v0.1.0
@@ -17,5 +18,10 @@ library DeliberationLib {
         proposal.proposalMeta.createdAt = block.timestamp;
         proposal.proposalMeta.expirationTime = block.timestamp + Storage.Deliberation().config.expiryDuration;
         // TODO Add Expiration Time
+    }
+
+    function getProposal(Schema.Deliberation storage $deliberation, uint pid) internal view returns(Schema.Proposal storage) {
+        if ($deliberation.proposals.length <= pid) revert TextDAOErrors.ProposalNotFound();
+        return $deliberation.proposals[pid];
     }
 }

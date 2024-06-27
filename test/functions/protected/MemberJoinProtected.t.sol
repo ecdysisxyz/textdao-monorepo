@@ -21,19 +21,13 @@ contract MemberJoinProtectedTest is MCTest {
         _use(MemberJoinProtected.memberJoin.selector, address(new MemberJoinProtected()));
     }
 
-    function test_memberJoin_success(uint256 proposeTime, uint256 expiryTime, uint256 execTime, Schema.Member[] memory candidates) public {
-        vm.warp(proposeTime);
+    function test_memberJoin_success(Schema.Member[] memory candidates) public {
         Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
-        // Storage.Deliberation().proposals.push().proposalMeta.createdAt = proposeTime;
-        vm.assume(expiryTime >= proposeTime);
-        Storage.Deliberation().config.expiryDuration = expiryTime - proposeTime;
-        vm.assume(expiryTime < execTime);
-        vm.warp(execTime);
 
-        $proposal.proposalMeta.cmdRank = [uint256(1), 0, 0];
+        $proposal.proposalMeta.approvedCommandId = 1;
         Schema.Command storage $cmd = $proposal.cmds.push();
         $cmd.createMemberJoinAction(0, candidates);
-        $cmd.actionStatuses[0] = Schema.ActionStatus.Approved;
+        $proposal.proposalMeta.actionStatuses[0] = Schema.ActionStatus.Approved;
 
         MemberJoinProtected(target).memberJoin({
             pid: 0,
@@ -51,7 +45,7 @@ contract MemberJoinProtectedTest is MCTest {
 
     function test_memberJoin_revert_notApprovedYet() public {
         Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
-        $proposal.proposalMeta.cmdRank = [uint256(1), 0, 0];
+        $proposal.proposalMeta.approvedCommandId = 1;
         $proposal.cmds.push().createMemberJoinAction(0, new Schema.Member[](1));
 
         vm.expectRevert(TextDAOErrors.ActionNotApprovedYet.selector);
@@ -61,14 +55,13 @@ contract MemberJoinProtectedTest is MCTest {
         });
     }
 
-    function test_memberJoin_revert_alreadyExecuted() public {
+    function test_memberJoin_revert_notFound() public {
         Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
-        $proposal.proposalMeta.cmdRank = [uint256(1), 0, 0];
-        Schema.Command storage $cmd = $proposal.cmds.push();
-        $cmd.createMemberJoinAction(0, new Schema.Member[](1));
-        $cmd.actionStatuses[0] = Schema.ActionStatus.Executed;
+        $proposal.proposalMeta.approvedCommandId = 1;
+        $proposal.cmds.push().createMemberJoinAction(0, new Schema.Member[](1));
+        $proposal.proposalMeta.actionStatuses[0] = Schema.ActionStatus.Executed;
 
-        vm.expectRevert(TextDAOErrors.ActionAlreadyExecuted.selector);
+        vm.expectRevert(TextDAOErrors.ActionNotFound.selector);
         MemberJoinProtected(target).memberJoin({
             pid: 0,
             candidates: new Schema.Member[](1)
