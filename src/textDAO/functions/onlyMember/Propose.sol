@@ -31,8 +31,10 @@ contract Propose is IPropose, OnlyMemberBase {
         emit TextDAOEvents.HeaderProposed(proposalId, _args.headerMetadataURI);
 
         // TODO Check ignore no action
-        $proposal.createCommand(_args.actions);
-        emit TextDAOEvents.CommandProposed(proposalId, _args.actions);
+        if (_args.actions.length != 0) {
+            $proposal.createCommand(_args.actions);
+            emit TextDAOEvents.CommandProposed(proposalId, _args.actions);
+        }
 
 
         Schema.VRFStorage storage $vrf = Storage.$VRF();
