@@ -506,17 +506,17 @@ export class Text extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get metadataURIs(): Array<Bytes> {
+  get metadataURIs(): Array<string> {
     let value = this.get("metadataURIs");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBytesArray();
+      return value.toStringArray();
     }
   }
 
-  set metadataURIs(value: Array<Bytes>) {
-    this.set("metadataURIs", Value.fromBytesArray(value));
+  set metadataURIs(value: Array<string>) {
+    this.set("metadataURIs", Value.fromStringArray(value));
   }
 
   get bodies(): Array<string> {

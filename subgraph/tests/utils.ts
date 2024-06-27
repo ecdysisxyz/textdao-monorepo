@@ -2,6 +2,7 @@ import { newMockEvent } from "matchstick-as";
 import { ethereum, Bytes, BigInt } from "@graphprotocol/graph-ts";
 import { CommandProposed, HeaderProposed } from "../generated/Propose/Propose";
 import { CommandScored, HeaderScored } from "../generated/Vote/Vote";
+import { TextSaved } from "../generated/SaveTextProtected/SaveTextProtected";
 
 export function createHeaderProposed(
   id: i32,
@@ -130,6 +131,28 @@ export function createCommandScored(
     new ethereum.EventParam(
       "currentScore",
       ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(currentScore))
+    )
+  );
+  return event;
+}
+
+export function createTextSaved(id: i32, metadataURIs: string[]): TextSaved {
+  let event = changetype<TextSaved>(newMockEvent());
+  event.parameters = new Array();
+  event.parameters.push(
+    new ethereum.EventParam(
+      "id",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(id))
+    )
+  );
+  event.parameters.push(
+    new ethereum.EventParam(
+      "metadataURIs",
+      ethereum.Value.fromArray(
+        metadataURIs.map<ethereum.Value>((v: string): ethereum.Value => {
+          return ethereum.Value.fromString(v);
+        })
+      )
     )
   );
   return event;

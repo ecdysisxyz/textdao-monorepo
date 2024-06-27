@@ -6,8 +6,9 @@ import {
   HeaderScored as HeaderScoredEvent,
   CommandScored as CommandScoredEvent,
 } from "../generated/Vote/Vote";
-import { Header, Command, Action } from "../generated/schema";
-import { store } from "@graphprotocol/graph-ts";
+import { TextSaved as TextSavedEvent } from "../generated/SaveTextProtected/SaveTextProtected";
+import { Header, Command, Action, Text } from "../generated/schema";
+import { store, ipfs } from "@graphprotocol/graph-ts";
 
 export function handleHeaderProposed(event: HeaderProposedEvent): void {
   const id = event.params.header.id.toString();
@@ -67,4 +68,20 @@ export function handleCommandScored(event: CommandScoredEvent): void {
   command.proposal = event.params.pid.toString();
   command.currentScore = event.params.currentScore;
   command.save();
+}
+export function handleTextSaved(event: TextSavedEvent): void {
+  const id = event.params.id.toString();
+  let text = Text.load(id);
+  if (text == null) {
+    text = new Text(id);
+  }
+  text.metadataURIs = event.params.metadataURIs;
+  text.bodies = event.params.metadataURIs.map<string>((metadataURI) => {
+    const metadataBytes = ipfs.cat(metadataURI);
+    if (metadataBytes) {
+      return metadataBytes.toString();
+    }
+    return "";
+  });
+  text.save();
 }

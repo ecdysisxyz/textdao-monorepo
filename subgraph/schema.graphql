@@ -37,7 +37,7 @@ type ProposalMeta @entity {
 }
 type Text @entity {
     id: ID!
-    metadataURIs: [Bytes!]!
+    metadataURIs: [String!]!
     bodies: [String!]!
 }
 type Member @entity {

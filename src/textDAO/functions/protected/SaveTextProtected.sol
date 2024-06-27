@@ -6,7 +6,8 @@ import { Schema } from "bundle/textDAO/storages/Schema.sol";
 import { ProtectionBase } from "bundle/textDAO/functions/protected/ProtectionBase.sol";
 
 contract SaveTextProtected is ProtectionBase {
-    event TextSaved(uint pid, Schema.Text text);
+    // TODO pid と紐付ける必要はあるか
+    event TextSaved(uint id, string[] metadataURIs);
 
     // TODO CRUD
     function saveText(uint pid, uint textId, string[] memory metadataURIs) public protected(pid) returns (bool) {
@@ -15,6 +16,6 @@ contract SaveTextProtected is ProtectionBase {
         for (uint i; i < metadataURIs.length; ++i) {
             $text.metadataURIs.push(metadataURIs[i]);
         }
-        emit TextSaved(pid, $text);
+        emit TextSaved(textId, $text.metadataURIs);
     }
 }
