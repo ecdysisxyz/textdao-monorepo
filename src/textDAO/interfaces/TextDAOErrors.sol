@@ -1,28 +1,59 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
+/**
+ * @title TextDAOErrors
+ * @dev Error definitions for TextDAO
+ * @custom:version 0.1.0
+ */
 interface TextDAOErrors {
+    // General errors
+    /// @dev Thrown when a proposal is not found
     error ProposalNotFound();
-    // Propose
+
+    // Propose errors
+    /// @dev Thrown when header metadata is missing
     error HeaderMetadataIsRequired();
-    // Tally
+
+    // Tally errors
+    /// @dev Thrown when trying to tally a proposal that hasn't expired yet
     error ProposalNotExpiredYet();
-    // Execute
+
+    // Execute errors
+    /// @dev Thrown when trying to execute an unapproved proposal
     error ProposalNotApproved();
+    /// @dev Thrown when an action is not found
     error ActionNotFound();
+    /// @dev Thrown when there are no actions to execute
     error NoActionToBeExecuted();
+    /// @dev Thrown when an action execution fails
     error ActionExecutionFailed(uint actionId);
+    /// @dev Thrown when trying to execute an already fully executed proposal
     error ProposalAlreadyFullyExecuted();
-    // OnlyMember
+
+    // Access control errors
+    /// @dev Thrown when a non-member tries to perform a member-only action
     error YouAreNotTheMember();
-    // OnlyReps
+    /// @dev Thrown when a non-representative tries to perform a representative-only action
     error YouAreNotTheRep();
-    // OnlyVrfCoordinator
+    /// @dev Thrown when a non-VRF coordinator tries to perform a VRF coordinator-only action
     error YouAreNotTheVrfCoordinator();
-    // Protection
+
+    // Protection errors
+    /// @dev Thrown when trying to execute an unapproved action
     error ActionNotApprovedYet();
+    /// @dev Thrown when trying to execute an already executed action
     error ActionAlreadyExecuted();
-    /// @dev From Initializable @ openzeppelin-contracts~5.0.0
+
+    // Initialization errors from Initializable @ openzeppelin-contracts~5.0.0
+    /// @dev Thrown when initialization is invalid
     error InvalidInitialization();
+    /// @dev Thrown when an operation is performed outside of the initializing phase
     error NotInitializing();
+
+    // ProposalLib errors
+    /// @dev Thrown when an invalid header ID is provided
+    error InvalidHeaderId(uint headerId);
+    /// @dev Thrown when an invalid command ID is provided
+    error InvalidCommandId(uint commandId);
 }
