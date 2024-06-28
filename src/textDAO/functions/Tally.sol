@@ -30,15 +30,15 @@ contract Tally is ITally {
 
         if (_bestCommandIds.length != 1 || _bestCommandIds.length != 1) {
             emit TextDAOEvents.ProposalTalliedWithTie(pid, _bestHeaderIds, _bestCommandIds);
-            $proposal.proposalMeta.expirationTime += Storage.Deliberation().config.expiryDuration; // TODO
+            $proposal.meta.expirationTime += Storage.Deliberation().config.expiryDuration; // TODO
             return;
         }
 
-        $proposal.proposalMeta.approvedHeaderId = _bestHeaderIds[0];
-        $proposal.proposalMeta.approvedCommandId = _bestCommandIds[0];
+        $proposal.meta.approvedHeaderId = _bestHeaderIds[0];
+        $proposal.meta.approvedCommandId = _bestCommandIds[0];
         Schema.Action[] storage $actions = $proposal.cmds[_bestCommandIds[0]].actions;
         for (uint i; i < $actions.length; ++i) {
-            $proposal.proposalMeta.actionStatuses[i] = Schema.ActionStatus.Approved;
+            $proposal.meta.actionStatuses[i] = Schema.ActionStatus.Approved;
         }
         emit TextDAOEvents.ProposalTallied(pid, _bestHeaderIds[0], _bestCommandIds[0]);
     }
@@ -60,12 +60,12 @@ contract Tally is ITally {
 
     //     Types.ProposalVars memory vars;
 
-    //     require($p.proposalMeta.createdAt + $.config.expiryDuration > block.timestamp, "This proposal has been expired. You cannot run new tally to update ranks.");
+    //     require($p.meta.createdAt + $.config.expiryDuration > block.timestamp, "This proposal has been expired. You cannot run new tally to update ranks.");
 
     //     vars.headerRank = new uint[]($headers.length);
-    //     vars.headerRank = SortLib.rankHeaders($headers, $p.proposalMeta.nextHeaderTallyFrom);
+    //     vars.headerRank = SortLib.rankHeaders($headers, $p.meta.nextHeaderTallyFrom);
     //     vars.cmdRank = new uint[]($cmds.length);
-    //     vars.cmdRank = SortLib.rankCmds($cmds, $p.proposalMeta.nextCmdTallyFrom);
+    //     vars.cmdRank = SortLib.rankCmds($cmds, $p.meta.nextCmdTallyFrom);
 
     //     uint headerTopScore = $headers[vars.headerRank[0]].currentScore;
     //     bool headerCond = headerTopScore >= $.config.quorumScore;
@@ -92,34 +92,34 @@ contract Tally is ITally {
     //         }
     //     }
 
-    //     if ($p.proposalMeta.headerRank.length == 0) {
-    //         $p.proposalMeta.headerRank = new uint[](3);
+    //     if ($p.meta.headerRank.length == 0) {
+    //         $p.meta.headerRank = new uint[](3);
     //     }
     //     if (headerCond) {
-    //         $p.proposalMeta.headerRank[0] = vars.headerRank[0];
-    //         $p.proposalMeta.headerRank[1] = vars.headerRank[1];
-    //         $p.proposalMeta.headerRank[2] = vars.headerRank[2];
-    //         $p.proposalMeta.nextHeaderTallyFrom = $headers.length;
+    //         $p.meta.headerRank[0] = vars.headerRank[0];
+    //         $p.meta.headerRank[1] = vars.headerRank[1];
+    //         $p.meta.headerRank[2] = vars.headerRank[2];
+    //         $p.meta.nextHeaderTallyFrom = $headers.length;
     //     } else {
     //         // emit HeaderQuorumFailed
     //     }
 
-    //     if ($p.proposalMeta.cmdRank.length == 0) {
-    //         $p.proposalMeta.cmdRank = new uint[](3);
+    //     if ($p.meta.cmdRank.length == 0) {
+    //         $p.meta.cmdRank = new uint[](3);
     //     }
     //     if (vars.cmdCondSum) {
-    //         $p.proposalMeta.cmdRank[0] = vars.cmdRank[0];
-    //         $p.proposalMeta.cmdRank[1] = vars.cmdRank[1];
-    //         $p.proposalMeta.cmdRank[2] = vars.cmdRank[2];
-    //         $p.proposalMeta.nextCmdTallyFrom = $cmds.length;
+    //         $p.meta.cmdRank[0] = vars.cmdRank[0];
+    //         $p.meta.cmdRank[1] = vars.cmdRank[1];
+    //         $p.meta.cmdRank[2] = vars.cmdRank[2];
+    //         $p.meta.nextCmdTallyFrom = $cmds.length;
     //     } else {
     //         // emit CommandQuorumFailed
     //     }
 
     //     // Repeatable tally
     //     for (uint i = 0; i < 3; ++i) {
-    //         vars.headerRank2 = $p.proposalMeta.headerRank[i];
-    //         vars.cmdRank2 = $p.proposalMeta.cmdRank[i];
+    //         vars.headerRank2 = $p.meta.headerRank[i];
+    //         vars.cmdRank2 = $p.meta.cmdRank[i];
 
     //         // Copy top ranked Headers and Commands to temporary arrays
     //         if(vars.headerRank2 < $p.headers.length){
@@ -152,7 +152,7 @@ contract Tally is ITally {
     //     // interval flag
     //     require($.config.tallyInterval > 0, "Set tally interval at config.");
     //     $p.tallied[block.timestamp / $.config.tallyInterval] = true;
-    //     // emit TextDAOEvents.ProposalTallied(pid, $p.proposalMeta);
+    //     // emit TextDAOEvents.ProposalTallied(pid, $p.meta);
     }
 
 }

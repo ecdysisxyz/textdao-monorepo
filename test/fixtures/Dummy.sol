@@ -16,8 +16,8 @@ contract Dummy {
     function save() public returns (bool) {
         // $.nextProposalId = 1;
         // get().nextProposalId = 1;
-        $.proposals[0].tallied[0] = true;
-        get().proposals[0].tallied[0] = true;
+        // $.proposals[0].tallied[0] = true;
+        // get().proposals[0].tallied[0] = true;
         return true;
     }
 

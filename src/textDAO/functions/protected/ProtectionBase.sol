@@ -18,7 +18,7 @@ abstract contract ProtectionBase {
     */
     modifier protected(uint pid) {
         Schema.Proposal storage $proposal = Storage.Deliberation().getProposal(pid);
-        uint _approvedCmdId = $proposal.proposalMeta.approvedCommandId;
+        uint _approvedCmdId = $proposal.meta.approvedCommandId;
         Schema.Command storage $command = $proposal.cmds[_approvedCmdId];
 
         bytes32 currentCallDataHash = keccak256(msg.data);
@@ -27,7 +27,7 @@ abstract contract ProtectionBase {
         for (uint i; i < actionLength; ++i) {
             Schema.Action storage $action = $command.actions[i];
             if (keccak256($action.calcCallData()) == currentCallDataHash) {
-                Schema.ActionStatus actionStatus = $proposal.proposalMeta.actionStatuses[i];
+                Schema.ActionStatus actionStatus = $proposal.meta.actionStatuses[i];
                 if (actionStatus == Schema.ActionStatus.Executed) {
                     continue;
                     // revert TextDAOErrors.ActionAlreadyExecuted();
@@ -38,7 +38,7 @@ abstract contract ProtectionBase {
 
                 _;
 
-                $proposal.proposalMeta.actionStatuses[i] = Schema.ActionStatus.Executed;
+                $proposal.meta.actionStatuses[i] = Schema.ActionStatus.Executed;
                 return;
             }
         }

@@ -28,8 +28,8 @@ library ProposalLib {
         _headerVotes = new uint[]($proposal.headers.length);
         _commandVotes = new uint[]($proposal.cmds.length);
 
-        for (uint i; i < $proposal.proposalMeta.reps.length; ++i) {
-            Schema.Vote memory _repVote = $proposal.proposalMeta.votes[$proposal.proposalMeta.reps[i]];
+        for (uint i; i < $proposal.meta.reps.length; ++i) {
+            Schema.Vote memory _repVote = $proposal.meta.votes[$proposal.meta.reps[i]];
 
             if (_repVote.rankedHeaderIds[0] != 0) _headerVotes[_repVote.rankedHeaderIds[0]] += 3;
             if (_repVote.rankedHeaderIds[1] != 0) _headerVotes[_repVote.rankedHeaderIds[1]] += 2;
@@ -42,7 +42,7 @@ library ProposalLib {
     }
 
     function isExpired(Schema.Proposal storage $proposal) internal view returns(bool) {
-        return $proposal.proposalMeta.expirationTime < block.timestamp;
+        return $proposal.meta.expirationTime < block.timestamp;
     }
 
 }

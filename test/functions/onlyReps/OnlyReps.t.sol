@@ -31,7 +31,7 @@ contract OnlyRepsTest is MCTest {
 
     function test_onlyReps_success(address[] calldata reps, uint256 repIndex) public {
         // proposalId = 0
-        Storage.Deliberation().proposals.push().proposalMeta.reps = reps;
+        Storage.Deliberation().proposals.push().meta.reps = reps;
 
         vm.assume(repIndex < reps.length);
         vm.prank(reps[repIndex]);
@@ -40,7 +40,7 @@ contract OnlyRepsTest is MCTest {
 
     function test_onlyReps_revert_notRep(address[] calldata reps, uint256 repIndex, address caller) public {
         // proposalId = 0
-        Storage.Deliberation().proposals.push().proposalMeta.reps = reps;
+        Storage.Deliberation().proposals.push().meta.reps = reps;
 
         vm.assume(repIndex < reps.length);
         for (uint i; i < reps.length; ++i) {

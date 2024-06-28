@@ -24,10 +24,10 @@ contract MemberJoinProtectedTest is MCTest {
     function test_memberJoin_success(Schema.Member[] memory candidates) public {
         Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
 
-        $proposal.proposalMeta.approvedCommandId = 1;
+        $proposal.meta.approvedCommandId = 1;
         Schema.Command storage $cmd = $proposal.cmds.push();
         $cmd.createMemberJoinAction(0, candidates);
-        $proposal.proposalMeta.actionStatuses[0] = Schema.ActionStatus.Approved;
+        $proposal.meta.actionStatuses[0] = Schema.ActionStatus.Approved;
 
         MemberJoinProtected(target).memberJoin({
             pid: 0,
@@ -45,7 +45,7 @@ contract MemberJoinProtectedTest is MCTest {
 
     function test_memberJoin_revert_notApprovedYet() public {
         Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
-        $proposal.proposalMeta.approvedCommandId = 1;
+        $proposal.meta.approvedCommandId = 1;
         $proposal.cmds.push().createMemberJoinAction(0, new Schema.Member[](1));
 
         vm.expectRevert(TextDAOErrors.ActionNotApprovedYet.selector);
@@ -57,9 +57,9 @@ contract MemberJoinProtectedTest is MCTest {
 
     function test_memberJoin_revert_notFound() public {
         Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
-        $proposal.proposalMeta.approvedCommandId = 1;
+        $proposal.meta.approvedCommandId = 1;
         $proposal.cmds.push().createMemberJoinAction(0, new Schema.Member[](1));
-        $proposal.proposalMeta.actionStatuses[0] = Schema.ActionStatus.Executed;
+        $proposal.meta.actionStatuses[0] = Schema.ActionStatus.Executed;
 
         vm.expectRevert(TextDAOErrors.ActionNotFound.selector);
         MemberJoinProtected(target).memberJoin({

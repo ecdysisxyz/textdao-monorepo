@@ -23,7 +23,7 @@ contract DeliberationLibTest is MCTest {
         proposal.headers.push();
         proposal.cmds.push();
 
-        proposal.proposalMeta.createdAt = block.timestamp;
+        proposal.meta.createdAt = block.timestamp;
         (, bytes32[] memory writes) = vm.accesses(
             address(this)
         );

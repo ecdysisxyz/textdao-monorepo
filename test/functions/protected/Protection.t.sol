@@ -29,8 +29,8 @@ contract ProtectedTest is MCTest {
             funcSig: "doSomething(uint256)",
             abiParams: abi.encode(0)
         }));
-        $proposal.proposalMeta.actionStatuses[0] = Schema.ActionStatus.Approved;
-        $proposal.proposalMeta.cmdRank = new uint[](3);
+        $proposal.meta.actionStatuses[0] = Schema.ActionStatus.Approved;
+        $proposal.meta.cmdRank = new uint[](3);
 
         assertTrue(Protected(target).doSomething(0));
     }

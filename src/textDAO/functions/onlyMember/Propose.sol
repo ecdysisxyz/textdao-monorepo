@@ -63,14 +63,14 @@ contract Propose is IPropose, OnlyMemberBase {
                 $vrf.config.numWords
             );
 
-            $proposal.proposalMeta.vrfRequestId = requestId;
+            $proposal.meta.vrfRequestId = requestId;
             $vrf.requests[requestId].proposalId = proposalId;
             // $vrf.requests[$vrf.nextId].requestId = requestId;
             // $vrf.requests[$vrf.nextId].proposalId = proposalId;
             // $vrf.nextId++;
         } else {
             for (uint i; i < $members.length; ++i) {
-                $proposal.proposalMeta.reps.push($members[i].addr);
+                $proposal.meta.reps.push($members[i].addr);
             }
         }
 

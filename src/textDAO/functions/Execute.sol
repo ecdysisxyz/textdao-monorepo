@@ -23,10 +23,10 @@ contract Execute is IExecute {
      */
     function execute(uint pid) external {
         Schema.Proposal storage $proposal = Storage.Deliberation().getProposal(pid);
-        uint _approvedCommandId = $proposal.proposalMeta.approvedCommandId;
+        uint _approvedCommandId = $proposal.meta.approvedCommandId;
 
         if (_approvedCommandId == 0) revert TextDAOErrors.ProposalNotApproved();
-        if ($proposal.proposalMeta.fullyExecuted) revert TextDAOErrors.ProposalAlreadyFullyExecuted();
+        if ($proposal.meta.fullyExecuted) revert TextDAOErrors.ProposalAlreadyFullyExecuted();
 
         Schema.Action[] storage $actions = $proposal.cmds[_approvedCommandId].actions;
         uint _actionsLength = $actions.length;
@@ -34,7 +34,7 @@ contract Execute is IExecute {
         uint _executedCount = 0;
 
         for (uint i; i < _actionsLength; ++i) {
-            if ($proposal.proposalMeta.actionStatuses[i] == Schema.ActionStatus.Executed) {
+            if ($proposal.meta.actionStatuses[i] == Schema.ActionStatus.Executed) {
                 _executedCount++;
                 continue;
             }
@@ -47,7 +47,7 @@ contract Execute is IExecute {
         }
 
         if (_executedCount == _actionsLength) {
-            $proposal.proposalMeta.fullyExecuted = true;
+            $proposal.meta.fullyExecuted = true;
             emit TextDAOEvents.ProposalExecuted(pid, _approvedCommandId);
         }
     }

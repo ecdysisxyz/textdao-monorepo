@@ -25,19 +25,19 @@ contract ProposalLibTest is MCTest {
         for (uint i; i < 3; i++) {
             $proposal.headers.push();
             $proposal.cmds.push();
-            $proposal.proposalMeta.reps.push(vm.addr(i+1));
+            $proposal.meta.reps.push(vm.addr(i+1));
         }
 
         // Set up specific voting data
-        $proposal.proposalMeta.votes[vm.addr(1)] = Schema.Vote({
+        $proposal.meta.votes[vm.addr(1)] = Schema.Vote({
             rankedHeaderIds: [uint(1), 2, 3],
             rankedCommandIds: [uint(1), 2, 3]
         });
-        $proposal.proposalMeta.votes[vm.addr(2)] = Schema.Vote({
+        $proposal.meta.votes[vm.addr(2)] = Schema.Vote({
             rankedHeaderIds: [uint(2), 1, 3],
             rankedCommandIds: [uint(2), 1, 3]
         });
-        $proposal.proposalMeta.votes[vm.addr(3)] = Schema.Vote({
+        $proposal.meta.votes[vm.addr(3)] = Schema.Vote({
             rankedHeaderIds: [uint(3), 2, 1],
             rankedCommandIds: [uint(3), 2, 1]
         });
@@ -81,7 +81,7 @@ contract ProposalLibTest is MCTest {
 
         // Generate random votes for each representative
         for (uint i = 0; i < numReps; i++) {
-            $proposal.proposalMeta.reps.push(address(uint160(i + 1)));
+            $proposal.meta.reps.push(address(uint160(i + 1)));
             uint256 randomSeed = uint256(keccak256(abi.encode(seed, i)));
 
             uint[3] memory rankedHeaderIds;
@@ -92,7 +92,7 @@ contract ProposalLibTest is MCTest {
                 rankedCommandIds[j] = (uint(keccak256(abi.encode(randomSeed, "command", j))) % MAX_COMMANDS) + 1;
             }
 
-            $proposal.proposalMeta.votes[$proposal.proposalMeta.reps[i]] = Schema.Vote({
+            $proposal.meta.votes[$proposal.meta.reps[i]] = Schema.Vote({
                 rankedHeaderIds: rankedHeaderIds,
                 rankedCommandIds: rankedCommandIds
             });
@@ -109,7 +109,7 @@ contract ProposalLibTest is MCTest {
         uint[] memory expectedCommandVotes = new uint[](MAX_COMMANDS + 1);
 
         for (uint i = 0; i < numReps; i++) {
-            Schema.Vote memory vote = $proposal.proposalMeta.votes[$proposal.proposalMeta.reps[i]];
+            Schema.Vote memory vote = $proposal.meta.votes[$proposal.meta.reps[i]];
 
             for (uint j = 0; j < 3; j++) {
                 if (vote.rankedHeaderIds[j] > 0 && vote.rankedHeaderIds[j] <= MAX_HEADERS) {

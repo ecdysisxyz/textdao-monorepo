@@ -85,13 +85,13 @@ contract ProposeTest is MCTest {
         Schema.Proposal storage $p = Storage.Deliberation().proposals[pid];
 
         assertEq(pid, 0);
-        assertEq($p.proposalMeta.currentScore, 0);
-        assertEq($p.proposalMeta.headerRank.length, 0);
-        assertEq($p.proposalMeta.cmdRank.length, 0);
-        assertEq($p.proposalMeta.nextHeaderTallyFrom, 0);
-        assertEq($p.proposalMeta.nextCmdTallyFrom, 0);
-        assertEq($p.proposalMeta.reps.length, 0);
-        assertEq($p.proposalMeta.createdAt, _proposedTime);
+        assertEq($p.meta.currentScore, 0);
+        assertEq($p.meta.headerRank.length, 0);
+        assertEq($p.meta.cmdRank.length, 0);
+        assertEq($p.meta.nextHeaderTallyFrom, 0);
+        assertEq($p.meta.nextCmdTallyFrom, 0);
+        assertEq($p.meta.reps.length, 0);
+        assertEq($p.meta.createdAt, _proposedTime);
         assertEq($p.headers[1].metadataURI, _args.headerMetadataURI);
     }
 
@@ -147,16 +147,16 @@ contract ProposeTest is MCTest {
         Schema.Proposal storage $p = Storage.Deliberation().proposals[pid];
 
         assertEq(pid, 0);
-        assertEq($p.proposalMeta.headerRank.length, 0);
-        assertEq($p.proposalMeta.cmdRank.length, 0);
+        assertEq($p.meta.headerRank.length, 0);
+        assertEq($p.meta.cmdRank.length, 0);
         assertEq($p.headers[1].metadataURI, _args.headerMetadataURI);
 
         uint pid2 = Propose(address(this)).propose(_args);
         Schema.Proposal storage $p2 = Storage.Deliberation().proposals[pid2];
 
         assertEq(pid, 0);
-        assertEq($p2.proposalMeta.headerRank.length, 0);
-        assertEq($p2.proposalMeta.cmdRank.length, 0);
+        assertEq($p2.meta.headerRank.length, 0);
+        assertEq($p2.meta.cmdRank.length, 0);
         assertEq($p2.headers[1].metadataURI, _args.headerMetadataURI);
 
     }

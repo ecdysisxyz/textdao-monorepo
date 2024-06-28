@@ -48,8 +48,8 @@ contract TextDAOTest is MCTest {
         uint _actionId = 0;
         uint _approvedCommandId = 1;
 
-        $proposal.proposalMeta.actionStatuses[_actionId] = Schema.ActionStatus.Approved;
-        $proposal.proposalMeta.approvedCommandId = _approvedCommandId;
+        $proposal.meta.actionStatuses[_actionId] = Schema.ActionStatus.Approved;
+        $proposal.meta.approvedCommandId = _approvedCommandId;
 
         Schema.Text[] storage $texts = Storage.Texts().texts;
 
@@ -72,8 +72,8 @@ contract TextDAOTest is MCTest {
         candidates[1].addr = address(2);
 
         $proposal.cmds.push().createMemberJoinAction(pid, candidates);
-        $proposal.proposalMeta.actionStatuses[0] = Schema.ActionStatus.Approved;
-        $proposal.proposalMeta.approvedCommandId = 1;
+        $proposal.meta.actionStatuses[0] = Schema.ActionStatus.Approved;
+        $proposal.meta.approvedCommandId = 1;
 
         Schema.Members storage $m = Storage.Members();
 

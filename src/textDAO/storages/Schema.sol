@@ -19,8 +19,7 @@ interface Schema {
     struct Proposal {
         Header[] headers;
         Command[] cmds;
-        mapping(uint => bool) tallied;
-        ProposalMeta proposalMeta;
+        ProposalMeta meta;
     }
     struct Header {
         uint currentScore;

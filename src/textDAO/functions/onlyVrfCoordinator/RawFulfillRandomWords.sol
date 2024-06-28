@@ -13,12 +13,12 @@ contract RawFulfillRandomWords is VRFConsumerV2Interface, OnlyVrfCoordinatorBase
         Storage.$VRF().requests[requestId].randomWords = randomWords;
 
         uint256 proposalId = Storage.$VRF().requests[requestId].proposalId;
-        Schema.Proposal storage $p = Storage.Deliberation().proposals[proposalId];
+        Schema.ProposalMeta storage $proposalMeta = Storage.Deliberation().proposals[proposalId].meta;
         Schema.Member[] storage $members = Storage.Members().members;
 
         for (uint i; i < randomWords.length; i++) {
             uint pickedIndex = uint256(randomWords[i]) % $members.length;
-            $p.proposalMeta.reps.push($members[pickedIndex].addr);
+            $proposalMeta.reps.push($members[pickedIndex].addr);
         }
     }
 }

@@ -24,12 +24,12 @@ contract ExecuteTest is MCTest {
 
     function test_execute_success() public {
         Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
-        $proposal.proposalMeta.approvedCommandId = 1;
+        $proposal.meta.approvedCommandId = 1;
         Schema.Command storage $cmd = $proposal.cmds.push();
         $cmd.createAction("successFunction(uint256)", abi.encode(uint(0)));
         $cmd.createAction("successFunction(uint256)", abi.encode(uint(0)));
-        $proposal.proposalMeta.actionStatuses[0] = Schema.ActionStatus.Approved;
-        $proposal.proposalMeta.actionStatuses[1] = Schema.ActionStatus.Approved;
+        $proposal.meta.actionStatuses[0] = Schema.ActionStatus.Approved;
+        $proposal.meta.actionStatuses[1] = Schema.ActionStatus.Approved;
 
         address _successContract = address(new SuccessContract());
         _use(SuccessContract.successFunction.selector, _successContract);
@@ -44,19 +44,19 @@ contract ExecuteTest is MCTest {
 
         Execute(target).execute(0);
 
-        assertTrue($proposal.proposalMeta.fullyExecuted, "FullyExecuted Flag should be true");
-        assertTrue($proposal.proposalMeta.actionStatuses[0] == Schema.ActionStatus.Executed);
-        assertTrue($proposal.proposalMeta.actionStatuses[1] == Schema.ActionStatus.Executed);
+        assertTrue($proposal.meta.fullyExecuted, "FullyExecuted Flag should be true");
+        assertTrue($proposal.meta.actionStatuses[0] == Schema.ActionStatus.Executed);
+        assertTrue($proposal.meta.actionStatuses[1] == Schema.ActionStatus.Executed);
     }
 
     function test_execute_partial_success() public {
         Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
-        $proposal.proposalMeta.approvedCommandId = 1;
+        $proposal.meta.approvedCommandId = 1;
         Schema.Command storage $cmd = $proposal.cmds.push();
         $cmd.createAction("successFunction(uint256)", abi.encode(uint(0)));
         $cmd.createAction("successFunction(uint256)", abi.encode(uint(0)));
-        $proposal.proposalMeta.actionStatuses[0] = Schema.ActionStatus.Executed;
-        $proposal.proposalMeta.actionStatuses[1] = Schema.ActionStatus.Approved;
+        $proposal.meta.actionStatuses[0] = Schema.ActionStatus.Executed;
+        $proposal.meta.actionStatuses[1] = Schema.ActionStatus.Approved;
 
         address _successContract = address(new SuccessContract());
         _use(SuccessContract.successFunction.selector, _successContract);
@@ -68,9 +68,9 @@ contract ExecuteTest is MCTest {
 
         Execute(target).execute(0);
 
-        assertTrue($proposal.proposalMeta.fullyExecuted);
-        assertTrue($proposal.proposalMeta.actionStatuses[0] == Schema.ActionStatus.Executed);
-        assertTrue($proposal.proposalMeta.actionStatuses[1] == Schema.ActionStatus.Executed);
+        assertTrue($proposal.meta.fullyExecuted);
+        assertTrue($proposal.meta.actionStatuses[0] == Schema.ActionStatus.Executed);
+        assertTrue($proposal.meta.actionStatuses[1] == Schema.ActionStatus.Executed);
     }
 
     function test_execute_revert_beforeApproved() public {
@@ -82,8 +82,8 @@ contract ExecuteTest is MCTest {
 
     function test_execute_revert_alreadyFullyExecuted() public {
         Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
-        $proposal.proposalMeta.approvedCommandId = 1;
-        $proposal.proposalMeta.fullyExecuted = true;
+        $proposal.meta.approvedCommandId = 1;
+        $proposal.meta.fullyExecuted = true;
 
         vm.expectRevert(TextDAOErrors.ProposalAlreadyFullyExecuted.selector);
         Execute(target).execute(0);
@@ -91,10 +91,10 @@ contract ExecuteTest is MCTest {
 
     function test_execute_revert_actionExecutionFailed() public {
         Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
-        $proposal.proposalMeta.approvedCommandId = 1;
+        $proposal.meta.approvedCommandId = 1;
         Schema.Command storage $cmd = $proposal.cmds.push();
         $cmd.createAction("revertingFunction()", "");
-        $proposal.proposalMeta.actionStatuses[0] = Schema.ActionStatus.Approved;
+        $proposal.meta.actionStatuses[0] = Schema.ActionStatus.Approved;
 
         _use(bytes4(keccak256("revertingFunction()")), address(new RevertingContract()));
 

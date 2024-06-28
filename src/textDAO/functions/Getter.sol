@@ -16,7 +16,7 @@
 //         return ProposalInfo({
 //             headersLength: proposal.headers.length,
 //             cmdsLength: proposal.cmds.length,
-//             proposalMeta: proposal.proposalMeta
+//             proposalMeta: proposal.meta
 //         });
 //     }
 

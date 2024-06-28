@@ -19,7 +19,7 @@ contract TallyTest is MCTest {
 
     function test_tally_success() public {
         Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
-        Schema.ProposalMeta storage $proposalMeta = $proposal.proposalMeta;
+        Schema.ProposalMeta storage $proposalMeta = $proposal.meta;
 
         Schema.Header[] storage $headers = $proposal.headers;
         Schema.Command[] storage $cmds = $proposal.cmds;
@@ -48,7 +48,7 @@ contract TallyTest is MCTest {
     //     Schema.Proposal storage $p = $.proposals.push();
     //     Schema.ConfigOverrideStorage storage $configOverride = Storage.$ConfigOverride();
 
-    //     $p.proposalMeta.createdAt = 0;
+    //     $p.meta.createdAt = 0;
     //     $.config.expiryDuration = 1000;
     //     $.config.tallyInterval = 1000;
 
@@ -76,19 +76,19 @@ contract TallyTest is MCTest {
 
     //     Tally(target).tally(0);
 
-    //     assertEq($p.proposalMeta.headerRank[0], 8);
-    //     assertEq($p.proposalMeta.headerRank[1], 9);
-    //     assertEq($p.proposalMeta.headerRank[2], 3);
-    //     assertEq($p.proposalMeta.nextHeaderTallyFrom, 10);
-    //     assertEq($p.proposalMeta.cmdRank[0], 0);
-    //     assertEq($p.proposalMeta.cmdRank[1], 0);
-    //     assertEq($p.proposalMeta.cmdRank[2], 0);
-    //     assertEq($p.proposalMeta.nextCmdTallyFrom, 0);
+    //     assertEq($p.meta.headerRank[0], 8);
+    //     assertEq($p.meta.headerRank[1], 9);
+    //     assertEq($p.meta.headerRank[2], 3);
+    //     assertEq($p.meta.nextHeaderTallyFrom, 10);
+    //     assertEq($p.meta.cmdRank[0], 0);
+    //     assertEq($p.meta.cmdRank[1], 0);
+    //     assertEq($p.meta.cmdRank[2], 0);
+    //     assertEq($p.meta.nextCmdTallyFrom, 0);
     // }
 
     function test_tally_revert_notExpiredYet(uint256 tallyTime, uint256 expirationTime) public {
         vm.assume(tallyTime <= expirationTime);
-        Storage.Deliberation().createProposal().proposalMeta.expirationTime = expirationTime;
+        Storage.Deliberation().createProposal().meta.expirationTime = expirationTime;
 
         vm.warp(tallyTime);
         vm.expectRevert(TextDAOErrors.ProposalNotExpiredYet.selector);

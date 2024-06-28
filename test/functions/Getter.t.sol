@@ -32,11 +32,11 @@
 //         Schema.Proposal storage $proposal = $.proposals.push();
 //         $proposal.headers.push();
 //         $proposal.cmds.push().actions.push();
-//         $proposal.proposalMeta.currentScore = 1;
+//         $proposal.meta.currentScore = 1;
 //         $.config.expiryDuration = 1;
 
 //         Getter.ProposalInfo memory proposalInfo = Getter(address(this)).getProposal(1);
-//         assertEq(proposalInfo.proposalMeta.currentScore, 1);
+//         assertEq(proposalInfo.meta.currentScore, 1);
 
 //         Schema.Header[] memory headers = Getter(address(this)).getProposalHeaders(1);
 //         assertEq(headers.length, 1);

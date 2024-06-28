@@ -16,7 +16,7 @@ contract Vote is IVote, OnlyRepsBase {
         // TODO validate not expired
         // TODO validate correct headerId & commandId
 
-        $proposal.proposalMeta.votes[msg.sender] = repVote;
+        $proposal.meta.votes[msg.sender] = repVote;
     }
 
     function voteHeaders(uint pid, uint[3] calldata headerIds) external onlyReps(pid) {
