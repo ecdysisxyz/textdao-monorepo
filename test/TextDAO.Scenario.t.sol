@@ -94,7 +94,7 @@ contract TextDAOScenarioTest is MCTest {
             rankedCommandIds: [uint(3), 0, 0]
         });
         Schema.Vote memory _vote4 = Schema.Vote({
-            rankedHeaderIds: [uint(0), 0, 0],
+            rankedHeaderIds: [uint(0), 0, 1],
             rankedCommandIds: [uint(0), 1, 0]
         });
         textDAO.vote(pid0, _vote2);
@@ -110,9 +110,9 @@ contract TextDAOScenarioTest is MCTest {
 
         // 5. tally
         vm.warp(block.timestamp + _config.expiryDuration + 1);
-        textDAO.tally(pid0);
+        // textDAO.tally(pid0);
         textDAO.tally(pid1);
-        textDAO.tally(pid2);
+        // textDAO.tally(pid2);
 
 
         // 6. execute

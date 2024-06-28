@@ -2,6 +2,7 @@
 pragma solidity ^0.8.24;
 
 import {Schema} from "bundle/textDAO/storages/Schema.sol";
+import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
 
 /**
  * @title ProposalLib v0.1.0
@@ -45,4 +46,38 @@ library ProposalLib {
         return $proposal.meta.expirationTime < block.timestamp;
     }
 
+
+    /**
+    * @notice Approves a specific header in the proposal
+    * @param $proposal The proposal to update
+    * @param _headerIdForApproval The ID of the header to approve
+    * @dev Reverts if the header ID is invalid
+    */
+    function approveHeader(Schema.Proposal storage $proposal, uint _headerIdForApproval) internal {
+        if (_headerIdForApproval == 0 ||
+            _headerIdForApproval >= $proposal.headers.length
+        ) {
+            revert TextDAOErrors.InvalidHeaderId(_headerIdForApproval);
+        }
+        $proposal.meta.approvedHeaderId = _headerIdForApproval;
+    }
+
+    /**
+    * @notice Approves a specific command and its actions in the proposal
+    * @param $proposal The proposal to update
+    * @param _cmdIdForApproval The ID of the command to approve
+    * @dev Reverts if the command ID is invalid
+    */
+    function approveCommand(Schema.Proposal storage $proposal, uint _cmdIdForApproval) internal {
+        if (_cmdIdForApproval == 0 ||
+            _cmdIdForApproval >= $proposal.cmds.length
+        ) {
+            revert TextDAOErrors.InvalidCommandId(_cmdIdForApproval);
+        }
+        $proposal.meta.approvedCommandId = _cmdIdForApproval;
+        Schema.Action[] storage $actions = $proposal.cmds[_cmdIdForApproval].actions;
+        for (uint i; i < $actions.length; ++i) {
+            $proposal.meta.actionStatuses[i] = Schema.ActionStatus.Approved;
+        }
+    }
 }

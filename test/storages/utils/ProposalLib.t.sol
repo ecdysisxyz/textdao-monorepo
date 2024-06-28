@@ -5,6 +5,7 @@ import {MCTest, console2} from "@devkit/Flattened.sol";
 import {ProposalLib} from "bundle/textDAO/storages/utils/ProposalLib.sol";
 import {Storage, Schema} from "bundle/textdao/storages/Storage.sol";
 import {DeliberationLib} from "bundle/textDAO/storages/utils/DeliberationLib.sol";
+import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
 
 contract ProposalLibTest is MCTest {
     using DeliberationLib for Schema.Deliberation;
@@ -133,5 +134,114 @@ contract ProposalLibTest is MCTest {
         // Verify that index 0 is always 0 (undefined)
         assertEq(headerVotes[0], 0, "Header votes at index 0 should be 0 (undefined)");
         assertEq(commandVotes[0], 0, "Command votes at index 0 should be 0 (undefined)");
+    }
+
+
+    function test_approveHeader_success() public {
+        Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
+
+        // Add some headers (starting from index 1)
+        $proposal.createHeader("header1");
+        $proposal.createHeader("header2");
+
+        // Approve a valid header
+        $proposal.approveHeader(1);
+        assertEq($proposal.meta.approvedHeaderId, 1, "Header 1 should be approved");
+
+        // Try to approve the reserved index 0
+        vm.expectRevert(abi.encodeWithSelector(TextDAOErrors.InvalidHeaderId.selector, 0));
+        $proposal.approveHeader(0);
+    }
+
+    function test_approveHeader_revert_withInvalidHeaderId() public {
+        Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
+
+        // Add some headers
+        for (uint i = 0; i < 3; i++) {
+            $proposal.headers.push();
+        }
+
+        // Try to approve an invalid header
+        vm.expectRevert(abi.encodeWithSelector(TextDAOErrors.InvalidHeaderId.selector, 4));
+        $proposal.approveHeader(4);
+    }
+
+    function test_approveHeader_success_withRandomHeaderId(uint8 rnd_headerId) public {
+        Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
+
+        // Initialize headers
+        for (uint i = 0; i < MAX_HEADERS; i++) {
+            $proposal.headers.push();
+        }
+
+        // Bound the headerId
+        rnd_headerId = uint8(bound(rnd_headerId, 1, MAX_HEADERS - 1));
+
+        $proposal.approveHeader(rnd_headerId);
+        assertEq($proposal.meta.approvedHeaderId, rnd_headerId, "Incorrect header approved");
+    }
+
+    function test_approveCommand_success() public {
+        Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
+
+        // Add some commands with actions (starting from index 1)
+        for (uint i = 1; i <= 3; i++) {
+            Schema.Action[] memory actions = new Schema.Action[](2);
+            actions[0] = Schema.Action({funcSig: "test1()", abiParams: ""});
+            actions[1] = Schema.Action({funcSig: "test2()", abiParams: ""});
+            $proposal.createCommand(actions);
+        }
+
+        // Approve a valid command
+        $proposal.approveCommand(1);
+        assertEq($proposal.meta.approvedCommandId, 1, "Command 1 should be approved");
+
+        // Check if all actions in the approved command are set to Approved
+        for (uint i = 0; i < $proposal.cmds[1].actions.length; i++) {
+            assertEq(uint($proposal.meta.actionStatuses[i]), uint(Schema.ActionStatus.Approved), "Action should be approved");
+        }
+
+        // Try to approve the reserved index 0
+        vm.expectRevert(abi.encodeWithSelector(TextDAOErrors.InvalidCommandId.selector, 0));
+        $proposal.approveCommand(0);
+    }
+
+    function test_approveCommand_revert_withInvalidCommandId() public {
+        Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
+
+        // Add some commands with actions
+        for (uint i = 0; i < 3; i++) {
+            Schema.Action[] memory actions = new Schema.Action[](2);
+            actions[0] = Schema.Action({funcSig: "test1()", abiParams: ""});
+            actions[1] = Schema.Action({funcSig: "test2()", abiParams: ""});
+            $proposal.createCommand(actions);
+        }
+
+        // Try to approve an invalid command
+        vm.expectRevert(abi.encodeWithSelector(TextDAOErrors.InvalidCommandId.selector, 4));
+        $proposal.approveCommand(4);
+    }
+
+    function test_approveCommand_success_withRandomCommandId(uint8 rnd_commandId) public {
+        Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
+
+        // Initialize commands with actions
+        for (uint i = 0; i < MAX_COMMANDS; i++) {
+            Schema.Action[] memory actions = new Schema.Action[](2);
+            actions[0] = Schema.Action({funcSig: "test1()", abiParams: ""});
+            actions[1] = Schema.Action({funcSig: "test2()", abiParams: ""});
+            $proposal.createCommand(actions);
+        }
+
+        // Bound the commandId
+        rnd_commandId = uint8(bound(rnd_commandId, 1, MAX_COMMANDS - 1));
+
+        $proposal.approveCommand(rnd_commandId);
+        assertEq($proposal.meta.approvedCommandId, rnd_commandId, "Incorrect command approved");
+
+        // Check if all actions in the approved command are set to Approved
+        for (uint i = 0; i < $proposal.cmds[rnd_commandId].actions.length; i++) {
+            assertEq(uint($proposal.meta.actionStatuses[i]), uint(Schema.ActionStatus.Approved), "Action should be approved");
+        }
     }
 }
