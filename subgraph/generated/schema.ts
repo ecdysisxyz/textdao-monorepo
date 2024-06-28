@@ -440,19 +440,6 @@ export class ProposalMeta extends Entity {
     this.set("reps", Value.fromBytesArray(value));
   }
 
-  get nextRepId(): BigInt {
-    let value = this.get("nextRepId");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set nextRepId(value: BigInt) {
-    this.set("nextRepId", Value.fromBigInt(value));
-  }
-
   get createdAt(): BigInt {
     let value = this.get("createdAt");
     if (!value || value.kind == ValueKind.NULL) {
@@ -464,6 +451,19 @@ export class ProposalMeta extends Entity {
 
   set createdAt(value: BigInt) {
     this.set("createdAt", Value.fromBigInt(value));
+  }
+
+  get vrfRequestId(): BigInt {
+    let value = this.get("vrfRequestId");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set vrfRequestId(value: BigInt) {
+    this.set("vrfRequestId", Value.fromBigInt(value));
   }
 }
 

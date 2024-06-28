@@ -7,8 +7,16 @@ import {
   CommandScored as CommandScoredEvent,
 } from "../generated/Vote/Vote";
 import { TextSaved as TextSavedEvent } from "../generated/SaveTextProtected/SaveTextProtected";
-import { Header, Command, Action, Text } from "../generated/schema";
-import { store, ipfs } from "@graphprotocol/graph-ts";
+import { ProposalTallied as ProposalTalliedEvent } from "../generated/Tally/Tally";
+import {
+  Header,
+  Command,
+  Action,
+  Text,
+  ProposalMeta,
+  Proposal,
+} from "../generated/schema";
+import { store, ipfs, Bytes } from "@graphprotocol/graph-ts";
 
 export function handleHeaderProposed(event: HeaderProposedEvent): void {
   const id = event.params.header.id.toString();
@@ -84,4 +92,30 @@ export function handleTextSaved(event: TextSavedEvent): void {
     return "";
   });
   text.save();
+}
+export function handleProposalTallied(event: ProposalTalliedEvent): void {
+  const pid = event.params.pid.toString();
+  let proposal = Proposal.load(pid);
+  if (proposal == null) {
+    proposal = new Proposal(pid);
+  }
+  const metas = proposal.proposalMeta.load();
+  for (let i: i32 = 0; i < metas.length; i++) {
+    const meta = metas[i];
+    store.remove("ProposalMeta", meta.id);
+  }
+
+  const id = event.transaction.hash.toHex();
+  let proposalMeta = new ProposalMeta(id);
+  proposalMeta.proposal = pid;
+  proposalMeta.currentScore = event.params.proposalMeta.currentScore;
+  proposalMeta.headerRank = event.params.proposalMeta.headerRank;
+  proposalMeta.cmdRank = event.params.proposalMeta.cmdRank;
+  proposalMeta.nextHeaderTallyFrom =
+    event.params.proposalMeta.nextHeaderTallyFrom;
+  proposalMeta.nextCmdTallyFrom = event.params.proposalMeta.nextCmdTallyFrom;
+  proposalMeta.reps = changetype<Bytes[]>(event.params.proposalMeta.reps);
+  proposalMeta.createdAt = event.params.proposalMeta.createdAt;
+  proposalMeta.vrfRequestId = event.params.proposalMeta.vrfRequestId;
+  proposalMeta.save();
 }
