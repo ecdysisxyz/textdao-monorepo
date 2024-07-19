@@ -27,3 +27,50 @@ abstract contract OnlyRepsBase {
     }
 
 }
+
+
+// Testing
+import {MCTest} from "@devkit/Flattened.sol";
+import {TestUtils} from "test/fixtures/TestUtils.sol";
+
+contract OnlyRepsTester is OnlyRepsBase {
+    function doSomething(uint256 pid) public onlyReps(pid) returns(bool) {
+        return true;
+    }
+}
+
+contract OnlyRepsTest is MCTest {
+    function setUp() public {
+        _use(OnlyRepsTester.doSomething.selector, address(new OnlyRepsTester()));
+    }
+
+    function test_onlyReps_success() public {
+        Storage.Deliberation().proposals.push();
+
+        TestUtils.setMsgSenderAsRep(0);
+        assertTrue(OnlyRepsTester(target).doSomething(0));
+    }
+
+    function test_onlyReps_success(address[] calldata reps, uint256 repIndex) public {
+        // proposalId = 0
+        Storage.Deliberation().proposals.push().meta.reps = reps;
+
+        vm.assume(repIndex < reps.length);
+        vm.prank(reps[repIndex]);
+        assertTrue(OnlyRepsTester(target).doSomething(0));
+    }
+
+    function test_onlyReps_revert_notRep(address[] calldata reps, uint256 repIndex, address caller) public {
+        // proposalId = 0
+        Storage.Deliberation().proposals.push().meta.reps = reps;
+
+        vm.assume(repIndex < reps.length);
+        for (uint i; i < reps.length; ++i) {
+            vm.assume(reps[i] != caller);
+        }
+        vm.prank(caller);
+        vm.expectRevert(TextDAOErrors.YouAreNotTheRep.selector);
+        OnlyRepsTester(target).doSomething(0);
+    }
+
+}

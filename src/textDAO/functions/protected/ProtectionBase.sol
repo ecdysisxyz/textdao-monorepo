@@ -47,3 +47,33 @@ abstract contract ProtectionBase {
     }
 
 }
+
+
+// Testing
+import {MCTest} from "@devkit/Flattened.sol";
+
+contract ProtectionBaseTester is ProtectionBase {
+    function doSomething(uint pid) public protected(pid) returns(bool) {
+        return true;
+    }
+}
+
+contract ProtectionBaseTesterTest is MCTest {
+    function setUp() public {
+        _use(ProtectionBaseTester.doSomething.selector, address(new ProtectionBaseTester()));
+    }
+
+    function test_protected_success() public {
+        Schema.Proposal storage $proposal = Storage.Deliberation().proposals.push();
+        Schema.Command storage $cmd = $proposal.cmds.push();
+        $cmd.actions.push(Schema.Action({
+            funcSig: "doSomething(uint256)",
+            abiParams: abi.encode(0)
+        }));
+        $proposal.meta.actionStatuses[0] = Schema.ActionStatus.Approved;
+        $proposal.meta.cmdRank = new uint[](3);
+
+        assertTrue(ProtectionBaseTester(target).doSomething(0));
+    }
+
+}
