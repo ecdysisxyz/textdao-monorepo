@@ -10,6 +10,10 @@ interface TextDAOErrors {
     // General errors
     /// @dev Thrown when a proposal is not found
     error ProposalNotFound();
+    /// @dev Thrown when a given votes array is empty
+    error VotesArrayIsEmpty();
+    /// @dev Thrown when a given header choice is out of range
+    error HeaderChoiceIsOutOfRange(uint choice);
 
     // Propose errors
     /// @dev Thrown when header metadata is missing
@@ -18,6 +22,8 @@ interface TextDAOErrors {
     // Tally errors
     /// @dev Thrown when trying to tally a proposal that hasn't expired yet
     error ProposalNotExpiredYet();
+    error AlreadySnapped();
+    error ProposalAlreadyApproved();
 
     // Execute errors
     /// @dev Thrown when trying to execute an unapproved proposal

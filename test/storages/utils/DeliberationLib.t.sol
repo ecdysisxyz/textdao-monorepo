@@ -3,7 +3,7 @@ pragma solidity ^0.8.24;
 
 import {MCTest, console2} from "@devkit/Flattened.sol";
 
-import {DeliberationLib} from "bundle/textDAO/storages/utils/DeliberationLib.sol";
+import {DeliberationLib} from "bundle/textDAO/utils/DeliberationLib.sol";
 import {Storage, Schema} from "bundle/textdao/storages/Storage.sol";
 
 contract DeliberationLibTest is MCTest {

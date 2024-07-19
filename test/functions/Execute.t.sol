@@ -8,8 +8,8 @@ import {Execute} from "bundle/textDAO/functions/Execute.sol";
 import {ProtectionBase} from "bundle/textDAO/functions/protected/ProtectionBase.sol";
 // Storage
 import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
-import {DeliberationLib} from "bundle/textDAO/storages/utils/DeliberationLib.sol";
-import {CommandLib} from "bundle/textDAO/storages/utils/CommandLib.sol";
+import {DeliberationLib} from "bundle/textDAO/utils/DeliberationLib.sol";
+import {CommandLib} from "bundle/textDAO/utils/CommandLib.sol";
 // Interface
 import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
 import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";

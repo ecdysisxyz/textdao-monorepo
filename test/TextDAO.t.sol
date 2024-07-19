@@ -12,8 +12,8 @@ import {Storage} from "bundle/textDAO/storages/Storage.sol";
 import {Schema} from "bundle/textDAO/storages/Schema.sol";
 import {SaveTextProtected} from "bundle/textDAO/functions/protected/SaveTextProtected.sol";
 import {MemberJoinProtected} from "bundle/textDAO/functions/protected/MemberJoinProtected.sol";
-import {DeliberationLib} from "bundle/textDAO/storages/utils/DeliberationLib.sol";
-import {CommandLib} from "bundle/textDAO/storages/utils/CommandLib.sol";
+import {DeliberationLib} from "bundle/textDAO/utils/DeliberationLib.sol";
+import {CommandLib} from "bundle/textDAO/utils/CommandLib.sol";
 
 contract TextDAOTest is MCTest {
     using DeliberationLib for Schema.Deliberation;

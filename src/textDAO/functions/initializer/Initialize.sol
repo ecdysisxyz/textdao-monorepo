@@ -5,7 +5,7 @@ pragma solidity ^0.8.24;
 import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 // Storage
 import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
-import {MembersLib} from "bundle/textDAO/storages/utils/MembersLib.sol";
+import {MembersLib} from "bundle/textDAO/utils/MembersLib.sol";
 // Interface
 import {IInitialize} from "bundle/textDAO/interfaces/TextDAOFunctions.sol";
 

@@ -10,9 +10,9 @@ import {
 } from "bundle/textDAO/functions/protected/MemberJoinProtected.sol";
 import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
 
-import {DeliberationLib} from "bundle/textDAO/storages/utils/DeliberationLib.sol";
+import {DeliberationLib} from "bundle/textDAO/utils/DeliberationLib.sol";
 using DeliberationLib for Schema.Deliberation;
-import {CommandLib} from "bundle/textDAO/storages/utils/CommandLib.sol";
+import {CommandLib} from "bundle/textDAO/utils/CommandLib.sol";
 using CommandLib for Schema.Command;
 
 contract MemberJoinProtectedTest is MCTest {

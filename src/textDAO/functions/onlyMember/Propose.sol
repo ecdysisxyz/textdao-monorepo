@@ -5,8 +5,8 @@ pragma solidity ^0.8.24;
 import {OnlyMemberBase} from "bundle/textDAO/functions/onlyMember/OnlyMemberBase.sol";
 // Storage
 import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
-import {DeliberationLib} from "bundle/textDAO/storages/utils/DeliberationLib.sol";
-import {ProposalLib} from "bundle/textDAO/storages/utils/ProposalLib.sol";
+import {DeliberationLib} from "bundle/textDAO/utils/DeliberationLib.sol";
+import {ProposalLib} from "bundle/textDAO/utils/ProposalLib.sol";
 // Interface
 import {IPropose} from "bundle/textDAO/interfaces/TextDAOFunctions.sol";
 import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";

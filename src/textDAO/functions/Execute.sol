@@ -2,8 +2,8 @@
 pragma solidity ^0.8.24;
 
 import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
-import {DeliberationLib} from "bundle/textDAO/storages/utils/DeliberationLib.sol";
-import {CommandLib} from "bundle/textDAO/storages/utils/CommandLib.sol";
+import {DeliberationLib} from "bundle/textDAO/utils/DeliberationLib.sol";
+import {CommandLib} from "bundle/textDAO/utils/CommandLib.sol";
 import {IExecute} from "bundle/textDAO/interfaces/TextDAOFunctions.sol";
 import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
 import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";

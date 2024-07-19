@@ -4,6 +4,16 @@ pragma solidity ^0.8.24;
 import {Schema} from "bundle/textDAO/storages/Schema.sol";
 
 interface TextDAOEvents {
+    // Warnings
+    /// @dev Thrown when a given header choice is out of range
+    event WARN_HeaderChoiceIsOutOfRange(uint headerChoice);
+    /// @dev Thrown when a given command choice is out of range
+    event WARN_CommandChoiceIsOutOfRange(uint commandChoice);
+    /// @dev Thrown when a given header choice is duplicate
+    event WARN_HeaderChoiceIsDuplicate(uint headerChoice);
+    /// @dev Thrown when a given command choice is duplicate
+    event WARN_CommandChoiceIsDuplicate(uint commandChoice);
+
     // Propose
     event HeaderProposed(uint pid, string metadataURI);
     event CommandProposed(uint pid, Schema.Action[] actions);
@@ -16,6 +26,7 @@ interface TextDAOEvents {
     // Tally
     event ProposalTalliedWithTie(uint pid, uint[] approvedHeaderIds, uint[] approvedCommandIds);
     event ProposalTallied(uint pid, uint approvedHeaderId, uint approvedCommandId);
+    event ProposalSnapped(uint pid, uint[] top3HeaderIds, uint[] top3CommandIds);
     // event ProposalTallied(uint pid, uint approvedHeaderId, uint approvedHeaderScore, uint approvedCommandId, uint approvedCommandScore);
     // Execute
     event ProposalExecuted(uint pid, uint approvedCommandId);
