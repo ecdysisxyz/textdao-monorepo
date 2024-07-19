@@ -3,152 +3,285 @@ pragma solidity ^0.8.24;
 
 // Storage
 import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
-import {SortLib} from "bundle/textDAO/storages/utils/SortLib.sol";
-import {RankLib} from "bundle/textDAO/storages/utils/RankLib.sol";
-import {ProposalLib} from "bundle/textDAO/storages/utils/ProposalLib.sol";
+import {DeliberationLib} from "bundle/textDAO/utils/DeliberationLib.sol";
+import {ProposalLib} from "bundle/textDAO/utils/ProposalLib.sol";
+import {RCVLib} from "bundle/textDAO/utils/RCVLib.sol";
 // Interface
 import {ITally} from "bundle/textDAO/interfaces/TextDAOFunctions.sol";
 import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
 import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
 
-// import {Types} from "bundle/textDAO/storages/Types.sol";
-// import {SelectorLib} from "bundle/textDAO/functions/_utils/SelectorLib.sol";
-
+/**
+ * @title Tally
+ * @notice This contract handles the tallying process for proposals in TextDAO
+ * @dev This contract is designed to be called by anyone, including keepers for automated execution
+ */
 contract Tally is ITally {
+    using DeliberationLib for Schema.Deliberation;
     using ProposalLib for Schema.Proposal;
-    using RankLib for uint[];
+    using RCVLib for Schema.Proposal;
+    using RCVLib for uint[];
 
+    /**
+     * @notice Initiates the tallying process for a given proposal
+     * @param pid The ID of the proposal to tally
+     * @dev This function can be called by anyone, including keepers
+     * @dev If the proposal is expired, it performs the final tally. Otherwise, it takes a snapshot.
+     */
     function tally(uint pid) external {
-        Schema.Proposal storage $proposal = Storage.Deliberation().proposals[pid];
+        Schema.Proposal storage $proposal = Storage.Deliberation().getProposal(pid);
 
-        if (!$proposal.isExpired()) revert TextDAOErrors.ProposalNotExpiredYet();
+        if ($proposal.isExpired()) {
+            _finalTally(pid, $proposal);
+        } else {
+            _snap(pid, $proposal);
+        }
+    }
 
-        (uint[] memory _headerVotes, uint[] memory _commandVotes) = $proposal.calcVotes();
+    /**
+     * @notice Performs the final tally for a proposal
+     * @param pid The ID of the proposal
+     * @param $proposal The storage pointer to the proposal
+     * @dev This function is called when the proposal has expired
+     * @dev It calculates votes, finds the top header and command, and approves them
+     * @dev If there's a tie, it extends the expiration time
+     */
+    function _finalTally(uint pid, Schema.Proposal storage $proposal) internal {
+        if ($proposal.isApproved()) revert TextDAOErrors.ProposalAlreadyApproved();
 
-        uint[] memory _bestHeaderIds = _headerVotes.findTop1();
-        uint[] memory _bestCommandIds = _commandVotes.findTop1();
+        (uint[] memory _headerScores, uint[] memory _commandScores) = $proposal.calcRCVScores();
 
-        if (_bestCommandIds.length != 1 || _bestCommandIds.length != 1) {
-            emit TextDAOEvents.ProposalTalliedWithTie(pid, _bestHeaderIds, _bestCommandIds);
-            $proposal.meta.expirationTime += Storage.Deliberation().config.expiryDuration; // TODO
-            return;
+        uint[] memory _topHeaderIds = _headerScores.findTopScorer();
+        uint[] memory _topCommandIds = _commandScores.findTopScorer();
+
+        // If there's a tie or no votes, extend the expiration time and emit an event
+        if (_topHeaderIds.length == 0 ||    // no votes for header
+            _topCommandIds.length == 0 ||   // no votes for command
+            _topHeaderIds.length > 1 || // there's a tie header
+            _topCommandIds.length > 1   // there's a tie command
+        ) {
+            $proposal.meta.expirationTime += Storage.Deliberation().config.expiryDuration;
+            emit TextDAOEvents.ProposalTalliedWithTie(pid, _topHeaderIds, _topCommandIds);
+        } else {
+            // Approve the winning header and command
+            $proposal.approveHeader(_topHeaderIds[0]);
+            $proposal.approveCommand(_topCommandIds[0]);
+            emit TextDAOEvents.ProposalTallied(pid, _topHeaderIds[0], _topCommandIds[0]);
+        }
+    }
+
+    /**
+     * @notice Takes a snapshot of the current voting state
+     * @param pid The ID of the proposal
+     * @param $proposal The storage pointer to the proposal
+     * @dev This function is called when the proposal has not yet expired
+     * @dev It calculates the current top 3 headers and commands and emits an event
+     * @dev Epoch is a rounded block.timestamp by snap interval
+     */
+    function _snap(uint pid, Schema.Proposal storage $proposal) internal {
+        if ($proposal.isSnappedInEpoch()) revert TextDAOErrors.AlreadySnapped();
+
+        (uint[] memory _headerScores, uint[] memory _commandScores) = $proposal.calcRCVScores();
+
+        uint[] memory _top3HeaderIds = _headerScores.findTop3Scorers();
+        uint[] memory _top3CommandIds = _commandScores.findTop3Scorers();
+
+        $proposal.flagSnappedInEpoch();
+
+        emit TextDAOEvents.ProposalSnapped(pid, _top3HeaderIds, _top3CommandIds);
+    }
+}
+
+
+/// Testing
+import {MCTest} from "@devkit/Flattened.sol";
+
+/**
+ * @title TallyTest
+ * @notice Test contract for the Tally contract
+ */
+contract TallyTest is MCTest {
+    using DeliberationLib for Schema.Deliberation;
+    using ProposalLib for Schema.Proposal;
+
+    function setUp() public {
+        _use(Tally.tally.selector, address(new Tally()));
+    }
+
+    /**
+     * @notice Test successful final tally
+     * @dev This test checks if the tally function correctly identifies and approves
+     *      the winning header (ID: 1) and command (ID: 3) based on the votes set up
+     *      in _setupProposalForTesting
+     */
+    function test_tally_finalTally_success() public {
+        Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
+        Schema.ProposalMeta storage $proposalMeta = $proposal.meta;
+
+        _setupProposalForTesting($proposal, $proposalMeta);
+
+        $proposalMeta.expirationTime = block.timestamp - 1;
+
+        vm.expectEmit(true, true, true, true);
+        emit TextDAOEvents.ProposalTallied(0, 1, 3);
+        Tally(target).tally(0);
+
+        assertEq($proposalMeta.approvedHeaderId, 1, "Incorrect approved header ID");
+        assertEq($proposalMeta.approvedCommandId, 3, "Incorrect approved command ID");
+    }
+
+    /**
+     * @notice Test tally with tie
+     * @dev This test creates a tie situation by adding a third vote that changes
+     *      the scores. After adding this vote, the scores are:
+     *      Headers: 1: 8 points, 2: 5 points, 3: 8 points, 4: 1 point
+     *      Commands: 1: 5 points, 2: 4 points, 3: 6 points
+     *      This results in a tie for headers (IDs 1 and 3), but not for commands (ID 3 still wins)
+     */
+    function test_tally_finalTally_success_tie() public {
+        Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
+        Schema.ProposalMeta storage $proposalMeta = $proposal.meta;
+
+        _setupProposalForTesting($proposal, $proposalMeta);
+
+        // Add another vote to create a tie
+        $proposalMeta.reps.push(address(3));
+        $proposalMeta.votes[address(3)].rankedHeaderIds = [2, 3, 1]; // This creates a tie between header 1 and 3
+        $proposalMeta.votes[address(3)].rankedCommandIds = [1, 1, 1]; // This doesn't change the winning command
+
+        $proposalMeta.expirationTime = block.timestamp - 1;
+
+        uint initialExpirationTime = $proposalMeta.expirationTime;
+
+        uint[] memory _tieHeaderIds = new uint[](2);
+        _tieHeaderIds[0] = 1;
+        _tieHeaderIds[1] = 3;
+        uint[] memory _tieCommandIds = new uint[](1);
+        _tieCommandIds[0] = 3;
+
+        vm.expectEmit(true, true, true, true);
+        emit TextDAOEvents.ProposalTalliedWithTie(0, _tieHeaderIds, _tieCommandIds);
+        Tally(target).tally(0);
+
+        assertEq($proposalMeta.expirationTime, initialExpirationTime + Storage.Deliberation().config.expiryDuration, "Expiration time should be extended");
+        assertEq($proposalMeta.approvedHeaderId, 0, "No header should be approved in case of tie");
+        assertEq($proposalMeta.approvedCommandId, 0, "No command should be approved in case of tie");
+    }
+
+    /**
+     * @notice Test tally with no votes
+     */
+    function test_tally_finalTally_noVotes() public {
+        Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
+        Schema.ProposalMeta storage $proposalMeta = $proposal.meta;
+
+        for (uint i; i < 3; i++) {
+            $proposal.createHeader("test://metadata");
+            $proposal.createCommand(new Schema.Action[](0));
         }
 
-        $proposal.approveHeader(_bestHeaderIds[0]);
-        $proposal.approveCommand(_bestCommandIds[0]);
-        emit TextDAOEvents.ProposalTallied(pid, _bestHeaderIds[0], _bestCommandIds[0]);
+        $proposalMeta.expirationTime = block.timestamp - 1;
+
+        uint initialExpirationTime = $proposalMeta.expirationTime;
+
+        vm.expectEmit(true, true, true, true);
+        emit TextDAOEvents.ProposalTalliedWithTie(0, new uint[](0), new uint[](0));
+        Tally(target).tally(0);
+
+        assertEq($proposalMeta.expirationTime, initialExpirationTime + Storage.Deliberation().config.expiryDuration, "Expiration time should be extended");
+        assertEq($proposalMeta.approvedHeaderId, 0, "No header should be approved when there are no votes");
+        assertEq($proposalMeta.approvedCommandId, 0, "No command should be approved when there are no votes");
     }
 
-    function snap(uint pid) external {
+    /**
+     * @notice Test tally with already approved proposal
+     */
+    function test_tally_finalTally_revert_alreadyApproved() public {
+        Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
+        Schema.ProposalMeta storage $proposalMeta = $proposal.meta;
 
-    // // modifier onlyOncePerInterval(uint pid) {
-    //     Schema.Deliberation storage $ = Storage.Deliberation();
-    //     Schema.Proposal storage $p = $.proposals[pid];
-    //     require($.config.tallyInterval > 0, "Set tally interval at config.");
-    //     require(!$p.tallied[block.timestamp / $.config.tallyInterval], "This interval is already tallied.");
-    //     // _;
-    // // }
-    //     // Schema.Deliberation storage $ = Storage.Deliberation();
-    //     // Schema.Proposal storage $p = $.proposals[pid];
-    //     Schema.Header[] storage $headers = $p.headers;
-    //     Schema.Command[] storage $cmds = $p.cmds;
-    //     Schema.ConfigOverrideStorage storage $configOverride = Storage.$ConfigOverride();
+        _setupProposalForTesting($proposal, $proposalMeta);
 
-    //     Types.ProposalVars memory vars;
+        $proposalMeta.expirationTime = block.timestamp - 1;
+        $proposalMeta.approvedHeaderId = 1; // Set as already approved
 
-    //     require($p.meta.createdAt + $.config.expiryDuration > block.timestamp, "This proposal has been expired. You cannot run new tally to update ranks.");
-
-    //     vars.headerRank = new uint[]($headers.length);
-    //     vars.headerRank = SortLib.rankHeaders($headers, $p.meta.nextHeaderTallyFrom);
-    //     vars.cmdRank = new uint[]($cmds.length);
-    //     vars.cmdRank = SortLib.rankCmds($cmds, $p.meta.nextCmdTallyFrom);
-
-    //     uint headerTopScore = $headers[vars.headerRank[0]].currentScore;
-    //     bool headerCond = headerTopScore >= $.config.quorumScore;
-    //     Schema.Command storage $topCmd = $cmds[vars.cmdRank[0]];
-    //     uint cmdTopScore = $topCmd.currentScore;
-
-
-    //     // Note: Passing multiple actions requires unanymous achivement of all quorum including harder conditions.
-    //     vars.cmdConds = new bool[]($topCmd.actions.length);
-    //     vars.cmdCondSum;
-    //     for (uint i; i < $topCmd.actions.length; i++) {
-    //         Schema.Action storage $action = $topCmd.actions[i];
-    //         uint quorumOverride = $configOverride.overrides[SelectorLib.selector($action.funcSig)].quorumScore;
-    //         if (quorumOverride > 0) {
-    //             vars.cmdConds[i] = cmdTopScore >= quorumOverride; // Special quorum
-    //         } else {
-    //             vars.cmdConds[i] = cmdTopScore >= $.config.quorumScore; // Global quorum
-    //         }
-    //         if (vars.cmdConds[i]) {
-    //             vars.cmdCondSum = true;
-    //         } else {
-    //             vars.cmdCondSum = false;
-    //             break;
-    //         }
-    //     }
-
-    //     if ($p.meta.headerRank.length == 0) {
-    //         $p.meta.headerRank = new uint[](3);
-    //     }
-    //     if (headerCond) {
-    //         $p.meta.headerRank[0] = vars.headerRank[0];
-    //         $p.meta.headerRank[1] = vars.headerRank[1];
-    //         $p.meta.headerRank[2] = vars.headerRank[2];
-    //         $p.meta.nextHeaderTallyFrom = $headers.length;
-    //     } else {
-    //         // emit HeaderQuorumFailed
-    //     }
-
-    //     if ($p.meta.cmdRank.length == 0) {
-    //         $p.meta.cmdRank = new uint[](3);
-    //     }
-    //     if (vars.cmdCondSum) {
-    //         $p.meta.cmdRank[0] = vars.cmdRank[0];
-    //         $p.meta.cmdRank[1] = vars.cmdRank[1];
-    //         $p.meta.cmdRank[2] = vars.cmdRank[2];
-    //         $p.meta.nextCmdTallyFrom = $cmds.length;
-    //     } else {
-    //         // emit CommandQuorumFailed
-    //     }
-
-    //     // Repeatable tally
-    //     for (uint i = 0; i < 3; ++i) {
-    //         vars.headerRank2 = $p.meta.headerRank[i];
-    //         vars.cmdRank2 = $p.meta.cmdRank[i];
-
-    //         // Copy top ranked Headers and Commands to temporary arrays
-    //         if(vars.headerRank2 < $p.headers.length){
-    //             vars.topHeaders[i] = $p.headers[vars.headerRank2];
-    //         }
-
-    //         if(vars.cmdRank2 < $p.cmds.length){
-    //             // vars.topCommands[i] = $p.cmds[vars.cmdRank2];
-    //         }
-    //     }
-
-    //     // Re-populate with top ranked items
-    //     // next{Header,Cmd}TallyFrom effectively remains these top-3 elements
-    //     // for (uint i = 0; i < 3; ++i) {
-    //     //     $p.headers[vars.headerRank2].id = vars.topHeaders[i].id;
-    //     //     $p.headers[vars.headerRank2].currentScore = vars.topHeaders[i].currentScore;
-    //     //     $p.headers[vars.headerRank2].metadataURI = vars.topHeaders[i].metadataURI;
-    //     //     for (uint j; j < vars.topHeaders[i].tagIds.length; j++) {
-    //     //         $p.headers[vars.headerRank2].tagIds[j] = vars.topHeaders[i].tagIds[j];
-    //     //     }
-
-    //     //     $p.cmds[vars.cmdRank2].id = vars.topCommands[i].id;
-    //     //     for (uint j; j < vars.topCommands[i].actions.length; j++) {
-    //     //         $p.cmds[vars.cmdRank2].actions[j].funcSig = vars.topCommands[i].actions[j].funcSig;
-    //     //         $p.cmds[vars.cmdRank2].actions[j].abiParams = vars.topCommands[i].actions[j].abiParams;
-    //     //     }
-    //     //     $p.cmds[vars.cmdRank2].currentScore = vars.topCommands[i].currentScore;
-    //     // }
-
-    //     // interval flag
-    //     require($.config.tallyInterval > 0, "Set tally interval at config.");
-    //     $p.tallied[block.timestamp / $.config.tallyInterval] = true;
-    //     // emit TextDAOEvents.ProposalTallied(pid, $p.meta);
+        vm.expectRevert(TextDAOErrors.ProposalAlreadyApproved.selector);
+        Tally(target).tally(0);
     }
 
+    /**
+     * @notice Test successful snapshot
+     */
+    function test_tally_snap_success() public {
+        Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
+        Schema.ProposalMeta storage $proposalMeta = $proposal.meta;
+
+        _setupProposalForTesting($proposal, $proposalMeta);
+
+        $proposalMeta.expirationTime = block.timestamp + 1;
+
+        uint[] memory _top3HeaderIdsExpected = new uint[](3);
+        _top3HeaderIdsExpected[0] = 1;
+        _top3HeaderIdsExpected[1] = 3;
+        _top3HeaderIdsExpected[2] = 2;
+        uint[] memory _top3CommandIdsExpected = new uint[](3);
+        _top3CommandIdsExpected[0] = 3;
+        _top3CommandIdsExpected[1] = 2;
+        _top3CommandIdsExpected[2] = 1;
+
+        vm.expectEmit(true, true, true, true);
+        emit TextDAOEvents.ProposalSnapped(0, _top3HeaderIdsExpected, _top3CommandIdsExpected);
+        Tally(target).tally(0);
+
+        assertFalse($proposal.isApproved(), "Proposal should not be approved after snapshot");
+    }
+
+    /**
+     * @notice Test snapshot with already snapped proposal
+     */
+    function test_tally_snap_revert_alreadySnapped() public {
+        Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
+        Schema.ProposalMeta storage $proposalMeta = $proposal.meta;
+
+        _setupProposalForTesting($proposal, $proposalMeta);
+
+        $proposalMeta.expirationTime = block.timestamp + 1;
+        $proposal.flagSnappedInEpoch(); // Set as already snapped
+
+        vm.expectRevert(TextDAOErrors.AlreadySnapped.selector);
+        Tally(target).tally(0);
+    }
+
+    /**
+     * @notice Helper function to set up a proposal for testing
+     * @dev This function creates a proposal with the following setup:
+     * - 10 headers and commands (index 0 is not used)
+     * - 2 representatives (address(1) and address(2))
+     * - Votes are set up as follows:
+     *   For headers:
+     *     address(1): [1, 2, 3] (3 points for 1, 2 points for 2, 1 point for 3)
+     *     address(2): [3, 1, 4] (3 points for 3, 2 points for 1, 1 point for 4)
+     *   For commands:
+     *     Both address(1) and address(2): [3, 2, 1]
+     *
+     * Resulting scores:
+     * Headers: 1: 5 points, 2: 2 points, 3: 4 points, 4: 1 point
+     * Commands: 1: 2 points, 2: 4 points, 3: 6 points, 4: 0 point
+     *
+     * Expected winners:
+     * Header: 1 (with 5 points)
+     * Command: 3 (with 6 points)
+     */
+    function _setupProposalForTesting(Schema.Proposal storage $testProposal, Schema.ProposalMeta storage $proposalMeta) internal {
+        for (uint i; i < 10; i++) {
+            $testProposal.createHeader("test://metadata");
+            $testProposal.createCommand(new Schema.Action[](1));
+        }
+        $proposalMeta.reps.push(address(1));
+        $proposalMeta.reps.push(address(2));
+        $proposalMeta.votes[address(1)].rankedHeaderIds = [1, 2, 3];
+        $proposalMeta.votes[address(2)].rankedHeaderIds = [3, 1, 4];
+        $proposalMeta.votes[address(1)].rankedCommandIds = [3, 2, 1];
+        $proposalMeta.votes[address(2)].rankedCommandIds = [3, 2, 1];
+    }
 }

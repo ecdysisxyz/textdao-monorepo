@@ -39,7 +39,7 @@ contract InitializeTest is MCTest {
     function test_initialize_revert_InvalidInitialization() public {
         Schema.DeliberationConfig memory _config = Schema.DeliberationConfig({
             expiryDuration: 2 minutes,
-            tallyInterval: 1 minutes,
+            snapInterval: 1 minutes,
             repsNum: 1000,
             quorumScore: 3
         });

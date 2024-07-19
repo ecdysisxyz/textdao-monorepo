@@ -25,7 +25,7 @@ contract TextDAOScenarioTest is MCTest {
 
         Schema.DeliberationConfig memory _config = Schema.DeliberationConfig({
             expiryDuration: 2 minutes,
-            tallyInterval: 1 minutes,
+            snapInterval: 1 minutes,
             repsNum: 1000,
             quorumScore: 3
         });
@@ -127,7 +127,7 @@ contract TextDAOScenarioTest is MCTest {
         initialMembers[0].addr = address(this); // Example initial member address
         try textDAO.initialize(initialMembers, Schema.DeliberationConfig({
             expiryDuration: 2 minutes,
-            tallyInterval: 1 minutes,
+            snapInterval: 1 minutes,
             repsNum: 1,
             quorumScore: 3
         })) {} catch {

@@ -12,7 +12,7 @@ interface Schema {
     }
     struct DeliberationConfig {
         uint expiryDuration;
-        uint tallyInterval;
+        uint snapInterval;
         uint repsNum;
         uint quorumScore;
     }
@@ -50,6 +50,8 @@ interface Schema {
         bool fullyExecuted;
         uint expirationTime;
         uint vrfRequestId;
+        uint snapInterval;
+        mapping(uint epoch => bool) snapped;
 
         uint currentScore;
         uint[] headerRank;

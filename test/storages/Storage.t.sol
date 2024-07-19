@@ -21,7 +21,7 @@ contract StorageTest is MCTest {
         vm.record();
         Storage.Deliberation().proposals.push();
         Storage.Deliberation().config.expiryDuration = 10;
-        Storage.Deliberation().config.tallyInterval = 20;
+        Storage.Deliberation().config.snapInterval = 20;
         Storage.Deliberation().config.repsNum = 30;
         Storage.Deliberation().config.quorumScore = 40;
         (, bytes32[] memory writes) = vm.accesses(
