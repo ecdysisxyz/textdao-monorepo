@@ -31,8 +31,6 @@ library DeployLib {
         mc.use("Fork", Fork.fork.selector, address(new Fork()));
         address voteAddr = address(new Vote());
         mc.use("Vote", Vote.vote.selector, voteAddr);
-        mc.use("VoteHeaders", Vote.voteHeaders.selector, voteAddr);
-        mc.use("VoteCmds", Vote.voteCmds.selector, voteAddr);
         mc.use("Tally", Tally.tally.selector, address(new Tally()));
         mc.use("Execute", Execute.execute.selector, address(new Execute()));
         mc.use("MemberJoinProtected", MemberJoinProtected.memberJoin.selector, address(new MemberJoinProtected()));

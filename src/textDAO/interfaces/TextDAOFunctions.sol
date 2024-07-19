@@ -24,8 +24,6 @@ interface IFork {
 
 interface IVote {
     function vote(uint pid, Schema.Vote calldata repVote) external;
-    function voteHeaders(uint pid, uint[3] calldata headerIds) external;
-    function voteCmds(uint pid, uint[3] calldata cmdIds) external;
 }
 
 interface ITally {

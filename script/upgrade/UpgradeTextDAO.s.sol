@@ -18,8 +18,6 @@ contract UpgradeTextDAOScript is MCScript {
         address propose = address(new Propose());
         address vote = address(new Vote());
         mc.loadDictionary("TextDAODictionary", mc.getDictionaryAddress(textDAO))
-            .set(Propose.propose.selector, propose)
-            .set(Vote.voteHeaders.selector, vote)
-            .set(Vote.voteCmds.selector, vote);
+            .set(Propose.propose.selector, propose);
     }
 }

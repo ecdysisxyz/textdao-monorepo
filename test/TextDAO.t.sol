@@ -24,8 +24,6 @@ contract TextDAOTest is MCTest {
         _use(Fork.fork.selector, address(new Fork()));
         _use(Execute.execute.selector, address(new Execute()));
         address vote = address(new Vote());
-        _use(Vote.voteHeaders.selector, vote);
-        _use(Vote.voteCmds.selector, vote);
         _use(Tally.tally.selector, address(new Tally()));
         _use(SaveTextProtected.saveText.selector, address(new SaveTextProtected()));
         _use(MemberJoinProtected.memberJoin.selector, address(new MemberJoinProtected()));
