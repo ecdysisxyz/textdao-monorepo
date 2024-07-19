@@ -17,10 +17,14 @@ interface TextDAOEvents {
     // Propose
     event HeaderProposed(uint pid, string metadataURI);
     event CommandProposed(uint pid, Schema.Action[] actions);
+    event Proposed(uint pid, address proposer, uint256 proposedAt);
+    event RepresentativesAssigned(uint pid, address[] reps);
+    event VRFRequested(uint pid, uint256 requestId);
     // Fork
     event HeaderForked(uint pid, string metadataURI);
     event CommandForked(uint pid, Schema.Action[] actions);
     // Vote
+    event Voted(uint pid, address rep, Schema.Vote vote);
     event HeaderScored(uint pid, uint headerId, uint currentScore);
     event CmdScored(uint pid, uint cmdId, uint currentScore);
     // Tally

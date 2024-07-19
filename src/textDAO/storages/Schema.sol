@@ -52,12 +52,6 @@ interface Schema {
         uint vrfRequestId;
         uint snapInterval;
         mapping(uint epoch => bool) snapped;
-
-        uint currentScore;
-        uint[] headerRank;
-        uint[] cmdRank;
-        uint nextHeaderTallyFrom;
-        uint nextCmdTallyFrom;
         uint createdAt;
     }
     struct Vote {

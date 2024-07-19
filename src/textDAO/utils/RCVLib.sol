@@ -42,14 +42,14 @@ library RCVLib {
             uint _headerRange = headerScores.length;
 
             // Process first header
-            if (!_isWithinRange(_h1, _headerRange)) {
+            if (!isWithinRange(_h1, _headerRange)) {
                 emit TextDAOEvents.WARN_HeaderChoiceIsOutOfRange(_h1);
             } else {
                 headerScores[_h1] += 3;
             }
 
             // Process second header
-            if (!_isWithinRange(_h2, _headerRange)) {
+            if (!isWithinRange(_h2, _headerRange)) {
                 emit TextDAOEvents.WARN_HeaderChoiceIsOutOfRange(_h2);
             } else if (_h2 == _h1) {
                 emit TextDAOEvents.WARN_HeaderChoiceIsDuplicate(_h2);
@@ -58,7 +58,7 @@ library RCVLib {
             }
 
             // Process third header
-            if (!_isWithinRange(_h3, _headerRange)) {
+            if (!isWithinRange(_h3, _headerRange)) {
                 emit TextDAOEvents.WARN_HeaderChoiceIsOutOfRange(_h3);
             } else if (_h3 == _h1 || _h3 == _h2) {
                 emit TextDAOEvents.WARN_HeaderChoiceIsDuplicate(_h3);
@@ -74,14 +74,14 @@ library RCVLib {
             uint _commandRange = headerScores.length;
 
             // Process first command
-            if (!_isWithinRange(_c1, _commandRange)) {
+            if (!isWithinRange(_c1, _commandRange)) {
                 emit TextDAOEvents.WARN_CommandChoiceIsOutOfRange(_c1);
             } else {
                 commandScores[_c1] += 3;
             }
 
             // Process second command
-            if (!_isWithinRange(_c2, _commandRange)) {
+            if (!isWithinRange(_c2, _commandRange)) {
                 emit TextDAOEvents.WARN_CommandChoiceIsOutOfRange(_c2);
             } else if (_c2 == _c1) {
                 emit TextDAOEvents.WARN_CommandChoiceIsDuplicate(_c2);
@@ -90,7 +90,7 @@ library RCVLib {
             }
 
             // Process third command
-            if (!_isWithinRange(_c3, _commandRange)) {
+            if (!isWithinRange(_c3, _commandRange)) {
                 emit TextDAOEvents.WARN_CommandChoiceIsOutOfRange(_c3);
             } else if (_c3 == _c1 || _c3 == _c2) {
                 emit TextDAOEvents.WARN_CommandChoiceIsDuplicate(_c3);
@@ -107,8 +107,8 @@ library RCVLib {
     * @param range The maximum valid value for the choice
     * @return bool True if the choice is within range, false otherwise
     */
-    function _isWithinRange(uint choice, uint range) internal pure returns (bool) {
-        return choice > 0 && choice < range;
+    function isWithinRange(uint choice, uint range) internal pure returns (bool) {
+        return 0 < choice && choice < range;
     }
 
     /**
@@ -315,17 +315,17 @@ contract RCVLibTest is Test {
             uint _h2 = vote.rankedHeaderIds[1];
             uint _h3 = vote.rankedHeaderIds[2];
 
-            if (RCVLib._isWithinRange(_h1, MAX_HEADERS + 1)) _expectedHeaderScores[_h1] += 3;
-            if (RCVLib._isWithinRange(_h2, MAX_HEADERS + 1) && _h2 != _h1) _expectedHeaderScores[_h2] += 2;
-            if (RCVLib._isWithinRange(_h3, MAX_HEADERS + 1) && _h3 != _h1 && _h3 != _h2) _expectedHeaderScores[_h3] += 1;
+            if (RCVLib.isWithinRange(_h1, MAX_HEADERS + 1)) _expectedHeaderScores[_h1] += 3;
+            if (RCVLib.isWithinRange(_h2, MAX_HEADERS + 1) && _h2 != _h1) _expectedHeaderScores[_h2] += 2;
+            if (RCVLib.isWithinRange(_h3, MAX_HEADERS + 1) && _h3 != _h1 && _h3 != _h2) _expectedHeaderScores[_h3] += 1;
 
             uint _c1 = vote.rankedCommandIds[0];
             uint _c2 = vote.rankedCommandIds[1];
             uint _c3 = vote.rankedCommandIds[2];
 
-            if (RCVLib._isWithinRange(_c1, MAX_COMMANDS + 1)) _expectedCommandScores[_c1] += 3;
-            if (RCVLib._isWithinRange(_c2, MAX_COMMANDS + 1) && _c2 != _c1) _expectedCommandScores[_c2] += 2;
-            if (RCVLib._isWithinRange(_c3, MAX_COMMANDS + 1) && _c3 != _c1 && _c3 != _c2) _expectedCommandScores[_c3] += 1;
+            if (RCVLib.isWithinRange(_c1, MAX_COMMANDS + 1)) _expectedCommandScores[_c1] += 3;
+            if (RCVLib.isWithinRange(_c2, MAX_COMMANDS + 1) && _c2 != _c1) _expectedCommandScores[_c2] += 2;
+            if (RCVLib.isWithinRange(_c3, MAX_COMMANDS + 1) && _c3 != _c1 && _c3 != _c2) _expectedCommandScores[_c3] += 1;
         }
 
         for (uint i = 1; i <= MAX_HEADERS; ++i) {

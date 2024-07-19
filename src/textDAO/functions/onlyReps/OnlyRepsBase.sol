@@ -11,7 +11,6 @@ abstract contract OnlyRepsBase {
     using DeliberationLib for Schema.Deliberation;
 
     modifier onlyReps(uint pid) {
-        // TODO ProposalNotFound
         address[] storage $reps = Storage.Deliberation().getProposal(pid).meta.reps;
 
         bool result;

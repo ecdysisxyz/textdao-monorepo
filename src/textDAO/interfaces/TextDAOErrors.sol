@@ -19,6 +19,19 @@ interface TextDAOErrors {
     /// @dev Thrown when header metadata is missing
     error HeaderMetadataIsRequired();
 
+    // VRF Request errors
+    error InvalidVRFSubscription();
+    error InvalidVRFCoordinator();
+    error InvalidVRFKeyHash();
+    error InvalidVRFCallbackGasLimit();
+    error InvalidVRFRequestConfirmations();
+    error InvalidVRFNumWords();
+    error InvalidVRFLinkToken();
+
+    // Vote errors
+    /// @dev Thrown when the proposal has already expired
+    error ProposalAlreadyExpired();
+
     // Tally errors
     /// @dev Thrown when trying to tally a proposal that hasn't expired yet
     error ProposalNotExpiredYet();

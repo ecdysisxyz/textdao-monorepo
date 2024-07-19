@@ -71,7 +71,7 @@ contract ProtectionBaseTesterTest is MCTest {
             abiParams: abi.encode(0)
         }));
         $proposal.meta.actionStatuses[0] = Schema.ActionStatus.Approved;
-        $proposal.meta.cmdRank = new uint[](3);
+        // $proposal.meta.cmdRank = new uint[](3);
 
         assertTrue(ProtectionBaseTester(target).doSomething(0));
     }
