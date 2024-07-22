@@ -14,15 +14,14 @@ interface TextDAOEvents {
     /// @dev Thrown when a given command choice is duplicate
     event WARN_CommandChoiceIsDuplicate(uint commandChoice);
 
+    // Proposal
+    event HeaderCreated(uint pid, uint headerId, string metadataURI);
+    event CommandCreated(uint pid, uint commandId, Schema.Action[] actions);
+
     // Propose
-    event HeaderProposed(uint pid, string metadataURI);
-    event CommandProposed(uint pid, Schema.Action[] actions);
-    event Proposed(uint pid, address proposer, uint256 proposedAt);
+    event Proposed(uint pid, address proposer, uint256 createdAt, uint256 expirationTime);
     event RepresentativesAssigned(uint pid, address[] reps);
     event VRFRequested(uint pid, uint256 requestId);
-    // Fork
-    event HeaderForked(uint pid, string metadataURI);
-    event CommandForked(uint pid, Schema.Action[] actions);
     // Vote
     event Voted(uint pid, address rep, Schema.Vote vote);
     event HeaderScored(uint pid, uint headerId, uint currentScore);
@@ -31,7 +30,6 @@ interface TextDAOEvents {
     event ProposalTalliedWithTie(uint pid, uint[] approvedHeaderIds, uint[] approvedCommandIds);
     event ProposalTallied(uint pid, uint approvedHeaderId, uint approvedCommandId);
     event ProposalSnapped(uint pid, uint[] top3HeaderIds, uint[] top3CommandIds);
-    // event ProposalTallied(uint pid, uint approvedHeaderId, uint approvedHeaderScore, uint approvedCommandId, uint approvedCommandScore);
     // Execute
     event ProposalExecuted(uint pid, uint approvedCommandId);
     // SaveText
