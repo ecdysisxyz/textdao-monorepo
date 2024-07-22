@@ -8,7 +8,7 @@ import {ITextDAO} from "bundle/textDAO/interfaces/ITextDAO.sol";
 contract TextDAOFacade is ITextDAO {
     function clone(address _target) external {}
     function initialize(Member[] calldata initialMembers, DeliberationConfig calldata pConfig) external {}
-    function propose(ProposeArgs calldata _args) external returns (uint) {}
+    function propose(string calldata headerMetadataURI, Action[] calldata actions) external returns (uint) {}
     function fork(uint pid, string calldata headerMetadataURI, Action[] calldata actions) external {}
     function vote(uint pid, Vote calldata repVote) external {}
     function voteHeaders(uint _proposalId, uint[3] calldata _headerIds) external {}

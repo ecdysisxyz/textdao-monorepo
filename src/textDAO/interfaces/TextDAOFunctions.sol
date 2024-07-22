@@ -8,11 +8,7 @@ interface IInitialize {
 }
 
 interface IPropose {
-    struct ProposeArgs {
-        string headerMetadataURI;
-        Schema.Action[] actions;
-    }
-    function propose(ProposeArgs calldata _args) external returns(uint proposalId);
+    function propose(string calldata headerMetadataURI, Schema.Action[] calldata actions) external returns(uint proposalId);
 }
 
 interface IFork {
