@@ -22,11 +22,27 @@ library CommandLib {
         });
     }
 
-    function createSaveTextAction(Schema.Command storage cmd, uint pid, uint textId, string[] memory metadataURIs) internal returns(Schema.Action storage) {
+    function createCreateTextAction(Schema.Command storage cmd, uint pid, string memory metadataURI) internal returns(Schema.Action storage) {
         return createAction({
             cmd: cmd,
-            funcSig: "saveText(uint256,uint256,string[])",
-            abiParams: abi.encode(pid, textId, metadataURIs)
+            funcSig: "createText(uint256,string)",
+            abiParams: abi.encode(pid, metadataURI)
+        });
+    }
+
+    function createUpdateTextAction(Schema.Command storage cmd, uint pid, uint textId, string memory metadataURI) internal returns(Schema.Action storage) {
+        return createAction({
+            cmd: cmd,
+            funcSig: "updateText(uint256,uint256,string)",
+            abiParams: abi.encode(pid, textId, metadataURI)
+        });
+    }
+
+    function createDeleteTextAction(Schema.Command storage cmd, uint pid, uint textId) internal returns(Schema.Action storage) {
+        return createAction({
+            cmd: cmd,
+            funcSig: "deleteText(uint256,uint256)",
+            abiParams: abi.encode(pid, textId)
         });
     }
 

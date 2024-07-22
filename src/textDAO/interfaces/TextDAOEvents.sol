@@ -35,7 +35,9 @@ interface TextDAOEvents {
     // Execute
     event ProposalExecuted(uint pid, uint approvedCommandId);
     // SaveText
-    event TextSaved(uint pid, Schema.Text text);
+    event TextCreated(uint textId, string metadataURI);
+    event TextUpdated(uint textId, string newMetadataURI);
+    event TextDeleted(uint textId);
     /// @dev From Initializable @ openzeppelin-contracts~5.0.0
     event Initialized(uint64 version);
 }

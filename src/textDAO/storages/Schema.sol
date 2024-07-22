@@ -65,7 +65,7 @@ interface Schema {
         Text[] texts;
     }
     struct Text {
-        string[] metadataURIs;
+        string metadataURI;
     }
 
 

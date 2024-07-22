@@ -75,4 +75,8 @@ interface TextDAOErrors {
     error InvalidHeaderId(uint headerId);
     /// @dev Thrown when an invalid command ID is provided
     error InvalidCommandId(uint commandId);
+
+    // DaveText
+    error TextMetadataURIIsRequired();
+    error TextNotFound(uint textId);
 }
