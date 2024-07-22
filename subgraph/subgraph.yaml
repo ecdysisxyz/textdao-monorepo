@@ -31,3 +31,80 @@ dataSources:
         - event: CommandProposed(uint256,(uint256,(string,bytes)[],uint256))
           handler: handleCommandProposed
       file: ./src/mapping.ts
+  - kind: ethereum
+    name: Vote
+    network: mainnet
+    source:
+      startBlock: 5041207
+      abi: Vote
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Proposal
+        - Header
+        - Command
+        - Action
+        - ProposalMeta
+        - Text
+        - Member
+      abis:
+        - name: Vote
+          file: ../out/Vote.sol/Vote.json
+      eventHandlers:
+        - event: HeaderScored(uint256,uint256,uint256)
+          handler: handleHeaderScored
+        - event: CommandScored(uint256,uint256,uint256)
+          handler: handleCommandScored
+      file: ./src/mapping.ts
+  - kind: ethereum
+    name: SaveTextProtected
+    network: mainnet
+    source:
+      startBlock: 5041207
+      abi: SaveTextProtected
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Proposal
+        - Header
+        - Command
+        - Action
+        - ProposalMeta
+        - Text
+        - Member
+      abis:
+        - name: SaveTextProtected
+          file: ../out/SaveTextProtected.sol/SaveTextProtected.json
+      eventHandlers:
+        - event: TextSaved(uint256,string[])
+          handler: handleTextSaved
+      file: ./src/mapping.ts
+  - kind: ethereum
+    name: Tally
+    network: mainnet
+    source:
+      startBlock: 5041207
+      abi: Tally
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Proposal
+        - Header
+        - Command
+        - Action
+        - ProposalMeta
+        - Text
+        - Member
+      abis:
+        - name: Tally
+          file: ../out/Tally.sol/Tally.json
+      eventHandlers:
+        - event: ProposalTallied(uint256,(uint256,uint256[],uint256[],uint256,uint256,address[],uint256,uint256))
+          handler: handleProposalTallied
+      file: ./src/mapping.ts

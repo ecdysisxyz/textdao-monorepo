@@ -9,6 +9,9 @@ import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
 import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
 
 contract SaveTextProtected is ProtectionBase {
+    // TODO pid と紐付ける必要はあるか
+    event TextSaved(uint id, string[] metadataURIs);
+
     // TODO CRUD
     function saveText(uint pid, uint textId, string[] memory metadataURIs) public protected(pid) returns (bool) {
         Schema.Text storage $text = Storage.Texts().texts.push();

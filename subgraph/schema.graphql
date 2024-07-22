@@ -32,12 +32,12 @@ type ProposalMeta @entity {
     nextHeaderTallyFrom: BigInt!
     nextCmdTallyFrom: BigInt!
     reps: [Bytes!]!
-    nextRepId: BigInt!
     createdAt: BigInt!
+    vrfRequestId: BigInt!
 }
 type Text @entity {
     id: ID!
-    metadataURIs: [Bytes!]!
+    metadataURIs: [String!]!
     bodies: [String!]!
 }
 type Member @entity {

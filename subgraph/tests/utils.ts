@@ -1,6 +1,9 @@
 import { newMockEvent } from "matchstick-as";
-import { ethereum, Bytes, BigInt } from "@graphprotocol/graph-ts";
+import { ethereum, Bytes, BigInt, Address } from "@graphprotocol/graph-ts";
 import { CommandProposed, HeaderProposed } from "../generated/Propose/Propose";
+import { CommandScored, HeaderScored } from "../generated/Vote/Vote";
+import { TextSaved } from "../generated/SaveTextProtected/SaveTextProtected";
+import { ProposalTallied } from "../generated/Tally/Tally";
 
 export function createHeaderProposed(
   id: i32,
@@ -75,5 +78,136 @@ export function createCommandProposed(
   );
   event.transaction.hash = Bytes.fromHexString(txHash);
 
+  return event;
+}
+
+export function createHeaderScored(
+  id: i32,
+  pid: i32,
+  currentScore: i32
+): HeaderScored {
+  let event = changetype<HeaderScored>(newMockEvent());
+  event.parameters = new Array();
+  event.parameters.push(
+    new ethereum.EventParam(
+      "pid",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(pid))
+    )
+  );
+  event.parameters.push(
+    new ethereum.EventParam(
+      "id",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(id))
+    )
+  );
+  event.parameters.push(
+    new ethereum.EventParam(
+      "currentScore",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(currentScore))
+    )
+  );
+  return event;
+}
+
+export function createCommandScored(
+  id: i32,
+  pid: i32,
+  currentScore: i32
+): CommandScored {
+  let event = changetype<CommandScored>(newMockEvent());
+  event.parameters = new Array();
+  event.parameters.push(
+    new ethereum.EventParam(
+      "pid",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(pid))
+    )
+  );
+  event.parameters.push(
+    new ethereum.EventParam(
+      "id",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(id))
+    )
+  );
+  event.parameters.push(
+    new ethereum.EventParam(
+      "currentScore",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(currentScore))
+    )
+  );
+  return event;
+}
+
+export function createTextSaved(id: i32, metadataURIs: string[]): TextSaved {
+  let event = changetype<TextSaved>(newMockEvent());
+  event.parameters = new Array();
+  event.parameters.push(
+    new ethereum.EventParam(
+      "id",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(id))
+    )
+  );
+  event.parameters.push(
+    new ethereum.EventParam(
+      "metadataURIs",
+      ethereum.Value.fromArray(
+        metadataURIs.map<ethereum.Value>((v: string): ethereum.Value => {
+          return ethereum.Value.fromString(v);
+        })
+      )
+    )
+  );
+  return event;
+}
+
+export function createProposalTallied(
+  pid: i32,
+  currentScore: i32,
+  txHash: string
+): ProposalTallied {
+  let meta = new ethereum.Tuple();
+  meta.push(ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(currentScore)));
+  meta.push(
+    ethereum.Value.fromArray([
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1)),
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(2)),
+    ])
+  );
+  meta.push(
+    ethereum.Value.fromArray([
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(3)),
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(4)),
+    ])
+  );
+  meta.push(ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(5)));
+  meta.push(ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(6)));
+  meta.push(
+    ethereum.Value.fromArray([
+      ethereum.Value.fromAddress(
+        Address.fromBytes(
+          Bytes.fromHexString("0x0102030405060708091011121314151617181920")
+        )
+      ),
+      ethereum.Value.fromAddress(
+        Address.fromBytes(
+          Bytes.fromHexString("0x0102030405060708091011121314151617181921")
+        )
+      ),
+    ])
+  );
+  meta.push(ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(7)));
+  meta.push(ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(8)));
+
+  let event = changetype<ProposalTallied>(newMockEvent());
+  event.parameters = new Array();
+  event.parameters.push(
+    new ethereum.EventParam(
+      "pid",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(pid))
+    )
+  );
+  event.parameters.push(
+    new ethereum.EventParam("proposalMeta", ethereum.Value.fromTuple(meta))
+  );
+  event.transaction.hash = Bytes.fromHexString(txHash);
   return event;
 }
