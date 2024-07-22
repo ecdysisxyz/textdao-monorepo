@@ -49,10 +49,10 @@ contract Vote is IVote, OnlyRepsBase {
      */
     function _validateVote(Schema.Proposal storage $proposal, Schema.Vote calldata repVote) internal view {
         for (uint256 i; i < 3; ++i) {
-            if (!repVote.rankedHeaderIds[i].isWithinRange($proposal.headers.length)) {
+            if (repVote.rankedHeaderIds[i] > $proposal.headers.length - 1) {
                 revert TextDAOErrors.InvalidHeaderId(repVote.rankedHeaderIds[i]);
             }
-            if (!repVote.rankedCommandIds[i].isWithinRange($proposal.cmds.length)) {
+            if (repVote.rankedCommandIds[i] > $proposal.cmds.length - 1) {
                 revert TextDAOErrors.InvalidCommandId(repVote.rankedCommandIds[i]);
             }
         }
@@ -171,6 +171,23 @@ contract VoteTest is MCTest {
         (uint256 _pid, address _voter) = _setupProposalAndVoter();
         Schema.Vote memory _repVote = _createValidVote();
         _repVote.rankedCommandIds = [uint256(1), 1, 1]; // Duplicate command IDs
+
+        vm.prank(_voter);
+        Vote(target).vote(_pid, _repVote);
+
+        _assertVoteRecorded(_pid, _voter, _repVote);
+    }
+
+    /**
+     * @notice Test voting with zero values
+     * @dev Verifies that voting with zero values for some choices is allowed and correctly recorded
+     */
+    function test_vote_success_withZeroValues() public {
+        (uint256 _pid, address _voter) = _setupProposalAndVoter();
+        Schema.Vote memory _repVote = Schema.Vote({
+            rankedHeaderIds: [uint256(1), 0, 2],
+            rankedCommandIds: [uint256(0), 1, 2]
+        });
 
         vm.prank(_voter);
         Vote(target).vote(_pid, _repVote);
