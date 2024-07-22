@@ -12,55 +12,137 @@ import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
 
 /**
  * @title Fork function
- * @custom:version interface:0.1
+ * @dev Allows representatives to fork an existing proposal by adding new headers or commands
+ * @custom:version 0.1.0
  */
 contract Fork is IFork, OnlyRepsBase {
     using ProposalLib for Schema.Proposal;
 
+    /**
+     * @notice Forks an existing proposal by adding a new header or command
+     * @param pid The ID of the proposal to fork
+     * @param headerMetadataURI The URI for the new header metadata (can be empty)
+     * @param actions The array of actions for the new command (can be empty)
+     */
     function fork(uint pid, string calldata headerMetadataURI, Schema.Action[] calldata actions) external onlyReps(pid) {
         Schema.Proposal storage $proposal = Storage.Deliberation().proposals[pid];
 
         if (bytes(headerMetadataURI).length > 0) {
-            $proposal.createHeader(headerMetadataURI);
-            emit TextDAOEvents.HeaderForked(pid, headerMetadataURI);
+            uint _headerId = $proposal.createHeader(headerMetadataURI);
+            emit TextDAOEvents.HeaderCreated(pid, _headerId, headerMetadataURI);
         }
         if (actions.length > 0) {
-            $proposal.createCommand(actions);
-            emit TextDAOEvents.CommandForked(pid, actions);
+            uint _cmdId = $proposal.createCommand(actions);
+            emit TextDAOEvents.CommandCreated(pid, _cmdId, actions);
         }
+
         // Note: Shadow(sender, timestamp)
     }
 }
 
 
+// Testing
 import {MCTest} from "@devkit/Flattened.sol";
+import {DeliberationLib} from "bundle/textDAO/utils/DeliberationLib.sol";
 import {TestUtils} from "test/fixtures/TestUtils.sol";
 import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
 
+/**
+ * @title ForkTest
+ * @dev Test contract for the Fork functionality in TextDAO
+ */
 contract ForkTest is MCTest {
+    using DeliberationLib for Schema.Deliberation;
 
     function setUp() public {
         _use(Fork.fork.selector, address(new Fork()));
     }
 
+    /**
+     * @notice Test successful forking of a proposal with both header and command
+     * @dev Verifies that a new header and command are added correctly and proper events are emitted
+     */
     function test_fork_success() public {
         uint pid = 0;
-        Schema.Proposal storage $p = Storage.Deliberation().proposals.push();
+        Schema.Proposal storage $p = Storage.Deliberation().createProposal();
 
-        assertEq($p.headers.length, 0);
-        assertEq($p.cmds.length, 0);
+        // Assert initial state
+        assertEq($p.headers.length, 1, "Initial headers length should be 1");
+        assertEq($p.cmds.length, 1, "Initial commands length should be 1");
 
         TestUtils.setMsgSenderAsRep(pid);
+
+        // Expect correct events to be emitted
+        vm.expectEmit(true, true, true, true);
+        emit TextDAOEvents.HeaderCreated(pid, 1, "Qc.....xh");
+        vm.expectEmit(true, true, true, true);
+        emit TextDAOEvents.CommandCreated(pid, 1, new Schema.Action[](1));
+
         Fork(target).fork({
             pid: pid,
             headerMetadataURI: "Qc.....xh",
             actions: new Schema.Action[](1)
         });
 
-        assertEq($p.headers.length, 1);
-        assertEq($p.cmds.length, 1);
+        // Assert final state after forking
+        assertEq($p.headers.length, 2, "Headers length should be 2 after forking");
+        assertEq($p.cmds.length, 2, "Commands length should be 2 after forking");
     }
 
+    /**
+     * @notice Test successful forking of a proposal with only a new header
+     * @dev Verifies that only a new header is added and the proper event is emitted
+     */
+    function test_fork_success_onlyHeader() public {
+        uint pid = 0;
+        Schema.Proposal storage $p = Storage.Deliberation().createProposal();
+
+        TestUtils.setMsgSenderAsRep(pid);
+
+        // Expect correct event to be emitted
+        vm.expectEmit(true, true, true, true);
+        emit TextDAOEvents.HeaderCreated(pid, 1, "Qc.....xh");
+
+        Fork(target).fork({
+            pid: pid,
+            headerMetadataURI: "Qc.....xh",
+            actions: new Schema.Action[](0)
+        });
+
+        // Assert final state after forking
+        assertEq($p.headers.length, 2, "Headers length should be 2 after forking");
+        assertEq($p.cmds.length, 1, "Commands length should remain 1");
+    }
+
+    /**
+     * @notice Test successful forking of a proposal with only a new command
+     * @dev Verifies that only a new command is added and the proper event is emitted
+     */
+    function test_fork_success_onlyCommand() public {
+        uint pid = 0;
+        Schema.Proposal storage $p = Storage.Deliberation().createProposal();
+
+        TestUtils.setMsgSenderAsRep(pid);
+
+        // Expect correct event to be emitted
+        vm.expectEmit(true, true, true, true);
+        emit TextDAOEvents.CommandCreated(pid, 1, new Schema.Action[](1));
+
+        Fork(target).fork({
+            pid: pid,
+            headerMetadataURI: "",
+            actions: new Schema.Action[](1)
+        });
+
+        // Assert final state after forking
+        assertEq($p.headers.length, 1, "Headers length should remain 1");
+        assertEq($p.cmds.length, 2, "Commands length should be 2 after forking");
+    }
+
+    /**
+     * @notice Test that non-representatives cannot fork a proposal
+     * @dev Verifies that the onlyReps modifier is working correctly
+     */
     function test_fork_revert_notRep() public {
         Storage.Deliberation().proposals.push();
 
@@ -71,5 +153,4 @@ contract ForkTest is MCTest {
             actions: new Schema.Action[](1)
         });
     }
-
 }
