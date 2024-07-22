@@ -3,6 +3,7 @@ pragma solidity ^0.8.24;
 
 import {Schema} from "bundle/textDAO/storages/Schema.sol";
 import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
+import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
 
 /**
  * @title ProposalLib
@@ -15,11 +16,14 @@ library ProposalLib {
      * @notice Creates a new header for a proposal
      * @param $proposal The proposal to add the header to
      * @param metadataURI The URI of the metadata for the header
-     * @dev Initializes a new header with zero score and empty tag list
+     * @dev Initializes a new header with empty tag list
+     * @return headerId The index of the newly created header
      */
-    function createHeader(Schema.Proposal storage $proposal, string memory metadataURI) internal {
+    function createHeader(Schema.Proposal storage $proposal, string memory metadataURI) internal returns(uint headerId) {
+        if (bytes(metadataURI).length == 0) revert TextDAOErrors.HeaderMetadataIsRequired();
+
+        headerId = $proposal.headers.length;
         $proposal.headers.push(Schema.Header({
-            currentScore: 0,
             metadataURI: metadataURI,
             tagIds: new uint[](0)
         }));
@@ -29,15 +33,15 @@ library ProposalLib {
      * @notice Creates a new command for a proposal
      * @param $proposal The proposal to add the command to
      * @param actions The actions to be included in the command
-     * @dev Initializes a new command with the given actions and zero score
+     * @dev Initializes a new command with the given actions
+     * @return cmdId The index of the newly created command
      */
-    function createCommand(Schema.Proposal storage $proposal, Schema.Action[] memory actions) internal {
+    function createCommand(Schema.Proposal storage $proposal, Schema.Action[] memory actions) internal returns(uint cmdId) {
+        cmdId = $proposal.cmds.length;
         Schema.Command storage $cmd = $proposal.cmds.push();
         for (uint i; i < actions.length; ++i) {
             $cmd.actions.push(actions[i]);
         }
-        /// @dev ActionStatus defaults to 'Proposed' (0) when creating a Command, so it doesn't need to be explicitly set.
-        $cmd.currentScore = 0;
     }
 
     /**
@@ -126,7 +130,7 @@ library ProposalLib {
 }
 
 
-/// Testing
+// Testing
 import {Test} from "@devkit/Flattened.sol";
 import {Storage} from "bundle/textDAO/storages/Storage.sol";
 import {DeliberationLib} from "bundle/textDAO/utils/DeliberationLib.sol";
@@ -144,11 +148,11 @@ contract ProposalLibTest is Test {
     function test_createHeader_success() public {
         Schema.Proposal storage $testProposal = Storage.Deliberation().createProposal();
         uint _initialLength = $testProposal.headers.length;
-        $testProposal.createHeader("test://metadata");
+        uint _headerId = $testProposal.createHeader("test://metadata");
+        assertEq(_headerId, _initialLength, "Header ID should match");
+        assertEq($testProposal.headers[_headerId].metadataURI, "test://metadata", "Metadata URI should match");
+        assertEq($testProposal.headers[_headerId].tagIds.length, 0, "Tag IDs should be empty");
         assertEq($testProposal.headers.length, _initialLength + 1, "Should have added one header");
-        assertEq($testProposal.headers[_initialLength].metadataURI, "test://metadata", "Metadata URI should match");
-        assertEq($testProposal.headers[_initialLength].currentScore, 0, "Initial score should be zero");
-        assertEq($testProposal.headers[_initialLength].tagIds.length, 0, "Tag IDs should be empty");
     }
 
     /// @notice Tests the creation of a new command in a proposal
@@ -158,10 +162,10 @@ contract ProposalLibTest is Test {
         uint _initialLength = $testProposal.cmds.length;
         Schema.Action[] memory _actions = new Schema.Action[](1);
         _actions[0] = Schema.Action("test()", "0x");
-        $testProposal.createCommand(_actions);
+        uint _cmdId = $testProposal.createCommand(_actions);
+        assertEq(_cmdId, _initialLength, "Command ID should match");
+        assertEq($testProposal.cmds[_cmdId].actions.length, 1, "Should have 1 action");
         assertEq($testProposal.cmds.length, _initialLength + 1, "Should have added one command");
-        assertEq($testProposal.cmds[_initialLength].actions.length, 1, "Should have 1 action");
-        assertEq($testProposal.cmds[_initialLength].currentScore, 0, "Initial score should be zero");
     }
 
     /// @notice Tests the expiration status of a proposal
