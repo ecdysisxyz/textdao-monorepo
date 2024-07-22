@@ -17,6 +17,7 @@ import {VRFCoordinatorV2Interface} from "@chainlink/vrf/interfaces/VRFCoordinato
 /**
  * @title Propose
  * @dev Contract for proposing new proposals in TextDAO
+ * @custom:version 0.1.0
  */
 contract Propose is IPropose, OnlyMemberBase {
     using DeliberationLib for Schema.Deliberation;
@@ -31,22 +32,21 @@ contract Propose is IPropose, OnlyMemberBase {
     function propose(string calldata headerMetadataURI, Schema.Action[] calldata actions) external onlyMember returns (uint pid) {
         Schema.Deliberation storage $deliberation = Storage.Deliberation();
 
-        if (bytes(headerMetadataURI).length == 0) revert TextDAOErrors.HeaderMetadataIsRequired();
-
         pid = $deliberation.proposals.length;
         Schema.Proposal storage $proposal = $deliberation.createProposal();
 
-        $proposal.createHeader(headerMetadataURI);
-        emit TextDAOEvents.HeaderProposed(pid, headerMetadataURI);
+        uint _headerId = $proposal.createHeader(headerMetadataURI);
+        emit TextDAOEvents.HeaderCreated(pid, _headerId, headerMetadataURI);
 
         if (actions.length > 0) {
-            $proposal.createCommand(actions);
-            emit TextDAOEvents.CommandProposed(pid, actions);
+            uint _cmdId = $proposal.createCommand(actions);
+            emit TextDAOEvents.CommandCreated(pid, _cmdId, actions);
         }
 
         _setupRepresentatives($proposal, pid);
+        _setupTimes($proposal);
 
-        emit TextDAOEvents.Proposed(pid, msg.sender, block.timestamp);
+        emit TextDAOEvents.Proposed(pid, msg.sender, $proposal.meta.createdAt, $proposal.meta.expirationTime);
     }
 
     /**
@@ -64,6 +64,15 @@ contract Propose is IPropose, OnlyMemberBase {
             _assignAllMembersAsReps($proposal, $members);
             emit TextDAOEvents.RepresentativesAssigned(pid, $proposal.meta.reps);
         }
+    }
+
+    /**
+     * @dev Sets up timing information for the proposal
+     * @param $proposal The proposal storage reference
+     */
+    function _setupTimes(Schema.Proposal storage $proposal) internal {
+        $proposal.meta.createdAt = block.timestamp;
+        $proposal.meta.expirationTime = block.timestamp + Storage.Deliberation().config.expiryDuration;
     }
 
     /**
@@ -390,20 +399,30 @@ contract ProposeTest is MCTest {
      * @notice Test event emissions during proposal creation
      * @dev This test checks that all expected events are emitted with correct parameters
      */
-    function test_propose_events() public {
+    function test_propose_emitsCorrectEvents() public {
         // Setup
         Schema.Members storage $m = Storage.Members();
         $m.members.push().addr = address(this);
         Storage.Deliberation().config.repsNum = 1;
 
         string memory _headerMetadataURI = "Qc.....xh";
-        Schema.Action[] memory _actions = new Schema.Action[](0);
+        Schema.Action[] memory _actions = new Schema.Action[](1);
+        _actions[0] = Schema.Action("test()", "0x");
 
         // Expect events
         vm.expectEmit(true, true, true, true);
-        emit TextDAOEvents.HeaderProposed(0, "Qc.....xh");
-        emit TextDAOEvents.RepresentativesAssigned(0, new address[](1));
-        emit TextDAOEvents.Proposed(0, address(this), block.timestamp);
+        emit TextDAOEvents.HeaderCreated(0, 1, _headerMetadataURI);
+
+        vm.expectEmit(true, true, true, true);
+        emit TextDAOEvents.CommandCreated(0, 1, _actions);
+
+        address[] memory _reps = new address[](1);
+        _reps[0] = address(this);
+        vm.expectEmit(true, true, true, true);
+        emit TextDAOEvents.RepresentativesAssigned(0, _reps);
+
+        vm.expectEmit(true, true, true, true);
+        emit TextDAOEvents.Proposed(0, address(this), block.timestamp, block.timestamp + Storage.Deliberation().config.expiryDuration);
 
         // Act
         Propose(target).propose(_headerMetadataURI, _actions);
