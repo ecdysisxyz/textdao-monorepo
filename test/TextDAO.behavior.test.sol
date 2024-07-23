@@ -2,7 +2,7 @@
 pragma solidity ^0.8.24;
 
 import {MCTest, console2} from "@devkit/Flattened.sol";
-import {DeployLib} from "script/deployment/DeployLib.sol";
+import {TextDAODeployer} from "script/deployment/TextDAODeployer.sol";
 import {ITextDAO, Schema} from "bundle/textDAO/interfaces/ITextDAO.sol";
 import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
 import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
@@ -19,7 +19,7 @@ contract TextDAOBehaviorTest is MCTest {
     address public constant NON_MEMBER = address(0x4567);
 
     function setUp() public {
-        textDAO = ITextDAO(DeployLib.deployTextDAO(mc));
+        textDAO = ITextDAO(TextDAODeployer.deploy(mc));
     }
 
     /**

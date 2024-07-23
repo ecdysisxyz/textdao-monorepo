@@ -1,29 +1,19 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {MCScript, VmSafe} from "@devkit/Flattened.sol";
-import {DeployLib} from "script/deployment/DeployLib.sol";
+import {MCDeployScript} from "script/deployment/MCDeployScript.sol";
+import {TextDAODeployer} from "script/deployment/TextDAODeployer.sol";
 
-contract DeployTextDAOScript is MCScript {
+contract DeployTextDAOScript is MCDeployScript {
     function run() public startBroadcastWith("DEPLOYER_PRIV_KEY") {
-        address textDAO = DeployLib.deployTextDAO(mc);
+        address _textDAO = TextDAODeployer.deploy(mc);
+        _saveAddrToEnv(_textDAO, "TEXT_DAO_ADDR_");
+    }
+}
 
-        if (!vm.isContext(VmSafe.ForgeContext.ScriptBroadcast)) return;
-
-        uint256 chainId;
-        assembly {
-            chainId := chainid()
-        }
-        string memory chainIdString = vm.toString(chainId);
-
-        vm.writeLine(
-            string.concat(vm.projectRoot(), "/.env"),
-            string.concat(
-                "TEXT_DAO_ADDR_",
-                chainIdString,
-                "=",
-                vm.toString(address(textDAO))
-            )
-        );
+contract DeployTextDAOWithCheatScript is MCDeployScript {
+    function run() public startBroadcastWith("DEPLOYER_PRIV_KEY") {
+        address _textDAO = TextDAODeployer.deployWithCheat(mc, deployer);
+        _saveAddrToEnv(_textDAO, "TEXT_DAO_CHEAT_ADDR_");
     }
 }

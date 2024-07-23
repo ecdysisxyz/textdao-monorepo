@@ -5,7 +5,7 @@
 
 // import {TestUtils} from "test/fixtures/TestUtils.sol";
 
-// import {DeployLib} from "script/deployment/DeployLib.sol";
+// import {TextDAODeployer} from "script/deployment/TextDAODeployer.sol";
 // import {ITextDAO, Schema} from "bundle/textDAO/interfaces/ITextDAO.sol";
 // import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
 // import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
@@ -123,7 +123,7 @@
 //         if (_textDAOAddr.code.length > 0) {
 //             textDAO = ITextDAO(_textDAOAddr);
 //         } else {
-//             textDAO = ITextDAO(DeployLib.deployTextDAO(mc));
+//             textDAO = ITextDAO(TextDAODeployer.deployTextDAO(mc));
 //         }
 //     }
 
