@@ -3,12 +3,11 @@ pragma solidity ^0.8.24;
 
 import {MCTest, console2} from "@devkit/Flattened.sol";
 
-import {DeployLib} from "script/deployment/DeployLib.sol";
 import {ITextDAO, Schema} from "bundle/textDAO/interfaces/ITextDAO.sol";
 import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
 import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
-
 import {Storage} from "bundle/textDAO/storages/Storage.sol";
+
 import {Initialize} from "bundle/textDAO/functions/initializer/Initialize.sol";
 import {Propose} from "bundle/textDAO/functions/onlyMember/Propose.sol";
 import {Fork} from "bundle/textDAO/functions/onlyReps/Fork.sol";
@@ -19,10 +18,12 @@ import {SaveTextProtected} from "bundle/textDAO/functions/protected/SaveTextProt
 import {MemberJoinProtected} from "bundle/textDAO/functions/protected/MemberJoinProtected.sol";
 import {DeliberationLib} from "bundle/textDAO/utils/DeliberationLib.sol";
 import {CommandLib} from "bundle/textDAO/utils/CommandLib.sol";
+import {RawFulfillRandomWords} from "bundle/textDAO/functions/onlyVrfCoordinator/RawFulfillRandomWords.sol";
+import {VRFCoordinatorV2Interface} from "@chainlink/vrf/interfaces/VRFCoordinatorV2Interface.sol";
 
 /**
- * @title TextDAOStateTest
- * @dev This contract contains state tests for the TextDAO system
+ * @title TextDAO State-Focused Integration Test
+ * @dev This contract contains state tests for the TextDAO using MC State-Fuzzing Test
  */
 contract TextDAOStateTest is MCTest {
     using DeliberationLib for Schema.Deliberation;
@@ -34,7 +35,9 @@ contract TextDAOStateTest is MCTest {
     address memberJoin;
     address public constant MEMBER1 = address(0x1234);
     address public constant MEMBER2 = address(0x2345);
-    address public constant NON_MEMBER = address(0x3456);
+    address public constant MEMBER3 = address(0x3456);
+    address public constant NON_MEMBER = address(0x4567);
+    address public constant VRF_COORDINATOR = address(0x5678);
 
     /**
      * @dev Sets up the test environment by initializing necessary contracts and functions
@@ -52,6 +55,7 @@ contract TextDAOStateTest is MCTest {
         _use(SaveTextProtected.deleteText.selector, saveText);
         memberJoin = address(new MemberJoinProtected());
         _use(MemberJoinProtected.memberJoin.selector, memberJoin);
+        _use(RawFulfillRandomWords.rawFulfillRandomWords.selector, address(new RawFulfillRandomWords()));
     }
 
     /**
@@ -129,6 +133,82 @@ contract TextDAOStateTest is MCTest {
         assertEq($proposal.headers.length, 4, "Incorrect number of headers after execution");
         assertEq($proposal.cmds.length, 3, "Incorrect number of commands after execution");
         assertTrue($proposal.meta.fullyExecuted, "Proposal should be fully executed");
+    }
+
+    /**
+     * @dev Tests the VRF request and fulfillment process in TextDAO
+     */
+    function test_scenario_vrfRequestAndFulfillment() public {
+        // Initialize TextDAO
+        Schema.Member[] memory _initialMembers = new Schema.Member[](3);
+        _initialMembers[0] = Schema.Member({addr: MEMBER1, metadataURI: "member1URI"});
+        _initialMembers[1] = Schema.Member({addr: MEMBER2, metadataURI: "member2URI"});
+        _initialMembers[2] = Schema.Member({addr: MEMBER3, metadataURI: "member3URI"});
+
+        Schema.DeliberationConfig memory _config = Schema.DeliberationConfig({
+            expiryDuration: 2 minutes,
+            snapInterval: 1 minutes,
+            repsNum: 2,
+            quorumScore: 2
+        });
+
+        textDAO.initialize(_initialMembers, _config);
+
+        // Setup VRF configuration
+        Schema.VRFConfig memory _vrfConfig = Schema.VRFConfig({
+            vrfCoordinator: VRF_COORDINATOR,
+            keyHash: bytes32(uint256(1)),
+            callbackGasLimit: 100000,
+            requestConfirmations: 3,
+            numWords: 1,
+            LINKTOKEN: address(0x1234) // Dummy LINK token address
+        });
+        Storage.$VRF().config = _vrfConfig;
+        Storage.$VRF().subscriptionId = 1; // Set a dummy subscription ID
+        uint256 _requestId = 100;
+        vm.mockCall(
+            VRF_COORDINATOR,
+            abi.encodeCall(
+                VRFCoordinatorV2Interface.requestRandomWords,
+                (
+                    _vrfConfig.keyHash,
+                    1,
+                    _vrfConfig.requestConfirmations,
+                    _vrfConfig.callbackGasLimit,
+                    _vrfConfig.numWords
+                )
+            ),
+            abi.encode(_requestId)
+        );
+
+        // Create a proposal
+        vm.prank(MEMBER1);
+        uint256 _pid = textDAO.propose("proposalURI", new Schema.Action[](0));
+
+        // Check that VRF request was made
+        Schema.Proposal storage $proposal = Storage.Deliberation().getProposal(_pid);
+        assertEq($proposal.meta.vrfRequestId, _requestId, "VRF request should have been made");
+
+        // Simulate VRF fulfillment
+        uint256[] memory _randomWords = new uint256[](1);
+        _randomWords[0] = 12345; // Example random number
+        vm.prank(VRF_COORDINATOR);
+        RawFulfillRandomWords(target).rawFulfillRandomWords($proposal.meta.vrfRequestId, _randomWords);
+
+        // Check that representatives were assigned
+        assertTrue($proposal.meta.reps.length > 0, "Representatives should have been assigned");
+
+        // Verify that the assigned representatives are valid members
+        for (uint i = 0; i < $proposal.meta.reps.length; i++) {
+            bool _isValidMember = false;
+            for (uint j = 0; j < _initialMembers.length; j++) {
+                if ($proposal.meta.reps[i] == _initialMembers[j].addr) {
+                    _isValidMember = true;
+                    break;
+                }
+            }
+            assertTrue(_isValidMember, "Assigned representative is not a valid member");
+        }
     }
 
     /**
