@@ -2,7 +2,7 @@
 pragma solidity ^0.8.24;
 
 import {Schema} from "bundle/textDAO/storages/Schema.sol";
-import {TextDAOFunctions} from "bundle/textDAO/interfaces/TextDAOFunctions.sol";
+import {TextDAOMainFunctions} from "bundle/textDAO/interfaces/TextDAOFunctions.sol";
 import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
 import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
 
@@ -13,4 +13,4 @@ import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
  * @custom:version errors:0.1.0
  * @custom:version events:0.1.0
  */
-interface ITextDAO is Schema, TextDAOFunctions, TextDAOErrors, TextDAOEvents {}
+interface ITextDAO is Schema, TextDAOMainFunctions, TextDAOErrors, TextDAOEvents {}

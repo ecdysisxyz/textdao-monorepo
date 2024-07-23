@@ -3,6 +3,10 @@ pragma solidity ^0.8.24;
 
 import {Schema} from "bundle/textDAO/storages/Schema.sol";
 
+interface IClone {
+    function clone(bytes calldata initData) external returns(address proxy);
+}
+
 interface IInitialize {
     function initialize(Schema.Member[] calldata initialMembers, Schema.DeliberationConfig calldata initialConfig) external;
 }
@@ -30,11 +34,23 @@ interface IExecute {
     function execute(uint pid) external;
 }
 
-interface TextDAOFunctions is
+interface ISaveText {
+    function createText(uint256 pid, string memory metadataURI) external returns (uint256 textId);
+    function updateText(uint256 pid, uint256 textId, string memory newMetadataURI) external;
+    function deleteText(uint256 pid, uint256 textId) external;
+}
+
+interface IMemberJoin {
+    function memberJoin(uint pid, Schema.Member[] memory candidates) external;
+}
+
+interface TextDAOMainFunctions is
+    IClone,
     IInitialize,
     IPropose,
     IFork,
     IVote,
     ITally,
-    IExecute
+    IExecute,
+    ISaveText
 {}

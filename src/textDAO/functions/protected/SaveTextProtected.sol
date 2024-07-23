@@ -6,6 +6,7 @@ import {ProtectionBase} from "bundle/textDAO/functions/protected/ProtectionBase.
 // Storage
 import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
 // Interface
+import {ISaveText} from "bundle/textDAO/interfaces/TextDAOFunctions.sol";
 import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
 import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
 
@@ -14,14 +15,14 @@ import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
  * @dev Handles C(R)UD operations for text storage in TextDAO
  * @custom:version 0.1.0
  */
-contract SaveTextProtected is ProtectionBase {
+contract SaveTextProtected is ISaveText, ProtectionBase {
     /**
      * @notice Creates a new text entry
      * @param pid Proposal ID
      * @param metadataURI Metadata URI for the text
      * @return textId The ID of the newly created text
      */
-    function createText(uint256 pid, string memory metadataURI) public protected(pid) returns (uint256 textId) {
+    function createText(uint256 pid, string memory metadataURI) external protected(pid) returns (uint256 textId) {
         if (bytes(metadataURI).length == 0) revert TextDAOErrors.TextMetadataURIIsRequired();
 
         textId = Storage.Texts().texts.length;
@@ -35,7 +36,7 @@ contract SaveTextProtected is ProtectionBase {
      * @param textId ID of the text to update
      * @param newMetadataURI New metadata URI for the text
      */
-    function updateText(uint256 pid, uint256 textId, string memory newMetadataURI) public protected(pid) {
+    function updateText(uint256 pid, uint256 textId, string memory newMetadataURI) external protected(pid) {
         if (textId >= Storage.Texts().texts.length) revert TextDAOErrors.TextNotFound(textId);
         if (bytes(newMetadataURI).length == 0) revert TextDAOErrors.TextMetadataURIIsRequired();
 
@@ -48,7 +49,7 @@ contract SaveTextProtected is ProtectionBase {
      * @param pid Proposal ID
      * @param textId ID of the text to delete
      */
-    function deleteText(uint256 pid, uint256 textId) public protected(pid) {
+    function deleteText(uint256 pid, uint256 textId) external protected(pid) {
         if (textId >= Storage.Texts().texts.length) revert TextDAOErrors.TextNotFound(textId);
 
         delete Storage.Texts().texts[textId];

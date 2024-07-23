@@ -5,9 +5,11 @@ pragma solidity ^0.8.24;
 import {ProtectionBase} from "bundle/textDAO/functions/protected/ProtectionBase.sol";
 // Storage
 import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
+// Interface
+import {IMemberJoin} from "bundle/textDAO/interfaces/TextDAOFunctions.sol";
 
-contract MemberJoinProtected is ProtectionBase {
-    function memberJoin(uint pid, Schema.Member[] memory candidates) public protected(pid) returns (bool) {
+contract MemberJoinProtected is IMemberJoin, ProtectionBase {
+    function memberJoin(uint pid, Schema.Member[] memory candidates) external protected(pid) {
         Schema.Members storage $ = Storage.Members();
 
         for (uint i; i < candidates.length; ++i) {

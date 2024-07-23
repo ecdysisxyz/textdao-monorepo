@@ -6,20 +6,31 @@ pragma solidity ^0.8.24;
 import {ITextDAO} from "bundle/textDAO/interfaces/ITextDAO.sol";
 
 contract TextDAOFacade is ITextDAO {
-    function clone(address _target) external {}
+    // TextDAO core functions
+    function clone(bytes calldata initData) external returns(address proxy) {}
     function initialize(Member[] calldata initialMembers, DeliberationConfig calldata pConfig) external {}
     function propose(string calldata headerMetadataURI, Action[] calldata actions) external returns (uint) {}
     function fork(uint pid, string calldata headerMetadataURI, Action[] calldata actions) external {}
     function vote(uint pid, Vote calldata repVote) external {}
-    function voteHeaders(uint _proposalId, uint[3] calldata _headerIds) external {}
-    function voteCmds(uint _proposalId, uint[3] calldata _cmdIds) external {}
     function tally(uint _proposalId) external {}
     function execute(uint _proposalId) external {}
+    // TextDAO protected functions
     function memberJoin(uint _proposalId, Member[] calldata _candidates) external {}
-    function setProposalsConfig(DeliberationConfig calldata _config) external {}
-    function overrideProposalsConfig(uint _proposalId, DeliberationConfig calldata _config) external {}
-    function saveText(uint _proposalId, string calldata _text) external {}
+    function createText(uint256 pid, string memory metadataURI) external returns (uint256 textId) {}
+    function updateText(uint256 pid, uint256 textId, string memory newMetadataURI) external {}
+    function deleteText(uint256 pid, uint256 textId) external {}
+    // function setProposalsConfig(DeliberationConfig calldata _config) external {}
+    // function overrideProposalsConfig(uint _proposalId, DeliberationConfig calldata _config) external {}
+}
 
+contract TextDAOWithCheatsFacade is TextDAOFacade {
+    function addMembers(address[] memory newMembers) public {}
+    function updateConfig(DeliberationConfig calldata newConfig) external {}
+    function transferAdmin(address newAdmin) external {}
+    function forceTally(uint pid) external {}
+}
+
+contract TextDAOWithGetterFacade is TextDAOFacade {
     // Getters
     // function getProposal(uint id) external view returns (Getter.ProposalInfo memory) {}
     // function getProposalHeaders(uint id) external view returns (Header[] memory) {}
