@@ -2,7 +2,7 @@
 pragma solidity ^0.8.24;
 
 import {MCTest, console2} from "@devkit/Flattened.sol";
-import {TextDAODeployer} from "script/deployment/TextDAODeployer.sol";
+import {TextDAODeployer} from "script/TextDAODeployer.sol";
 import {ITextDAO, Schema} from "bundle/textDAO/interfaces/ITextDAO.sol";
 import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
 import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
@@ -19,30 +19,20 @@ contract TextDAOBehaviorTest is MCTest {
     address public constant NON_MEMBER = address(0x4567);
 
     function setUp() public {
-        textDAO = ITextDAO(TextDAODeployer.deploy(mc));
+        Schema.Member[] memory _initialMembers = new Schema.Member[](3);
+        _initialMembers[0] = Schema.Member({addr: MEMBER1, metadataURI: "member1URI"});
+        _initialMembers[1] = Schema.Member({addr: MEMBER2, metadataURI: "member2URI"});
+        _initialMembers[2] = Schema.Member({addr: MEMBER3, metadataURI: "member3URI"});
+
+        textDAO = ITextDAO(TextDAODeployer.deploy(mc, _initialMembers));
     }
 
     /**
      * @dev Tests the full lifecycle of a proposal in TextDAO
      */
     function test_scenario_fullProposalLifecycle() public {
-        // Initialize TextDAO
-        Schema.Member[] memory _initialMembers = new Schema.Member[](3);
-        _initialMembers[0] = Schema.Member({addr: MEMBER1, metadataURI: "member1URI"});
-        _initialMembers[1] = Schema.Member({addr: MEMBER2, metadataURI: "member2URI"});
-        _initialMembers[2] = Schema.Member({addr: MEMBER3, metadataURI: "member3URI"});
-
-        Schema.DeliberationConfig memory _config = Schema.DeliberationConfig({
-            expiryDuration: 2 minutes,
-            snapInterval: 1 minutes,
-            repsNum: 3,
-            quorumScore: 2
-        });
-
-        textDAO.initialize(_initialMembers, _config);
-
         // Create proposal
-        uint256 _expirationTime = block.timestamp + _config.expiryDuration;
+        uint256 _expirationTime = block.timestamp + TextDAODeployer.initialConfig().expiryDuration;
         vm.prank(MEMBER1);
         vm.expectEmit(true, true, true, true);
         emit TextDAOEvents.Proposed(0, MEMBER1, block.timestamp, _expirationTime);
@@ -107,23 +97,8 @@ contract TextDAOBehaviorTest is MCTest {
      * @dev Tests a scenario with voting tie and resolution
      */
     function test_scenario_votingTieAndResolution() public {
-        // Initialize TextDAO (similar to previous test)
-        Schema.Member[] memory _initialMembers = new Schema.Member[](3);
-        _initialMembers[0] = Schema.Member({addr: MEMBER1, metadataURI: "member1URI"});
-        _initialMembers[1] = Schema.Member({addr: MEMBER2, metadataURI: "member2URI"});
-        _initialMembers[2] = Schema.Member({addr: MEMBER3, metadataURI: "member3URI"});
-
-        Schema.DeliberationConfig memory _config = Schema.DeliberationConfig({
-            expiryDuration: 2 minutes,
-            snapInterval: 1 minutes,
-            repsNum: 3,
-            quorumScore: 2
-        });
-
-        textDAO.initialize(_initialMembers, _config);
-
         // Create proposal
-        uint256 _expirationTime = block.timestamp + _config.expiryDuration;
+        uint256 _expirationTime = block.timestamp + TextDAODeployer.initialConfig().expiryDuration;
         vm.prank(MEMBER1);
         vm.expectEmit(true, true, true, true);
         emit TextDAOEvents.Proposed(0, MEMBER1, block.timestamp, _expirationTime);
@@ -185,7 +160,7 @@ contract TextDAOBehaviorTest is MCTest {
         textDAO.vote(_pid, _vote3);
 
         // Wait for extended expiry
-        vm.warp(_expirationTime + _config.expiryDuration + 1);
+        vm.warp(_expirationTime + TextDAODeployer.initialConfig().expiryDuration + 1);
 
         // Tally votes again, expect resolution
         vm.expectEmit(true, true, true, true);
@@ -197,23 +172,8 @@ contract TextDAOBehaviorTest is MCTest {
      * @dev Tests error cases from an end-user perspective
      */
     function test_scenario_errorCases() public {
-        // Initialize TextDAO (similar to previous tests)
-        Schema.Member[] memory initialMembers = new Schema.Member[](3);
-        initialMembers[0] = Schema.Member({addr: MEMBER1, metadataURI: "member1URI"});
-        initialMembers[1] = Schema.Member({addr: MEMBER2, metadataURI: "member2URI"});
-        initialMembers[2] = Schema.Member({addr: MEMBER3, metadataURI: "member3URI"});
-
-        Schema.DeliberationConfig memory _config = Schema.DeliberationConfig({
-            expiryDuration: 2 minutes,
-            snapInterval: 1 minutes,
-            repsNum: 3,
-            quorumScore: 2
-        });
-
-        textDAO.initialize(initialMembers, _config);
-
         // Test non-member proposal attempt
-        uint256 _expirationTime = block.timestamp + _config.expiryDuration;
+        uint256 _expirationTime = block.timestamp + TextDAODeployer.initialConfig().expiryDuration;
         vm.prank(NON_MEMBER);
         vm.expectRevert(TextDAOErrors.YouAreNotTheMember.selector);
         textDAO.propose("nonMemberProposalURI", new Schema.Action[](0));

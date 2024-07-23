@@ -3,25 +3,31 @@ pragma solidity ^0.8.24;
 
 import {MCDevKit} from "@devkit/Flattened.sol";
 
+import {Schema} from "bundle/textDAO/storages/Schema.sol";
+// Main core functions
 import {Clone} from "@mc-std/functions/Clone.sol";
-
 import {Initialize} from "bundle/textDAO/functions/initializer/Initialize.sol";
 import {Propose} from "bundle/textDAO/functions/onlyMember/Propose.sol";
+import {RawFulfillRandomWords} from "bundle/textDAO/functions/onlyVrfCoordinator/RawFulfillRandomWords.sol";
 import {Fork} from "bundle/textDAO/functions/onlyReps/Fork.sol";
 import {Vote} from "bundle/textDAO/functions/onlyReps/Vote.sol";
-import {RawFulfillRandomWords} from "bundle/textDAO/functions/onlyVrfCoordinator/RawFulfillRandomWords.sol";
+import {Tally} from "bundle/textDAO/functions/Tally.sol";
+import {Execute} from "bundle/textDAO/functions/Execute.sol";
+// Main protected functions
 import {ConfigOverrideProtected} from "bundle/textDAO/functions/protected/ConfigOverrideProtected.sol";
 import {MemberJoinProtected} from "bundle/textDAO/functions/protected/MemberJoinProtected.sol";
 import {SaveTextProtected} from "bundle/textDAO/functions/protected/SaveTextProtected.sol";
 import {SetConfigsProtected} from "bundle/textDAO/functions/protected/SetConfigsProtected.sol";
-import {Execute} from "bundle/textDAO/functions/Execute.sol";
+// Cheats
+import {OnlyAdminCheats} from "bundle/textDAO/functions/_cheat/OnlyAdminCheats.sol";
+// Getter
 // import {Getter} from "bundle/textDAO/functions/Getter.sol";
-import {Tally} from "bundle/textDAO/functions/Tally.sol";
 
-import {Schema} from "bundle/textDAO/storages/Schema.sol";
-import {AddMember} from "bundle/textDAO/functions/_cheat/AddMember.sol";
-
-import {TextDAOFacade} from "bundle/textDAO/interfaces/TextDAOFacade.sol";
+import {
+    TextDAOFacade,
+    TextDAOWithCheatsFacade,
+    TextDAOWithGetterFacade
+} from "bundle/textDAO/interfaces/TextDAOFacade.sol";
 
 /**
  * @title TextDAODeployer
@@ -35,12 +41,16 @@ library TextDAODeployer {
      * @param mc MCDevKit storage reference
      * @return textDAO Address of the deployed TextDAO proxy
      */
-    function deploy(MCDevKit storage mc) internal returns(address textDAO) {
+    function deploy(MCDevKit storage mc, Schema.Member[] memory initialMembers) internal returns(address textDAO) {
         mc.init(BUNDLE_NAME);
         _useMainFunctions(mc);
         mc.useFacade(address(new TextDAOFacade())); // for Etherscan proxy read/write
 
-        return mc.deploy().toProxyAddress();
+        return mc.deploy(
+            abi.encodeCall(Initialize.initialize,
+                (initialMembers, initialConfig())
+            )
+        ).toProxyAddress();
     }
 
     /**
@@ -49,19 +59,15 @@ library TextDAODeployer {
      * @param admin Address of the initial admin who can cheat
      * @return textDAO Address of the deployed TextDAO proxy
      */
-    function deployWithCheat(MCDevKit storage mc, address admin) internal returns(address textDAO) {
+    function deployWithCheats(MCDevKit storage mc, address admin) internal returns(address textDAO) {
         mc.init(BUNDLE_NAME);
         _useMainFunctions(mc);
         _useCheatFunctions(mc);
-        mc.useFacade(address(new TextDAOFacade())); // for Etherscan proxy read/write
-
-        Schema.Member[] memory _initialMembers = new Schema.Member[](1);
-        _initialMembers[0] = Schema.Member({addr: admin, metadataURI: ""});
+        mc.useFacade(address(new TextDAOWithCheatsFacade())); // for Etherscan proxy read/write
 
         return mc.deploy(
-            abi.encodeCall(
-                Initialize.initialize,
-                (_initialMembers, _setupInitialConfig())
+            abi.encodeCall(Initialize.initialize,
+                (initialMember(admin), initialConfig())
             )
         ).toProxyAddress();
     }
@@ -71,13 +77,17 @@ library TextDAODeployer {
      * @param mc MCDevKit storage reference
      * @return textDAO Address of the deployed TextDAO proxy
      */
-    function deployWithGetter(MCDevKit storage mc) internal returns(address textDAO) {
+    function deployWithGetter(MCDevKit storage mc, Schema.Member[] memory initialMembers) internal returns(address textDAO) {
         mc.init(BUNDLE_NAME);
         _useMainFunctions(mc);
         _useGetterFunctions(mc);
-        mc.useFacade(address(new TextDAOFacade())); // for Etherscan proxy read/write
+        mc.useFacade(address(new TextDAOWithGetterFacade())); // for Etherscan proxy read/write
 
-        return mc.deploy().toProxyAddress();
+        return mc.deploy(
+            abi.encodeCall(Initialize.initialize,
+                (initialMembers, initialConfig())
+            )
+        ).toProxyAddress();
     }
 
     //=============================
@@ -89,9 +99,8 @@ library TextDAODeployer {
      * @param mc MCDevKit storage reference
      */
     function _useMainFunctions(MCDevKit storage mc) internal {
-        mc.use("Clone", Clone.clone.selector, address(new Clone()));
-
         // TextDAO core functions
+        mc.use("Clone", Clone.clone.selector, address(new Clone()));
         mc.use("Initialize", Initialize.initialize.selector, address(new Initialize()));
         mc.use("Propose", Propose.propose.selector, address(new Propose()));
         mc.use("Fork", Fork.fork.selector, address(new Fork()));
@@ -114,7 +123,11 @@ library TextDAODeployer {
      * @param mc MCDevKit storage reference
      */
     function _useCheatFunctions(MCDevKit storage mc) internal {
-        mc.use("AddMember", AddMember.addMembers.selector, address(new AddMember()));
+        address onlyAdminCheats = address(new OnlyAdminCheats());
+        mc.use("AddMember", OnlyAdminCheats.addMembers.selector, onlyAdminCheats);
+        mc.use("UpdateConfig", OnlyAdminCheats.updateConfig.selector, onlyAdminCheats);
+        mc.use("TransferAdmin", OnlyAdminCheats.transferAdmin.selector, onlyAdminCheats);
+        mc.use("ForceTally", OnlyAdminCheats.forceTally.selector, onlyAdminCheats);
     }
 
     /**
@@ -143,18 +156,23 @@ library TextDAODeployer {
      * @param initialMemberAddrs Array of initial member addresses
      * @return initialMembers Array of Schema.Member structs
      */
-    function _setupInitialMembers(address[] memory initialMemberAddrs) internal pure returns(Schema.Member[] memory initialMembers) {
+    function initialMembers(address[] memory initialMemberAddrs) internal pure returns(Schema.Member[] memory initialMembers) {
         initialMembers = new Schema.Member[](initialMemberAddrs.length);
         for (uint i; i < initialMemberAddrs.length; ++i) {
             initialMembers[i] = Schema.Member({addr: initialMemberAddrs[i], metadataURI: ""});
         }
     }
 
+    function initialMember(address initialMemberAddr) internal pure returns(Schema.Member[] memory initialMembers) {
+        initialMembers = new Schema.Member[](1);
+        initialMembers[0] = Schema.Member({addr: initialMemberAddr, metadataURI: ""});
+    }
+
     /**
      * @dev Sets up initial configuration for the TextDAO
      * @return Schema.DeliberationConfig struct with initial configuration
      */
-    function _setupInitialConfig() internal pure returns(Schema.DeliberationConfig memory) {
+    function initialConfig() internal pure returns(Schema.DeliberationConfig memory) {
         return Schema.DeliberationConfig({
             expiryDuration: 7 days,
             snapInterval: 2 hours,
