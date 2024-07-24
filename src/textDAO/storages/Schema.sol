@@ -40,8 +40,6 @@ interface Schema {
     struct ProposalMeta {
         address[] reps;
         mapping(address rep => Vote) votes;
-        // uint[] headerScores;
-        // uint[] commandScores;
         uint approvedHeaderId;
         uint approvedCommandId;
         mapping(uint actionId => ActionStatus) actionStatuses;

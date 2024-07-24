@@ -61,7 +61,7 @@ contract Tally is ITally {
             _topCommandIds.length > 1   // there's a tie command
         ) {
             $proposal.meta.expirationTime += Storage.Deliberation().config.expiryDuration;
-            emit TextDAOEvents.ProposalTalliedWithTie(pid, _topHeaderIds, _topCommandIds);
+            emit TextDAOEvents.ProposalTalliedWithTie(pid, _topHeaderIds, _topCommandIds, $proposal.meta.expirationTime);
         } else {
             // Approve the winning header and command
             $proposal.approveHeader(_topHeaderIds[0]);
@@ -151,7 +151,8 @@ contract TallyTest is MCTest {
 
         $proposalMeta.expirationTime = block.timestamp - 1;
 
-        uint initialExpirationTime = $proposalMeta.expirationTime;
+        uint _initialExpirationTime = $proposalMeta.expirationTime;
+        uint _extendedExpirationTime = _initialExpirationTime + Storage.Deliberation().config.expiryDuration;
 
         uint[] memory _tieHeaderIds = new uint[](2);
         _tieHeaderIds[0] = 1;
@@ -160,10 +161,10 @@ contract TallyTest is MCTest {
         _tieCommandIds[0] = 3;
 
         vm.expectEmit(true, true, true, true);
-        emit TextDAOEvents.ProposalTalliedWithTie(0, _tieHeaderIds, _tieCommandIds);
+        emit TextDAOEvents.ProposalTalliedWithTie(0, _tieHeaderIds, _tieCommandIds, _extendedExpirationTime);
         Tally(target).tally(0);
 
-        assertEq($proposalMeta.expirationTime, initialExpirationTime + Storage.Deliberation().config.expiryDuration, "Expiration time should be extended");
+        assertEq($proposalMeta.expirationTime, _extendedExpirationTime, "Expiration time should be extended");
         assertEq($proposalMeta.approvedHeaderId, 0, "No header should be approved in case of tie");
         assertEq($proposalMeta.approvedCommandId, 0, "No command should be approved in case of tie");
     }
@@ -182,13 +183,14 @@ contract TallyTest is MCTest {
 
         $proposalMeta.expirationTime = block.timestamp - 1;
 
-        uint initialExpirationTime = $proposalMeta.expirationTime;
+        uint _initialExpirationTime = $proposalMeta.expirationTime;
+        uint _extendedExpirationTime = _initialExpirationTime + Storage.Deliberation().config.expiryDuration;
 
         vm.expectEmit(true, true, true, true);
-        emit TextDAOEvents.ProposalTalliedWithTie(0, new uint[](0), new uint[](0));
+        emit TextDAOEvents.ProposalTalliedWithTie(0, new uint[](0), new uint[](0), _extendedExpirationTime);
         Tally(target).tally(0);
 
-        assertEq($proposalMeta.expirationTime, initialExpirationTime + Storage.Deliberation().config.expiryDuration, "Expiration time should be extended");
+        assertEq($proposalMeta.expirationTime, _extendedExpirationTime, "Expiration time should be extended");
         assertEq($proposalMeta.approvedHeaderId, 0, "No header should be approved when there are no votes");
         assertEq($proposalMeta.approvedCommandId, 0, "No command should be approved when there are no votes");
     }

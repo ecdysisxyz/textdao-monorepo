@@ -271,7 +271,7 @@ contract TextDAOStateTest is MCTest {
         uint256[] memory _tieCommandIds = new uint256[](1);
         _tieCommandIds[0] = 1;
         vm.expectEmit(true, true, true, true);
-        emit TextDAOEvents.ProposalTalliedWithTie(_pid, _tieHeaderIds, _tieCommandIds);
+        emit TextDAOEvents.ProposalTalliedWithTie(_pid, _tieHeaderIds, _tieCommandIds, $proposal.meta.expirationTime + _config.expiryDuration);
         textDAO.tally(_pid);
 
         // Verify that the expiration time has been extended

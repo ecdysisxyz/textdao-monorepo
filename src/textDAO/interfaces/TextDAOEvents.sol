@@ -24,10 +24,8 @@ interface TextDAOEvents {
     event VRFRequested(uint pid, uint256 requestId);
     // Vote
     event Voted(uint pid, address rep, Schema.Vote vote);
-    event HeaderScored(uint pid, uint headerId, uint currentScore);
-    event CmdScored(uint pid, uint cmdId, uint currentScore);
     // Tally
-    event ProposalTalliedWithTie(uint pid, uint[] approvedHeaderIds, uint[] approvedCommandIds);
+    event ProposalTalliedWithTie(uint pid, uint[] approvedHeaderIds, uint[] approvedCommandIds, uint extendedExpirationTime);
     event ProposalTallied(uint pid, uint approvedHeaderId, uint approvedCommandId);
     event ProposalSnapped(uint pid, uint[] top3HeaderIds, uint[] top3CommandIds);
     // Execute
