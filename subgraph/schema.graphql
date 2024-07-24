@@ -1,44 +1,69 @@
+type DeliberationConfig @entity {
+    id: ID!
+    expiryDuration: BigInt!
+    snapInterval: BigInt!
+    repsNum: BigInt!
+    quorumScore: BigInt!
+}
 type Proposal @entity {
     id: ID!
     headers: [Header!]! @derivedFrom(field: "proposal")
     cmds: [Command!]! @derivedFrom(field: "proposal")
-    proposalMeta: ProposalMeta @derivedFrom(field: "proposal")
+    # meta
+    proposer: Bytes!
+    createdAt: BigInt
+    expirationTime: BigInt
+    # voting status
+    reps: [Bytes!]!
+    votes: [Vote!] @derivedFrom(field: "proposal")
+    approvedHeaderId: BigInt
+    approvedCommandId: BigInt
+    actionStatuses: [ActionStatus!] @derivedFrom(field: "proposal")
+    fullyExecuted: Boolean
+    vrfRequestId: BigInt
+    # snapInterval: BigInt
+    snapped: [Snapped!] @derivedFrom(field: "proposal")
+    top3Headers: [Header!]
+    top3Commands: [Command!]
 }
 type Header @entity {
     id: ID!
     proposal: Proposal!
-    currentScore: BigInt!
-    metadataURI: Bytes!
-    tagIds: [BigInt!]!
+    metadataURI: String!
 }
 type Command @entity {
     id: ID!
     proposal: Proposal!
     actions: [Action!]! @derivedFrom(field: "command")
-    currentScore: BigInt!
 }
 type Action @entity {
-    id: ID!  # fill from thagraph
-    command: Command!
+    id: ID! # fill from thegraph
+    command: Command! # parent
     func: String!
     abiParams: Bytes!
+    status: ActionStatus!
 }
-type ProposalMeta @entity {
-    id: ID!  # fill from thagraph
-    proposal: Proposal!
-    currentScore: BigInt!
-    headerRank: [BigInt!]!
-    cmdRank: [BigInt!]!
-    nextHeaderTallyFrom: BigInt!
-    nextCmdTallyFrom: BigInt!
-    reps: [Bytes!]!
-    createdAt: BigInt!
-    vrfRequestId: BigInt!
+type Vote @entity {
+    id: ID!
+    proposal: Proposal! # parent
+    rep: Bytes! # mapping-key
+    rankedHeaderIds: [BigInt!]
+    rankedCommandIds: [BigInt!]
+}
+type Snapped @entity {
+    id: ID!
+    proposal: Proposal! # parent
+    epoch: BigInt! # mapping-key
+    snapped: Boolean!
+}
+enum ActionStatus {
+    Proposed
+    Approved
+    Executed
 }
 type Text @entity {
     id: ID!
-    metadataURIs: [String!]!
-    bodies: [String!]!
+    metadataURI: String!
 }
 type Member @entity {
     id: ID!

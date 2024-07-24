@@ -1,110 +1,56 @@
 specVersion: 1.0.0
-indexerHints:
-  prune: auto
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
-    name: Propose
-    network: mainnet
+    name: TextDAO
+    network: sepolia
     source:
-      startBlock: 5041207
-      abi: Propose
+      address: "0xbC2fC4eb14077Fd7F29B948E5Fd39a4634f6D138"
+      abi: TextDAOEvents
+      startBlock: 6354206
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
+        - DeliberationConfig
         - Proposal
         - Header
         - Command
         - Action
         - ProposalMeta
+        - Vote
         - Text
         - Member
       abis:
-        - name: Propose
-          file: ../out/Propose.sol/Propose.json
+        - name: TextDAOEvents
+          file: ../out/TextDAOEvents.sol/TextDAOEvents.json
       eventHandlers:
-        - event: HeaderProposed(uint256,(uint256,uint256,bytes32,uint256[]))
-          handler: handleHeaderProposed
-        - event: CommandProposed(uint256,(uint256,(string,bytes)[],uint256))
-          handler: handleCommandProposed
-      file: ./src/mapping.ts
-  - kind: ethereum
-    name: Vote
-    network: mainnet
-    source:
-      startBlock: 5041207
-      abi: Vote
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - Proposal
-        - Header
-        - Command
-        - Action
-        - ProposalMeta
-        - Text
-        - Member
-      abis:
-        - name: Vote
-          file: ../out/Vote.sol/Vote.json
-      eventHandlers:
-        - event: HeaderScored(uint256,uint256,uint256)
-          handler: handleHeaderScored
-        - event: CommandScored(uint256,uint256,uint256)
-          handler: handleCommandScored
-      file: ./src/mapping.ts
-  - kind: ethereum
-    name: SaveTextProtected
-    network: mainnet
-    source:
-      startBlock: 5041207
-      abi: SaveTextProtected
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - Proposal
-        - Header
-        - Command
-        - Action
-        - ProposalMeta
-        - Text
-        - Member
-      abis:
-        - name: SaveTextProtected
-          file: ../out/SaveTextProtected.sol/SaveTextProtected.json
-      eventHandlers:
-        - event: TextSaved(uint256,string[])
-          handler: handleTextSaved
-      file: ./src/mapping.ts
-  - kind: ethereum
-    name: Tally
-    network: mainnet
-    source:
-      startBlock: 5041207
-      abi: Tally
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - Proposal
-        - Header
-        - Command
-        - Action
-        - ProposalMeta
-        - Text
-        - Member
-      abis:
-        - name: Tally
-          file: ../out/Tally.sol/Tally.json
-      eventHandlers:
-        - event: ProposalTallied(uint256,(uint256,uint256[],uint256[],uint256,uint256,address[],uint256,uint256))
+        - event: CommandCreated(uint256,uint256,(string,bytes)[])
+          handler: handleCommandCreated
+        - event: HeaderCreated(uint256,uint256,string)
+          handler: handleHeaderCreated
+        - event: ProposalExecuted(uint256,uint256)
+          handler: handleProposalExecuted
+        - event: ProposalSnapped(uint256,uint256[],uint256[])
+          handler: handleProposalSnapped
+        - event: ProposalTallied(uint256,uint256,uint256)
           handler: handleProposalTallied
-      file: ./src/mapping.ts
+        - event: ProposalTalliedWithTie(uint256,uint256[],uint256[],uint256)
+          handler: handleProposalTalliedWithTie
+        - event: Proposed(uint256,address,uint256,uint256)
+          handler: handleProposed
+        - event: RepresentativesAssigned(uint256,address[])
+          handler: handleRepresentativesAssigned
+        - event: TextCreated(uint256,string)
+          handler: handleTextCreated
+        - event: TextDeleted(uint256)
+          handler: handleTextDeleted
+        - event: TextUpdated(uint256,string)
+          handler: handleTextUpdated
+        - event: VRFRequested(uint256,uint256)
+          handler: handleVRFRequested
+        - event: Voted(uint256,address,(uint256[3],uint256[3]))
+          handler: handleVoted
+      file: ./src/text-dao-event-handlers.ts

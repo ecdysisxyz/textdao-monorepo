@@ -8,8 +8,104 @@ import {
   store,
   Bytes,
   BigInt,
-  BigDecimal,
+  BigDecimal
 } from "@graphprotocol/graph-ts";
+
+export class DeliberationConfig extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save DeliberationConfig entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type DeliberationConfig must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("DeliberationConfig", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): DeliberationConfig | null {
+    return changetype<DeliberationConfig | null>(
+      store.get_in_block("DeliberationConfig", id)
+    );
+  }
+
+  static load(id: string): DeliberationConfig | null {
+    return changetype<DeliberationConfig | null>(
+      store.get("DeliberationConfig", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get expiryDuration(): BigInt {
+    let value = this.get("expiryDuration");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set expiryDuration(value: BigInt) {
+    this.set("expiryDuration", Value.fromBigInt(value));
+  }
+
+  get snapInterval(): BigInt {
+    let value = this.get("snapInterval");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set snapInterval(value: BigInt) {
+    this.set("snapInterval", Value.fromBigInt(value));
+  }
+
+  get repsNum(): BigInt {
+    let value = this.get("repsNum");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set repsNum(value: BigInt) {
+    this.set("repsNum", Value.fromBigInt(value));
+  }
+
+  get quorumScore(): BigInt {
+    let value = this.get("quorumScore");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set quorumScore(value: BigInt) {
+    this.set("quorumScore", Value.fromBigInt(value));
+  }
+}
 
 export class Proposal extends Entity {
   constructor(id: string) {
@@ -23,7 +119,7 @@ export class Proposal extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type Proposal must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+        `Entities of type Proposal must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
       store.set("Proposal", id.toString(), this);
     }
@@ -58,12 +154,178 @@ export class Proposal extends Entity {
     return new CommandLoader("Proposal", this.get("id")!.toString(), "cmds");
   }
 
-  get proposalMeta(): ProposalMetaLoader {
-    return new ProposalMetaLoader(
+  get proposer(): Bytes {
+    let value = this.get("proposer");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set proposer(value: Bytes) {
+    this.set("proposer", Value.fromBytes(value));
+  }
+
+  get createdAt(): BigInt | null {
+    let value = this.get("createdAt");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set createdAt(value: BigInt | null) {
+    if (!value) {
+      this.unset("createdAt");
+    } else {
+      this.set("createdAt", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get expirationTime(): BigInt | null {
+    let value = this.get("expirationTime");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set expirationTime(value: BigInt | null) {
+    if (!value) {
+      this.unset("expirationTime");
+    } else {
+      this.set("expirationTime", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get reps(): Array<Bytes> {
+    let value = this.get("reps");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytesArray();
+    }
+  }
+
+  set reps(value: Array<Bytes>) {
+    this.set("reps", Value.fromBytesArray(value));
+  }
+
+  get votes(): VoteLoader {
+    return new VoteLoader("Proposal", this.get("id")!.toString(), "votes");
+  }
+
+  get approvedHeaderId(): BigInt | null {
+    let value = this.get("approvedHeaderId");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set approvedHeaderId(value: BigInt | null) {
+    if (!value) {
+      this.unset("approvedHeaderId");
+    } else {
+      this.set("approvedHeaderId", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get approvedCommandId(): BigInt | null {
+    let value = this.get("approvedCommandId");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set approvedCommandId(value: BigInt | null) {
+    if (!value) {
+      this.unset("approvedCommandId");
+    } else {
+      this.set("approvedCommandId", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get actionStatuses(): ActionStatusLoader {
+    return new ActionStatusLoader(
       "Proposal",
       this.get("id")!.toString(),
-      "proposalMeta",
+      "actionStatuses"
     );
+  }
+
+  get fullyExecuted(): boolean {
+    let value = this.get("fullyExecuted");
+    if (!value || value.kind == ValueKind.NULL) {
+      return false;
+    } else {
+      return value.toBoolean();
+    }
+  }
+
+  set fullyExecuted(value: boolean) {
+    this.set("fullyExecuted", Value.fromBoolean(value));
+  }
+
+  get vrfRequestId(): BigInt | null {
+    let value = this.get("vrfRequestId");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set vrfRequestId(value: BigInt | null) {
+    if (!value) {
+      this.unset("vrfRequestId");
+    } else {
+      this.set("vrfRequestId", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get snapped(): SnappedLoader {
+    return new SnappedLoader("Proposal", this.get("id")!.toString(), "snapped");
+  }
+
+  get top3Headers(): Array<string> | null {
+    let value = this.get("top3Headers");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set top3Headers(value: Array<string> | null) {
+    if (!value) {
+      this.unset("top3Headers");
+    } else {
+      this.set("top3Headers", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+
+  get top3Commands(): Array<string> | null {
+    let value = this.get("top3Commands");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set top3Commands(value: Array<string> | null) {
+    if (!value) {
+      this.unset("top3Commands");
+    } else {
+      this.set("top3Commands", Value.fromStringArray(<Array<string>>value));
+    }
   }
 }
 
@@ -79,7 +341,7 @@ export class Header extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type Header must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+        `Entities of type Header must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
       store.set("Header", id.toString(), this);
     }
@@ -119,43 +381,17 @@ export class Header extends Entity {
     this.set("proposal", Value.fromString(value));
   }
 
-  get currentScore(): BigInt {
-    let value = this.get("currentScore");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set currentScore(value: BigInt) {
-    this.set("currentScore", Value.fromBigInt(value));
-  }
-
-  get metadataURI(): Bytes {
+  get metadataURI(): string {
     let value = this.get("metadataURI");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set metadataURI(value: Bytes) {
-    this.set("metadataURI", Value.fromBytes(value));
-  }
-
-  get tagIds(): Array<BigInt> {
-    let value = this.get("tagIds");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigIntArray();
-    }
-  }
-
-  set tagIds(value: Array<BigInt>) {
-    this.set("tagIds", Value.fromBigIntArray(value));
+  set metadataURI(value: string) {
+    this.set("metadataURI", Value.fromString(value));
   }
 }
 
@@ -171,7 +407,7 @@ export class Command extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type Command must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+        `Entities of type Command must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
       store.set("Command", id.toString(), this);
     }
@@ -214,19 +450,6 @@ export class Command extends Entity {
   get actions(): ActionLoader {
     return new ActionLoader("Command", this.get("id")!.toString(), "actions");
   }
-
-  get currentScore(): BigInt {
-    let value = this.get("currentScore");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set currentScore(value: BigInt) {
-    this.set("currentScore", Value.fromBigInt(value));
-  }
 }
 
 export class Action extends Entity {
@@ -241,7 +464,7 @@ export class Action extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type Action must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+        `Entities of type Action must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
       store.set("Action", id.toString(), this);
     }
@@ -306,9 +529,22 @@ export class Action extends Entity {
   set abiParams(value: Bytes) {
     this.set("abiParams", Value.fromBytes(value));
   }
+
+  get status(): string {
+    let value = this.get("status");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set status(value: string) {
+    this.set("status", Value.fromString(value));
+  }
 }
 
-export class ProposalMeta extends Entity {
+export class Vote extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -316,24 +552,22 @@ export class ProposalMeta extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save ProposalMeta entity without an ID");
+    assert(id != null, "Cannot save Vote entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type ProposalMeta must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+        `Entities of type Vote must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("ProposalMeta", id.toString(), this);
+      store.set("Vote", id.toString(), this);
     }
   }
 
-  static loadInBlock(id: string): ProposalMeta | null {
-    return changetype<ProposalMeta | null>(
-      store.get_in_block("ProposalMeta", id),
-    );
+  static loadInBlock(id: string): Vote | null {
+    return changetype<Vote | null>(store.get_in_block("Vote", id));
   }
 
-  static load(id: string): ProposalMeta | null {
-    return changetype<ProposalMeta | null>(store.get("ProposalMeta", id));
+  static load(id: string): Vote | null {
+    return changetype<Vote | null>(store.get("Vote", id));
   }
 
   get id(): string {
@@ -362,47 +596,108 @@ export class ProposalMeta extends Entity {
     this.set("proposal", Value.fromString(value));
   }
 
-  get currentScore(): BigInt {
-    let value = this.get("currentScore");
+  get rep(): Bytes {
+    let value = this.get("rep");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBigInt();
+      return value.toBytes();
     }
   }
 
-  set currentScore(value: BigInt) {
-    this.set("currentScore", Value.fromBigInt(value));
+  set rep(value: Bytes) {
+    this.set("rep", Value.fromBytes(value));
   }
 
-  get headerRank(): Array<BigInt> {
-    let value = this.get("headerRank");
+  get rankedHeaderIds(): Array<BigInt> | null {
+    let value = this.get("rankedHeaderIds");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigIntArray();
-    }
-  }
-
-  set headerRank(value: Array<BigInt>) {
-    this.set("headerRank", Value.fromBigIntArray(value));
-  }
-
-  get cmdRank(): Array<BigInt> {
-    let value = this.get("cmdRank");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return null;
     } else {
       return value.toBigIntArray();
     }
   }
 
-  set cmdRank(value: Array<BigInt>) {
-    this.set("cmdRank", Value.fromBigIntArray(value));
+  set rankedHeaderIds(value: Array<BigInt> | null) {
+    if (!value) {
+      this.unset("rankedHeaderIds");
+    } else {
+      this.set("rankedHeaderIds", Value.fromBigIntArray(<Array<BigInt>>value));
+    }
   }
 
-  get nextHeaderTallyFrom(): BigInt {
-    let value = this.get("nextHeaderTallyFrom");
+  get rankedCommandIds(): Array<BigInt> | null {
+    let value = this.get("rankedCommandIds");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigIntArray();
+    }
+  }
+
+  set rankedCommandIds(value: Array<BigInt> | null) {
+    if (!value) {
+      this.unset("rankedCommandIds");
+    } else {
+      this.set("rankedCommandIds", Value.fromBigIntArray(<Array<BigInt>>value));
+    }
+  }
+}
+
+export class Snapped extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Snapped entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type Snapped must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("Snapped", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): Snapped | null {
+    return changetype<Snapped | null>(store.get_in_block("Snapped", id));
+  }
+
+  static load(id: string): Snapped | null {
+    return changetype<Snapped | null>(store.get("Snapped", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get proposal(): string {
+    let value = this.get("proposal");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set proposal(value: string) {
+    this.set("proposal", Value.fromString(value));
+  }
+
+  get epoch(): BigInt {
+    let value = this.get("epoch");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -410,60 +705,21 @@ export class ProposalMeta extends Entity {
     }
   }
 
-  set nextHeaderTallyFrom(value: BigInt) {
-    this.set("nextHeaderTallyFrom", Value.fromBigInt(value));
+  set epoch(value: BigInt) {
+    this.set("epoch", Value.fromBigInt(value));
   }
 
-  get nextCmdTallyFrom(): BigInt {
-    let value = this.get("nextCmdTallyFrom");
+  get snapped(): boolean {
+    let value = this.get("snapped");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return false;
     } else {
-      return value.toBigInt();
+      return value.toBoolean();
     }
   }
 
-  set nextCmdTallyFrom(value: BigInt) {
-    this.set("nextCmdTallyFrom", Value.fromBigInt(value));
-  }
-
-  get reps(): Array<Bytes> {
-    let value = this.get("reps");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBytesArray();
-    }
-  }
-
-  set reps(value: Array<Bytes>) {
-    this.set("reps", Value.fromBytesArray(value));
-  }
-
-  get createdAt(): BigInt {
-    let value = this.get("createdAt");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set createdAt(value: BigInt) {
-    this.set("createdAt", Value.fromBigInt(value));
-  }
-
-  get vrfRequestId(): BigInt {
-    let value = this.get("vrfRequestId");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set vrfRequestId(value: BigInt) {
-    this.set("vrfRequestId", Value.fromBigInt(value));
+  set snapped(value: boolean) {
+    this.set("snapped", Value.fromBoolean(value));
   }
 }
 
@@ -479,7 +735,7 @@ export class Text extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type Text must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+        `Entities of type Text must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
       store.set("Text", id.toString(), this);
     }
@@ -506,30 +762,17 @@ export class Text extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get metadataURIs(): Array<string> {
-    let value = this.get("metadataURIs");
+  get metadataURI(): string {
+    let value = this.get("metadataURI");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toStringArray();
+      return value.toString();
     }
   }
 
-  set metadataURIs(value: Array<string>) {
-    this.set("metadataURIs", Value.fromStringArray(value));
-  }
-
-  get bodies(): Array<string> {
-    let value = this.get("bodies");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toStringArray();
-    }
-  }
-
-  set bodies(value: Array<string>) {
-    this.set("bodies", Value.fromStringArray(value));
+  set metadataURI(value: string) {
+    this.set("metadataURI", Value.fromString(value));
   }
 }
 
@@ -545,7 +788,7 @@ export class Member extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type Member must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+        `Entities of type Member must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
       store.set("Member", id.toString(), this);
     }
@@ -635,7 +878,7 @@ export class CommandLoader extends Entity {
   }
 }
 
-export class ProposalMetaLoader extends Entity {
+export class VoteLoader extends Entity {
   _entity: string;
   _field: string;
   _id: string;
@@ -647,9 +890,45 @@ export class ProposalMetaLoader extends Entity {
     this._field = field;
   }
 
-  load(): ProposalMeta[] {
+  load(): Vote[] {
     let value = store.loadRelated(this._entity, this._id, this._field);
-    return changetype<ProposalMeta[]>(value);
+    return changetype<Vote[]>(value);
+  }
+}
+
+export class ActionStatusLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): ActionStatus[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<ActionStatus[]>(value);
+  }
+}
+
+export class SnappedLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): Snapped[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<Snapped[]>(value);
   }
 }
 
