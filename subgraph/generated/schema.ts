@@ -252,14 +252,6 @@ export class Proposal extends Entity {
     }
   }
 
-  get actionStatuses(): ActionStatusLoader {
-    return new ActionStatusLoader(
-      "Proposal",
-      this.get("id")!.toString(),
-      "actionStatuses"
-    );
-  }
-
   get fullyExecuted(): boolean {
     let value = this.get("fullyExecuted");
     if (!value || value.kind == ValueKind.NULL) {
@@ -893,24 +885,6 @@ export class VoteLoader extends Entity {
   load(): Vote[] {
     let value = store.loadRelated(this._entity, this._id, this._field);
     return changetype<Vote[]>(value);
-  }
-}
-
-export class ActionStatusLoader extends Entity {
-  _entity: string;
-  _field: string;
-  _id: string;
-
-  constructor(entity: string, id: string, field: string) {
-    super();
-    this._entity = entity;
-    this._id = id;
-    this._field = field;
-  }
-
-  load(): ActionStatus[] {
-    let value = store.loadRelated(this._entity, this._id, this._field);
-    return changetype<ActionStatus[]>(value);
   }
 }
 

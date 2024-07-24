@@ -18,7 +18,6 @@ type Proposal @entity {
     votes: [Vote!] @derivedFrom(field: "proposal")
     approvedHeaderId: BigInt
     approvedCommandId: BigInt
-    actionStatuses: [ActionStatus!] @derivedFrom(field: "proposal")
     fullyExecuted: Boolean
     vrfRequestId: BigInt
     # snapInterval: BigInt
