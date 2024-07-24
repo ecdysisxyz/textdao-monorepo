@@ -7,14 +7,14 @@ type DeliberationConfig @entity {
 }
 type Proposal @entity {
     id: ID!
-    headers: [Header!]! @derivedFrom(field: "proposal")
-    cmds: [Command!]! @derivedFrom(field: "proposal")
+    headers: [Header!] @derivedFrom(field: "proposal")
+    cmds: [Command!] @derivedFrom(field: "proposal")
     # meta
-    proposer: Bytes!
+    proposer: Bytes
     createdAt: BigInt
     expirationTime: BigInt
     # voting status
-    reps: [Bytes!]!
+    reps: [Bytes!]
     votes: [Vote!] @derivedFrom(field: "proposal")
     approvedHeaderId: BigInt
     approvedCommandId: BigInt

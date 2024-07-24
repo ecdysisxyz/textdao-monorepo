@@ -154,17 +154,21 @@ export class Proposal extends Entity {
     return new CommandLoader("Proposal", this.get("id")!.toString(), "cmds");
   }
 
-  get proposer(): Bytes {
+  get proposer(): Bytes | null {
     let value = this.get("proposer");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return null;
     } else {
       return value.toBytes();
     }
   }
 
-  set proposer(value: Bytes) {
-    this.set("proposer", Value.fromBytes(value));
+  set proposer(value: Bytes | null) {
+    if (!value) {
+      this.unset("proposer");
+    } else {
+      this.set("proposer", Value.fromBytes(<Bytes>value));
+    }
   }
 
   get createdAt(): BigInt | null {
@@ -201,17 +205,21 @@ export class Proposal extends Entity {
     }
   }
 
-  get reps(): Array<Bytes> {
+  get reps(): Array<Bytes> | null {
     let value = this.get("reps");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return null;
     } else {
       return value.toBytesArray();
     }
   }
 
-  set reps(value: Array<Bytes>) {
-    this.set("reps", Value.fromBytesArray(value));
+  set reps(value: Array<Bytes> | null) {
+    if (!value) {
+      this.unset("reps");
+    } else {
+      this.set("reps", Value.fromBytesArray(<Array<Bytes>>value));
+    }
   }
 
   get votes(): VoteLoader {
