@@ -20,8 +20,9 @@ describe("ProposalSnapped Event Handler", () => {
         clearStore();
     });
 
-    test("Should update existing Proposal entity with top3 headers and commands", () => {
+    test("Should update existing Proposal entity with top3 headers, commands, and snapped epoch", () => {
         const pid = BigInt.fromI32(100);
+        const epoch = BigInt.fromI32(1721900000);
         const top3HeaderIds = [
             BigInt.fromI32(1),
             BigInt.fromI32(2),
@@ -37,7 +38,12 @@ describe("ProposalSnapped Event Handler", () => {
         createMockProposalEntity(pid);
 
         handleProposalSnapped(
-            createMockProposalSnappedEvent(pid, top3HeaderIds, top3CommandIds)
+            createMockProposalSnappedEvent(
+                pid,
+                epoch,
+                top3HeaderIds,
+                top3CommandIds
+            )
         );
 
         const proposalEntityId = genProposalId(pid);
@@ -77,12 +83,19 @@ describe("ProposalSnapped Event Handler", () => {
             "top3Commands",
             expectedTop3Commands
         );
+        assert.fieldEquals(
+            "Proposal",
+            proposalEntityId,
+            "snappedEpoch",
+            `[${epoch.toString()}]`
+        );
     });
 
     test(
         "Should fail if Proposal entity doesn't exist",
         () => {
             const pid = BigInt.fromI32(100);
+            const epoch = BigInt.fromI32(1721900000);
             const top3HeaderIds = [
                 BigInt.fromI32(1),
                 BigInt.fromI32(2),
@@ -99,6 +112,7 @@ describe("ProposalSnapped Event Handler", () => {
             handleProposalSnapped(
                 createMockProposalSnappedEvent(
                     pid,
+                    epoch,
                     top3HeaderIds,
                     top3CommandIds
                 )
@@ -107,8 +121,10 @@ describe("ProposalSnapped Event Handler", () => {
         true
     );
 
-    test("Should update existing Proposal entity with new values", () => {
+    test("Should update existing Proposal entity with new values and append new epoch", () => {
         const pid = BigInt.fromI32(100);
+        const epoch1 = BigInt.fromI32(1721900000);
+        const epoch2 = BigInt.fromI32(1721900100);
         const initialTop3HeaderIds = [
             BigInt.fromI32(1),
             BigInt.fromI32(2),
@@ -136,6 +152,7 @@ describe("ProposalSnapped Event Handler", () => {
         handleProposalSnapped(
             createMockProposalSnappedEvent(
                 pid,
+                epoch1,
                 initialTop3HeaderIds,
                 initialTop3CommandIds
             )
@@ -143,6 +160,7 @@ describe("ProposalSnapped Event Handler", () => {
         handleProposalSnapped(
             createMockProposalSnappedEvent(
                 pid,
+                epoch2,
                 updatedTop3HeaderIds,
                 updatedTop3CommandIds
             )
@@ -179,10 +197,17 @@ describe("ProposalSnapped Event Handler", () => {
             "top3Commands",
             expectedUpdatedTop3Commands
         );
+        assert.fieldEquals(
+            "Proposal",
+            proposalEntityId,
+            "snappedEpoch",
+            `[${epoch1.toString()}, ${epoch2.toString()}]`
+        );
     });
 
     test("Should handle less than 3 top headers or commands", () => {
         const pid = BigInt.fromI32(100);
+        const epoch = BigInt.fromI32(1721900000);
         const top3HeaderIds = [BigInt.fromI32(1), BigInt.fromI32(2)];
         const top3CommandIds = [BigInt.fromI32(1)];
 
@@ -190,7 +215,12 @@ describe("ProposalSnapped Event Handler", () => {
         createMockProposalEntity(pid);
 
         handleProposalSnapped(
-            createMockProposalSnappedEvent(pid, top3HeaderIds, top3CommandIds)
+            createMockProposalSnappedEvent(
+                pid,
+                epoch,
+                top3HeaderIds,
+                top3CommandIds
+            )
         );
 
         const proposalEntityId = genProposalId(pid);
@@ -216,10 +246,17 @@ describe("ProposalSnapped Event Handler", () => {
             "top3Commands",
             expectedTop3Commands
         );
+        assert.fieldEquals(
+            "Proposal",
+            proposalEntityId,
+            "snappedEpoch",
+            `[${epoch.toString()}]`
+        );
     });
 
     test("Should handle empty top headers or commands", () => {
         const pid = BigInt.fromI32(100);
+        const epoch = BigInt.fromI32(1721900000);
         const top3HeaderIds: BigInt[] = [];
         const top3CommandIds: BigInt[] = [];
 
@@ -227,17 +264,29 @@ describe("ProposalSnapped Event Handler", () => {
         createMockProposalEntity(pid);
 
         handleProposalSnapped(
-            createMockProposalSnappedEvent(pid, top3HeaderIds, top3CommandIds)
+            createMockProposalSnappedEvent(
+                pid,
+                epoch,
+                top3HeaderIds,
+                top3CommandIds
+            )
         );
 
         const proposalEntityId = genProposalId(pid);
 
         assert.fieldEquals("Proposal", proposalEntityId, "top3Headers", "[]");
         assert.fieldEquals("Proposal", proposalEntityId, "top3Commands", "[]");
+        assert.fieldEquals(
+            "Proposal",
+            proposalEntityId,
+            "snappedEpoch",
+            `[${epoch.toString()}]`
+        );
     });
 
     test("Should handle large proposal ID and large header/command IDs", () => {
         const pid = BigInt.fromI32(999999);
+        const epoch = BigInt.fromI32(1721900000);
         const top3HeaderIds = [
             BigInt.fromI32(1000000),
             BigInt.fromI32(2000000),
@@ -253,7 +302,12 @@ describe("ProposalSnapped Event Handler", () => {
         createMockProposalEntity(pid);
 
         handleProposalSnapped(
-            createMockProposalSnappedEvent(pid, top3HeaderIds, top3CommandIds)
+            createMockProposalSnappedEvent(
+                pid,
+                epoch,
+                top3HeaderIds,
+                top3CommandIds
+            )
         );
 
         const proposalEntityId = genProposalId(pid);
@@ -284,6 +338,48 @@ describe("ProposalSnapped Event Handler", () => {
             proposalEntityId,
             "top3Commands",
             expectedTop3Commands
+        );
+        assert.fieldEquals(
+            "Proposal",
+            proposalEntityId,
+            "snappedEpoch",
+            `[${epoch.toString()}]`
+        );
+    });
+
+    test("Should handle multiple snaps and append all epochs", () => {
+        const pid = BigInt.fromI32(100);
+        const epochs = [
+            BigInt.fromI32(1721900000),
+            BigInt.fromI32(1721900100),
+            BigInt.fromI32(1721900200),
+        ];
+        const top3HeaderIds = [BigInt.fromI32(1), BigInt.fromI32(2)];
+        const top3CommandIds = [BigInt.fromI32(1)];
+
+        // Create a proposal first
+        createMockProposalEntity(pid);
+
+        for (let i = 0; i < epochs.length; i++) {
+            handleProposalSnapped(
+                createMockProposalSnappedEvent(
+                    pid,
+                    epochs[i],
+                    top3HeaderIds,
+                    top3CommandIds
+                )
+            );
+        }
+
+        const proposalEntityId = genProposalId(pid);
+
+        const expectedSnappedEpochs = `[${epochs[0].toString()}, ${epochs[1].toString()}, ${epochs[2].toString()}]`;
+
+        assert.fieldEquals(
+            "Proposal",
+            proposalEntityId,
+            "snappedEpoch",
+            expectedSnappedEpochs
         );
     });
 });

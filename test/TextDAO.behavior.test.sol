@@ -33,10 +33,17 @@ contract TextDAOBehaviorTest is MCTest {
     function test_scenario_fullProposalLifecycle() public {
         // Create proposal
         uint256 _expirationTime = block.timestamp + TextDAODeployer.initialConfig().expiryDuration;
+        address[] memory _reps = new address[](3);
+        _reps[0] = MEMBER1;
+        _reps[1] = MEMBER2;
+        _reps[2] = MEMBER3;
+        string memory _metadataURI = "originalProposalURI";
         vm.prank(MEMBER1);
         vm.expectEmit(true, true, true, true);
+        emit TextDAOEvents.HeaderCreated(0, 1, _metadataURI);
+        emit TextDAOEvents.RepresentativesAssigned(0, _reps);
         emit TextDAOEvents.Proposed(0, MEMBER1, block.timestamp, _expirationTime);
-        uint256 _pid = textDAO.propose("originalProposalURI", new Schema.Action[](0));
+        uint256 _pid = textDAO.propose(_metadataURI, new Schema.Action[](0));
 
         // Fork proposal
         vm.prank(MEMBER2);
@@ -99,10 +106,17 @@ contract TextDAOBehaviorTest is MCTest {
     function test_scenario_votingTieAndResolution() public {
         // Create proposal
         uint256 _expirationTime = block.timestamp + TextDAODeployer.initialConfig().expiryDuration;
+        address[] memory _reps = new address[](3);
+        _reps[0] = MEMBER1;
+        _reps[1] = MEMBER2;
+        _reps[2] = MEMBER3;
+        string memory _metadataURI = "tieProposalURI";
         vm.prank(MEMBER1);
         vm.expectEmit(true, true, true, true);
+        emit TextDAOEvents.HeaderCreated(0, 1, _metadataURI);
+        emit TextDAOEvents.RepresentativesAssigned(0, _reps);
         emit TextDAOEvents.Proposed(0, MEMBER1, block.timestamp, _expirationTime);
-        uint256 _pid = textDAO.propose("tieProposalURI", new Schema.Action[](0));
+        uint256 _pid = textDAO.propose(_metadataURI, new Schema.Action[](0));
 
         // Fork proposal
         vm.prank(MEMBER2);
@@ -179,13 +193,23 @@ contract TextDAOBehaviorTest is MCTest {
         textDAO.propose("nonMemberProposalURI", new Schema.Action[](0));
 
         // Test premature tally attempt
+        address[] memory _reps = new address[](3);
+        _reps[0] = MEMBER1;
+        _reps[1] = MEMBER2;
+        _reps[2] = MEMBER3;
+        string memory _metadataURI = "proposalURI";
         vm.prank(MEMBER1);
         vm.expectEmit(true, true, true, true);
+        emit TextDAOEvents.HeaderCreated(0, 1, _metadataURI);
+        emit TextDAOEvents.RepresentativesAssigned(0, _reps);
         emit TextDAOEvents.Proposed(0, MEMBER1, block.timestamp, _expirationTime);
-        uint256 proposalId = textDAO.propose("proposalURI", new Schema.Action[](0));
+        uint256 proposalId = textDAO.propose(_metadataURI, new Schema.Action[](0));
 
+        // uint256 _snapInterval = TextDAODeployer.initialConfig().snapInterval;
+        // uint256 _epoch = block.timestamp / _snapInterval * _snapInterval;
+        uint256 _epoch = 1; // snapInterval == 0
         vm.expectEmit(true, true, true, true);
-        emit TextDAOEvents.ProposalSnapped(proposalId, new uint[](0), new uint[](0));
+        emit TextDAOEvents.ProposalSnapped(proposalId, _epoch, new uint[](0), new uint[](0));
         textDAO.tally(proposalId);
 
         // Test execution of non-approved proposal

@@ -290,8 +290,21 @@ export class Proposal extends Entity {
     }
   }
 
-  get snapped(): SnappedLoader {
-    return new SnappedLoader("Proposal", this.get("id")!.toString(), "snapped");
+  get snappedEpoch(): Array<BigInt> | null {
+    let value = this.get("snappedEpoch");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigIntArray();
+    }
+  }
+
+  set snappedEpoch(value: Array<BigInt> | null) {
+    if (!value) {
+      this.unset("snappedEpoch");
+    } else {
+      this.set("snappedEpoch", Value.fromBigIntArray(<Array<BigInt>>value));
+    }
   }
 
   get top3Headers(): Array<string> | null {
@@ -644,85 +657,6 @@ export class Vote extends Entity {
   }
 }
 
-export class Snapped extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id != null, "Cannot save Snapped entity without an ID");
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type Snapped must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
-      );
-      store.set("Snapped", id.toString(), this);
-    }
-  }
-
-  static loadInBlock(id: string): Snapped | null {
-    return changetype<Snapped | null>(store.get_in_block("Snapped", id));
-  }
-
-  static load(id: string): Snapped | null {
-    return changetype<Snapped | null>(store.get("Snapped", id));
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toString();
-    }
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get proposal(): string {
-    let value = this.get("proposal");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toString();
-    }
-  }
-
-  set proposal(value: string) {
-    this.set("proposal", Value.fromString(value));
-  }
-
-  get epoch(): BigInt {
-    let value = this.get("epoch");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set epoch(value: BigInt) {
-    this.set("epoch", Value.fromBigInt(value));
-  }
-
-  get snapped(): boolean {
-    let value = this.get("snapped");
-    if (!value || value.kind == ValueKind.NULL) {
-      return false;
-    } else {
-      return value.toBoolean();
-    }
-  }
-
-  set snapped(value: boolean) {
-    this.set("snapped", Value.fromBoolean(value));
-  }
-}
-
 export class Text extends Entity {
   constructor(id: string) {
     super();
@@ -893,24 +827,6 @@ export class VoteLoader extends Entity {
   load(): Vote[] {
     let value = store.loadRelated(this._entity, this._id, this._field);
     return changetype<Vote[]>(value);
-  }
-}
-
-export class SnappedLoader extends Entity {
-  _entity: string;
-  _field: string;
-  _id: string;
-
-  constructor(entity: string, id: string, field: string) {
-    super();
-    this._entity = entity;
-    this._id = id;
-    this._field = field;
-  }
-
-  load(): Snapped[] {
-    let value = store.loadRelated(this._entity, this._id, this._field);
-    return changetype<Snapped[]>(value);
   }
 }
 

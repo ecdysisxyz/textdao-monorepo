@@ -21,7 +21,7 @@ type Proposal @entity {
     fullyExecuted: Boolean
     vrfRequestId: BigInt
     # snapInterval: BigInt
-    snapped: [Snapped!] @derivedFrom(field: "proposal")
+    snappedEpoch: [BigInt!]
     top3Headers: [Header!]
     top3Commands: [Command!]
 }
@@ -48,12 +48,6 @@ type Vote @entity {
     rep: Bytes! # mapping-key
     rankedHeaderIds: [BigInt!]
     rankedCommandIds: [BigInt!]
-}
-type Snapped @entity {
-    id: ID!
-    proposal: Proposal! # parent
-    epoch: BigInt! # mapping-key
-    snapped: Boolean!
 }
 enum ActionStatus {
     Proposed

@@ -88,7 +88,7 @@ contract Tally is ITally {
 
         $proposal.flagSnappedInEpoch();
 
-        emit TextDAOEvents.ProposalSnapped(pid, _top3HeaderIds, _top3CommandIds);
+        emit TextDAOEvents.ProposalSnapped(pid, $proposal.calcCurrentEpoch(), _top3HeaderIds, _top3CommandIds);
     }
 }
 
@@ -232,7 +232,7 @@ contract TallyTest is MCTest {
         _top3CommandIdsExpected[2] = 1;
 
         vm.expectEmit(true, true, true, true);
-        emit TextDAOEvents.ProposalSnapped(0, _top3HeaderIdsExpected, _top3CommandIdsExpected);
+        emit TextDAOEvents.ProposalSnapped(0, $proposal.calcCurrentEpoch(), _top3HeaderIdsExpected, _top3CommandIdsExpected);
         Tally(target).tally(0);
 
         assertFalse($proposal.isApproved(), "Proposal should not be approved after snapshot");

@@ -34,11 +34,11 @@ export function handleProposalTalliedWithTie(
     const proposal = loadProposal(event.params.pid);
     proposal.top3Headers = genHeaderIds(
         event.params.pid,
-        event.params.approvedHeaderIds
+        event.params.topHeaderIds
     );
     proposal.top3Commands = genCommandIds(
         event.params.pid,
-        event.params.approvedCommandIds
+        event.params.topCommandIds
     );
     proposal.expirationTime = event.params.extendedExpirationTime;
     proposal.save();

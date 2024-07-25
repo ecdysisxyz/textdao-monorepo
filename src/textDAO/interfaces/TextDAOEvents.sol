@@ -25,9 +25,9 @@ interface TextDAOEvents {
     // Vote
     event Voted(uint pid, address rep, Schema.Vote vote);
     // Tally
-    event ProposalTalliedWithTie(uint pid, uint[] approvedHeaderIds, uint[] approvedCommandIds, uint extendedExpirationTime);
+    event ProposalTalliedWithTie(uint pid, uint[] topHeaderIds, uint[] topCommandIds, uint extendedExpirationTime);
     event ProposalTallied(uint pid, uint approvedHeaderId, uint approvedCommandId);
-    event ProposalSnapped(uint pid, uint[] top3HeaderIds, uint[] top3CommandIds);
+    event ProposalSnapped(uint pid, uint epoch, uint[] top3HeaderIds, uint[] top3CommandIds);
     // Execute
     event ProposalExecuted(uint pid, uint approvedCommandId);
     // SaveText

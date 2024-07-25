@@ -35,3 +35,18 @@ export function formatAddressArrayToBytesArray(
     }
     return bytesArray;
 }
+
+export function formatStringArray(stringArray: string[]): string {
+    return "[" + stringArray.join(", ") + "]";
+}
+
+export function pushToBigIntArray(
+    array: BigInt[] | null,
+    adder: BigInt
+): BigInt[] {
+    if (array == null) {
+        return [adder];
+    } else {
+        return array.concat([adder]);
+    }
+}

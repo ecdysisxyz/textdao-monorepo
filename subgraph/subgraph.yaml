@@ -33,7 +33,7 @@ dataSources:
           handler: handleHeaderCreated
         - event: ProposalExecuted(uint256,uint256)
           handler: handleProposalExecuted
-        - event: ProposalSnapped(uint256,uint256[],uint256[])
+        - event: ProposalSnapped(uint256,uint256,uint256[],uint256[])
           handler: handleProposalSnapped
         - event: ProposalTallied(uint256,uint256,uint256)
           handler: handleProposalTallied

@@ -131,12 +131,16 @@ export class ProposalSnapped__Params {
     return this._event.parameters[0].value.toBigInt();
   }
 
+  get epoch(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+
   get top3HeaderIds(): Array<BigInt> {
-    return this._event.parameters[1].value.toBigIntArray();
+    return this._event.parameters[2].value.toBigIntArray();
   }
 
   get top3CommandIds(): Array<BigInt> {
-    return this._event.parameters[2].value.toBigIntArray();
+    return this._event.parameters[3].value.toBigIntArray();
   }
 }
 
@@ -183,11 +187,11 @@ export class ProposalTalliedWithTie__Params {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get approvedHeaderIds(): Array<BigInt> {
+  get topHeaderIds(): Array<BigInt> {
     return this._event.parameters[1].value.toBigIntArray();
   }
 
-  get approvedCommandIds(): Array<BigInt> {
+  get topCommandIds(): Array<BigInt> {
     return this._event.parameters[2].value.toBigIntArray();
   }
 

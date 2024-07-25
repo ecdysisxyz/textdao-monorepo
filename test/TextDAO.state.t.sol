@@ -17,6 +17,7 @@ import {Tally} from "bundle/textDAO/functions/Tally.sol";
 import {SaveTextProtected} from "bundle/textDAO/functions/protected/SaveTextProtected.sol";
 import {MemberJoinProtected} from "bundle/textDAO/functions/protected/MemberJoinProtected.sol";
 import {DeliberationLib} from "bundle/textDAO/utils/DeliberationLib.sol";
+import {ProposalLib} from "bundle/textDAO/utils/ProposalLib.sol";
 import {CommandLib} from "bundle/textDAO/utils/CommandLib.sol";
 import {RawFulfillRandomWords} from "bundle/textDAO/functions/onlyVrfCoordinator/RawFulfillRandomWords.sol";
 import {VRFCoordinatorV2Interface} from "@chainlink/vrf/interfaces/VRFCoordinatorV2Interface.sol";
@@ -27,6 +28,7 @@ import {VRFCoordinatorV2Interface} from "@chainlink/vrf/interfaces/VRFCoordinato
  */
 contract TextDAOStateTest is MCTest {
     using DeliberationLib for Schema.Deliberation;
+    using ProposalLib for Schema.Proposal;
     using CommandLib for Schema.Command;
     using CommandLib for Schema.Action;
 
@@ -432,9 +434,10 @@ contract TextDAOStateTest is MCTest {
 
         vm.prank(MEMBER1);
         uint256 pid = textDAO.propose("proposalURI", new Schema.Action[](0));
+        uint _epoch = Storage.Deliberation().getProposal(pid).calcCurrentEpoch();
 
         vm.expectEmit(true, true, true, true);
-        emit TextDAOEvents.ProposalSnapped(pid, new uint[](0), new uint[](0));
+        emit TextDAOEvents.ProposalSnapped(pid, _epoch, new uint[](0), new uint[](0));
         textDAO.tally(pid);
     }
 }

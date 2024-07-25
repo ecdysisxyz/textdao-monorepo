@@ -214,15 +214,15 @@ export function createMockVotedEvent(
 /**
  * Creates a mock ProposalTalliedWithTie event
  * @param pid - Proposal ID
- * @param approvedHeaderIds - Array of approved header IDs
- * @param approvedCommandIds - Array of approved command IDs
+ * @param topHeaderIds - Array of top header IDs
+ * @param topCommandIds - Array of top command IDs
  * @param extendedExpirationTime The unix timestamp
  * @returns MockEvent of type ProposalTalliedWithTie
  */
 export function createMockProposalTalliedWithTieEvent(
     pid: BigInt,
-    approvedHeaderIds: BigInt[],
-    approvedCommandIds: BigInt[],
+    topHeaderIds: BigInt[],
+    topCommandIds: BigInt[],
     extendedExpirationTime: BigInt
 ): ProposalTalliedWithTie {
     let event = changetype<ProposalTalliedWithTie>(newMockEvent());
@@ -232,17 +232,17 @@ export function createMockProposalTalliedWithTieEvent(
     );
     event.parameters.push(
         new ethereum.EventParam(
-            "approvedHeaderIds",
+            "topHeaderIds",
             ethereum.Value.fromI32Array(
-                approvedHeaderIds.map<i32>((id) => id.toI32())
+                topHeaderIds.map<i32>((id) => id.toI32())
             )
         )
     );
     event.parameters.push(
         new ethereum.EventParam(
-            "approvedCommandIds",
+            "topCommandIds",
             ethereum.Value.fromI32Array(
-                approvedCommandIds.map<i32>((id) => id.toI32())
+                topCommandIds.map<i32>((id) => id.toI32())
             )
         )
     );
@@ -290,12 +290,14 @@ export function createMockProposalTalliedEvent(
 /**
  * Creates a mock ProposalSnapped event
  * @param pid - Proposal ID
+ * @param epoch - Snapped epoch timestamp (rounded block.timestamp by interval)
  * @param top3HeaderIds - Array of top 3 header IDs
  * @param top3CommandIds - Array of top 3 command IDs
  * @returns MockEvent of type ProposalSnapped
  */
 export function createMockProposalSnappedEvent(
     pid: BigInt,
+    epoch: BigInt,
     top3HeaderIds: BigInt[],
     top3CommandIds: BigInt[]
 ): ProposalSnapped {
@@ -303,6 +305,12 @@ export function createMockProposalSnappedEvent(
     event.parameters = new Array();
     event.parameters.push(
         new ethereum.EventParam("pid", ethereum.Value.fromUnsignedBigInt(pid))
+    );
+    event.parameters.push(
+        new ethereum.EventParam(
+            "epoch",
+            ethereum.Value.fromUnsignedBigInt(epoch)
+        )
     );
     event.parameters.push(
         new ethereum.EventParam(
