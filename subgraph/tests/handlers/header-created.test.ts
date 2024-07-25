@@ -6,8 +6,8 @@ import {
     beforeEach,
 } from "matchstick-as/assembly/index";
 import { BigInt } from "@graphprotocol/graph-ts";
-import { handleHeaderCreated } from "../src/handlers/header-created";
-import { genHeaderId, genProposalId } from "../src/utils/entity-id-provider";
+import { handleHeaderCreated } from "../../src/handlers/header-created";
+import { genHeaderId, genProposalId } from "../../src/utils/entity-id-provider";
 import { createMockHeaderCreatedEvent } from "./fixtures/mock-events";
 
 describe("HeaderCreated Event Handler", () => {
