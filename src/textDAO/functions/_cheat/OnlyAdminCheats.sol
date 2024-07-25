@@ -7,12 +7,14 @@ import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
 import {DeliberationLib} from "bundle/textDAO/utils/DeliberationLib.sol";
 import {ProposalLib} from "bundle/textDAO/utils/ProposalLib.sol";
 import {RCVLib} from "bundle/textDAO/utils/RCVLib.sol";
+import {MemberLib} from "bundle/textDAO/utils/MemberLib.sol";
 
 contract OnlyAdminCheats {
     using DeliberationLib for Schema.Deliberation;
     using ProposalLib for Schema.Proposal;
     using RCVLib for Schema.Proposal;
     using RCVLib for uint[];
+    using MemberLib for Schema.Members;
 
     modifier onlyAdmin() {
         require(Storage.Members().members[0].addr == msg.sender, "You are not the admin");
@@ -21,7 +23,7 @@ contract OnlyAdminCheats {
 
     function addMembers(address[] memory newMembers) external onlyAdmin {
         for (uint i; i < newMembers.length; ++i) {
-            Storage.Members().members.push(Schema.Member({
+            Storage.Members().addMember(Schema.Member({
                 addr: newMembers[i],
                 metadataURI: ""
             }));
@@ -33,7 +35,9 @@ contract OnlyAdminCheats {
     }
 
     function transferAdmin(address newAdmin) external onlyAdmin {
-        Storage.Members().members[0].addr = newAdmin;
+        Schema.Member storage $member = Storage.Members().members[0];
+        $member.addr = newAdmin;
+        emit TextDAOEvents.MemberUpdated(0, newAdmin, $member.metadataURI);
     }
 
     function forceTally(uint pid) external onlyAdmin {

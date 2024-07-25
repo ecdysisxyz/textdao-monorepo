@@ -36,4 +36,7 @@ interface TextDAOEvents {
     event TextDeleted(uint textId);
     /// @dev From Initializable @ openzeppelin-contracts~5.0.0
     event Initialized(uint64 version);
+    // Member
+    event MemberAdded(uint memberId, address addr, string metadataURI);
+    event MemberUpdated(uint memberId, address addr, string metadataURI);
 }

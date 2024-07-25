@@ -6,7 +6,7 @@ dataSources:
     name: TextDAO
     network: sepolia
     source:
-      address: "0xbC2fC4eb14077Fd7F29B948E5Fd39a4634f6D138"
+      address: "0x9628C83b4988D0cc7Dc13e227b2114cB3cF39D53"
       abi: TextDAOEvents
       startBlock: 6354206
     mapping:

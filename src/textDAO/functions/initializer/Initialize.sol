@@ -5,12 +5,12 @@ pragma solidity ^0.8.24;
 import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 // Storage
 import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
-import {MembersLib} from "bundle/textDAO/utils/MembersLib.sol";
+import {MemberLib} from "bundle/textDAO/utils/MemberLib.sol";
 // Interface
 import {IInitialize} from "bundle/textDAO/interfaces/TextDAOFunctions.sol";
 
 contract Initialize is IInitialize, Initializable {
-    using MembersLib for Schema.Members;
+    using MemberLib for Schema.Members;
 
     function initialize(Schema.Member[] calldata _initialMembers, Schema.DeliberationConfig calldata _initialConfig) external initializer {
         // 1. Set Initial Members

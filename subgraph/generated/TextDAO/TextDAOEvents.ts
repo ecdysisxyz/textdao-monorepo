@@ -92,6 +92,58 @@ export class Initialized__Params {
   }
 }
 
+export class MemberAdded extends ethereum.Event {
+  get params(): MemberAdded__Params {
+    return new MemberAdded__Params(this);
+  }
+}
+
+export class MemberAdded__Params {
+  _event: MemberAdded;
+
+  constructor(event: MemberAdded) {
+    this._event = event;
+  }
+
+  get memberId(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get addr(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+
+  get metadataURI(): string {
+    return this._event.parameters[2].value.toString();
+  }
+}
+
+export class MemberUpdated extends ethereum.Event {
+  get params(): MemberUpdated__Params {
+    return new MemberUpdated__Params(this);
+  }
+}
+
+export class MemberUpdated__Params {
+  _event: MemberUpdated;
+
+  constructor(event: MemberUpdated) {
+    this._event = event;
+  }
+
+  get memberId(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get addr(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+
+  get metadataURI(): string {
+    return this._event.parameters[2].value.toString();
+  }
+}
+
 export class ProposalExecuted extends ethereum.Event {
   get params(): ProposalExecuted__Params {
     return new ProposalExecuted__Params(this);

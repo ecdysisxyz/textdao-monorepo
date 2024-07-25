@@ -1,14 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {Schema} from "bundle/textDAO/storages/Schema.sol";
+import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
+import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
 
 /**
- * @title MembersLib v0.1.0
+ * @title MemberLib v0.1.0
  */
-library MembersLib {
+library MemberLib {
     function addMember(Schema.Members storage $, Schema.Member memory newMember) internal returns(Schema.Member storage) {
-        return $.members.push() = newMember;
+        uint _memberId = Storage.Members().members.length;
+        Schema.Member storage member = $.members.push() = newMember;
+        emit TextDAOEvents.MemberAdded(_memberId, newMember.addr, newMember.metadataURI);
+        return member;
     }
 
     function addMembers(Schema.Members storage $, Schema.Member[] memory newMembers) internal returns(Schema.Members storage) {
@@ -18,13 +22,11 @@ library MembersLib {
         return $;
     }
 
-    error OnlyYouCanModifyYourOwnProfile();
-    event MemberProfileUpdated(string newMetadataURI);
     function updateMemberInfo(Schema.Members storage $, uint mid, string memory newMetadataURI) internal {
         Schema.Member storage target = $.members[mid];
-        if (msg.sender != target.addr) revert OnlyYouCanModifyYourOwnProfile();
+        if (msg.sender != target.addr) revert("Only you can modify your own profile");
         target.metadataURI = newMetadataURI;
-        emit MemberProfileUpdated(newMetadataURI);
+        emit TextDAOEvents.MemberUpdated(mid, target.addr, newMetadataURI);
     }
 
     function isMember(Schema.Members storage $, address _checkAddress) internal view returns(bool result) {
