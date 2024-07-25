@@ -127,8 +127,8 @@ export function loadOrCreateVote(pid: BigInt, rep: Bytes): Vote {
         vote = new Vote(id);
         vote.proposal = genProposalId(pid);
         vote.rep = rep;
+        vote.save();
     }
-    vote.save();
     return vote;
 }
 
