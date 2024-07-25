@@ -1,5 +1,5 @@
 import { newMockEvent } from "matchstick-as";
-import { ethereum, Bytes, BigInt, Address } from "@graphprotocol/graph-ts";
+import { ethereum, BigInt, Address } from "@graphprotocol/graph-ts";
 import {
     HeaderCreated,
     CommandCreated,
@@ -16,7 +16,7 @@ import {
     TextDeleted,
     Initialized,
 } from "../../generated/TextDAO/TextDAOEvents";
-import { Action } from "../../src/types/schema";
+import { Action, Vote } from "../../src/utils/schema-types";
 
 /**
  * Creates a mock HeaderCreated event
@@ -176,11 +176,6 @@ export function createMockVRFRequestedEvent(
     return event;
 }
 
-interface Vote {
-    rankedHeaderIds: BigInt[];
-    rankedCommandIds: BigInt[];
-}
-
 /**
  * Creates a mock Voted event
  * @param pid - Proposal ID
@@ -203,8 +198,12 @@ export function createMockVotedEvent(
     );
 
     let voteTuple = new ethereum.Tuple();
-    voteTuple.push(ethereum.Value.fromBigIntArray(vote.rankedHeaderIds));
-    voteTuple.push(ethereum.Value.fromBigIntArray(vote.rankedCommandIds));
+    voteTuple.push(
+        ethereum.Value.fromUnsignedBigIntArray(vote.rankedHeaderIds)
+    );
+    voteTuple.push(
+        ethereum.Value.fromUnsignedBigIntArray(vote.rankedCommandIds)
+    );
     event.parameters.push(
         new ethereum.EventParam("vote", ethereum.Value.fromTuple(voteTuple))
     );

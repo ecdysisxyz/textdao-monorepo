@@ -1,11 +1,6 @@
-import { log } from "@graphprotocol/graph-ts";
-import { Proposal } from "../../generated/schema";
 import { ProposalSnapped } from "../../generated/TextDAO/TextDAOEvents";
-import {
-    genHeaderIds,
-    genCommandIds,
-    genProposalId,
-} from "../utils/entity-id-provider";
+import { genHeaderIds, genCommandIds } from "../utils/entity-id-provider";
+import { loadProposal } from "../utils/entity-provider";
 
 /**
  * Handles the ProposalSnapped event by updating the Proposal entity with top3 headers and commands.
@@ -16,15 +11,7 @@ import {
  * @param event - The ProposalSnapped event containing the event data
  */
 export function handleProposalSnapped(event: ProposalSnapped): void {
-    let proposalEntityId = genProposalId(event.params.pid);
-    let proposal = Proposal.load(proposalEntityId);
-    if (!proposal) {
-        log.warning(
-            "Proposal not found for ProposalSnapped event. Proposal ID: {}",
-            [proposalEntityId]
-        );
-        return;
-    }
+    const proposal = loadProposal(event.params.pid);
 
     proposal.top3Headers = genHeaderIds(
         event.params.pid,

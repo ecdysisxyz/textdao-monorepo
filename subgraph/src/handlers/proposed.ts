@@ -1,7 +1,5 @@
-import { log } from "@graphprotocol/graph-ts";
 import { Proposed } from "../../generated/TextDAO/TextDAOEvents";
-import { genProposalId } from "../utils/entity-id-provider";
-import { Proposal } from "../../generated/schema";
+import { loadProposal } from "../utils/entity-provider";
 
 /**
  * Handles the Proposed event by creating or updating the Proposal entity.
@@ -13,8 +11,7 @@ import { Proposal } from "../../generated/schema";
  * @param event The Proposed event containing the event data
  */
 export function handleProposed(event: Proposed): void {
-    const proposalEntityId = genProposalId(event.params.pid);
-    const proposal = new Proposal(proposalEntityId);
+    const proposal = loadProposal(event.params.pid);
 
     proposal.proposer = event.params.proposer;
     proposal.createdAt = event.params.createdAt;

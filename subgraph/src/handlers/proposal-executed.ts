@@ -1,10 +1,5 @@
-import { ProposalExecuted as ProposalExecutedEvent } from "../../generated/TextDAO/TextDAOEvents";
-import { Proposal, Command, Action } from "../../generated/schema";
-import {
-    genProposalId,
-    genCommandId,
-    genActionId,
-} from "../utils/entity-id-provider";
+import { ProposalExecuted } from "../../generated/TextDAO/TextDAOEvents";
+import { loadCommand, loadProposal } from "../utils/entity-provider";
 
 /**
  * Handles the ProposalExecuted event by updating the Proposal and Action entities.
@@ -17,28 +12,20 @@ import {
  *
  * @param event - The ProposalExecuted event containing the event data
  */
-export function handleProposalExecuted(event: ProposalExecutedEvent): void {
-    let proposalEntityId = genProposalId(event.params.pid);
-    let proposal = Proposal.load(proposalEntityId);
-    if (!proposal) return;
+export function handleProposalExecuted(event: ProposalExecuted): void {
+    const proposal = loadProposal(event.params.pid);
 
-    let commandEntityId = genCommandId(
+    proposal.fullyExecuted = true;
+
+    let actions = loadCommand(
         event.params.pid,
         event.params.approvedCommandId
-    );
-    let command = Command.load(commandEntityId);
-    if (command) {
-        let actions = command.actions.load();
-        for (let i = 0; i < actions.length; i++) {
-            let actionEntityId = actions[i].id;
-            let action = Action.load(actionEntityId);
-            if (!action) continue;
-            action.status = "Executed";
-            action.save();
-        }
+    ).actions.load();
+    for (let i = 0; i < actions.length; i++) {
+        let action = actions[i];
+        action.status = "Executed";
+        action.save();
     }
 
-    // Save the proposal even if the command is not found
-    proposal.fullyExecuted = true;
     proposal.save();
 }

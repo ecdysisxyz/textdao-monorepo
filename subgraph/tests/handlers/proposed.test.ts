@@ -7,13 +7,14 @@ import {
 } from "matchstick-as/assembly/index";
 import { BigInt, Address } from "@graphprotocol/graph-ts";
 import { handleProposed } from "../../src/handlers/proposed";
-import { handleRepresentativesAssigned } from "../../src/handlers/text-dao-event-handlers";
+import { handleRepresentativesAssigned } from "../../src/handlers/representatives-assigned";
 import { genProposalId } from "../../src/utils/entity-id-provider";
 import {
     createMockProposedEvent,
     createMockRepresentativesAssignedEvent,
 } from "../utils/mock-events";
-import { formatAddressArray } from "../utils/type-formatter";
+import { formatAddressArray } from "../../src/utils/type-formatter";
+import { createMockProposalEntity } from "../utils/mock-entities";
 
 describe("Proposed Event Handler", () => {
     beforeEach(() => {
@@ -69,45 +70,67 @@ describe("Proposed Event Handler", () => {
         );
     });
 
-    test("Should create new Proposal entity if it doesn't exist", () => {
-        const pid = BigInt.fromI32(100);
-        const proposalEntityId = genProposalId(pid);
-        const proposer = Address.fromString(
-            "0x1234567890123456789012345678901234567890"
-        );
-        const createdAt = BigInt.fromI32(1625097600);
-        const expirationTime = BigInt.fromI32(1625184000);
+    test(
+        "Should fail if Proposal entity doesn't exist",
+        () => {
+            const pid = BigInt.fromI32(100);
+            const proposer = Address.fromString(
+                "0x1234567890123456789012345678901234567890"
+            );
+            const createdAt = BigInt.fromI32(1625097600);
+            const expirationTime = BigInt.fromI32(1625184000);
 
-        handleProposed(
-            createMockProposedEvent(pid, proposer, createdAt, expirationTime)
-        );
+            handleProposed(
+                createMockProposedEvent(
+                    pid,
+                    proposer,
+                    createdAt,
+                    expirationTime
+                )
+            );
+        },
+        true
+    );
 
-        assert.entityCount("Proposal", 1);
-        assert.fieldEquals(
-            "Proposal",
-            proposalEntityId,
-            "id",
-            proposalEntityId
-        );
-        assert.fieldEquals(
-            "Proposal",
-            proposalEntityId,
-            "proposer",
-            proposer.toHexString()
-        );
-        assert.fieldEquals(
-            "Proposal",
-            proposalEntityId,
-            "createdAt",
-            createdAt.toString()
-        );
-        assert.fieldEquals(
-            "Proposal",
-            proposalEntityId,
-            "expirationTime",
-            expirationTime.toString()
-        );
-    });
+    // test("Should create new Proposal entity if it doesn't exist", () => {
+    //     const pid = BigInt.fromI32(100);
+    //     const proposalEntityId = genProposalId(pid);
+    //     const proposer = Address.fromString(
+    //         "0x1234567890123456789012345678901234567890"
+    //     );
+    //     const createdAt = BigInt.fromI32(1625097600);
+    //     const expirationTime = BigInt.fromI32(1625184000);
+
+    //     handleProposed(
+    //         createMockProposedEvent(pid, proposer, createdAt, expirationTime)
+    //     );
+
+    //     assert.entityCount("Proposal", 1);
+    //     assert.fieldEquals(
+    //         "Proposal",
+    //         proposalEntityId,
+    //         "id",
+    //         proposalEntityId
+    //     );
+    //     assert.fieldEquals(
+    //         "Proposal",
+    //         proposalEntityId,
+    //         "proposer",
+    //         proposer.toHexString()
+    //     );
+    //     assert.fieldEquals(
+    //         "Proposal",
+    //         proposalEntityId,
+    //         "createdAt",
+    //         createdAt.toString()
+    //     );
+    //     assert.fieldEquals(
+    //         "Proposal",
+    //         proposalEntityId,
+    //         "expirationTime",
+    //         expirationTime.toString()
+    //     );
+    // });
 
     test("Should handle multiple RepresentativesAssigned and Proposed events in correct order", () => {
         const pid = BigInt.fromI32(100);
@@ -177,6 +200,8 @@ describe("Proposed Event Handler", () => {
         const createdAt = BigInt.fromI32(1625097600);
         const expirationTime = BigInt.fromI32(1625184000);
 
+        createMockProposalEntity(pid);
+
         handleProposed(
             createMockProposedEvent(pid, zeroAddress, createdAt, expirationTime)
         );
@@ -197,6 +222,8 @@ describe("Proposed Event Handler", () => {
         );
         const createdAt = BigInt.fromI32(1625184000);
         const expirationTime = BigInt.fromI32(1625097600);
+
+        createMockProposalEntity(pid);
 
         handleProposed(
             createMockProposedEvent(pid, proposer, createdAt, expirationTime)

@@ -13,7 +13,7 @@ import {
     genProposalId,
 } from "../../src/utils/entity-id-provider";
 import { createMockCommandCreatedEvent } from "../utils/mock-events";
-import { Action } from "../../src/types/schema";
+import { Action } from "../../src/utils/schema-types";
 
 describe("CommandCreated Event Handler", () => {
     beforeEach(() => {
@@ -175,41 +175,27 @@ describe("CommandCreated Event Handler", () => {
         );
     });
 
-    test("Should not update an existing Command entity if it already exists", () => {
-        const pid = BigInt.fromI32(100);
-        const commandId = BigInt.fromI32(1);
-        const initialActions: Action[] = [
-            new Action("function1()", Bytes.fromHexString("0x1234")),
-        ];
-        const updatedActions: Action[] = [
-            new Action("function2()", Bytes.fromHexString("0x5678")),
-        ];
+    test(
+        "Should fail update an existing Command entity",
+        () => {
+            const pid = BigInt.fromI32(100);
+            const commandId = BigInt.fromI32(1);
+            const initialActions: Action[] = [
+                new Action("function1()", Bytes.fromHexString("0x1234")),
+            ];
+            const updatedActions: Action[] = [
+                new Action("function2()", Bytes.fromHexString("0x5678")),
+            ];
 
-        handleCommandCreated(
-            createMockCommandCreatedEvent(pid, commandId, initialActions)
-        );
-        handleCommandCreated(
-            createMockCommandCreatedEvent(pid, commandId, updatedActions)
-        );
-
-        assert.entityCount("Command", 1);
-        assert.entityCount("Action", 1);
-
-        const actionEntityId = genActionId(pid, commandId, 0);
-
-        assert.fieldEquals(
-            "Action",
-            actionEntityId,
-            "func",
-            initialActions[0].funcSig
-        );
-        assert.fieldEquals(
-            "Action",
-            actionEntityId,
-            "abiParams",
-            initialActions[0].abiParams.toHexString()
-        );
-    });
+            handleCommandCreated(
+                createMockCommandCreatedEvent(pid, commandId, initialActions)
+            );
+            handleCommandCreated(
+                createMockCommandCreatedEvent(pid, commandId, updatedActions)
+            );
+        },
+        true
+    );
 
     test("Should handle Commands with empty actions", () => {
         const pid = BigInt.fromI32(100);

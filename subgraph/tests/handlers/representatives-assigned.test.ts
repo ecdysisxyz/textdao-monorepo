@@ -9,7 +9,7 @@ import { BigInt, Address } from "@graphprotocol/graph-ts";
 import { handleRepresentativesAssigned } from "../../src/handlers/representatives-assigned";
 import { genProposalId } from "../../src/utils/entity-id-provider";
 import { createMockRepresentativesAssignedEvent } from "../utils/mock-events";
-import { formatAddressArray } from "../utils/type-formatter";
+import { formatAddressArray } from "../../src/utils/type-formatter";
 
 describe("RepresentativesAssigned Event Handler", () => {
     beforeEach(() => {

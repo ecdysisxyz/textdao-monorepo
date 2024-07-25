@@ -1,4 +1,4 @@
-import { BigInt, Address } from "@graphprotocol/graph-ts";
+import { BigInt, Address, Bytes } from "@graphprotocol/graph-ts";
 
 // Utility function to convert an array of Address to a formatted string
 export function formatAddressArray(addresses: Address[]): string {
@@ -10,7 +10,7 @@ export function formatAddressArray(addresses: Address[]): string {
 }
 
 // Utility function to convert an array of BigInt to a formatted string using a given conversion function
-export function formatBigIntArray(
+export function formatBigIntIdArray(
     pid: BigInt,
     ids: BigInt[],
     conversionFunction: (pid: BigInt, id: BigInt) => string
@@ -20,4 +20,18 @@ export function formatBigIntArray(
         idStrings.push(conversionFunction(pid, ids[i]));
     }
     return "[" + idStrings.join(", ") + "]";
+}
+
+export function formatBigIntArray(bigIntArray: BigInt[]): string {
+    return "[" + bigIntArray.join(", ") + "]";
+}
+
+export function formatAddressArrayToBytesArray(
+    addressArray: Address[]
+): Bytes[] {
+    let bytesArray: Array<Bytes> = [];
+    for (let i = 0; i < addressArray.length; i++) {
+        bytesArray.push(addressArray[i]);
+    }
+    return bytesArray;
 }

@@ -1,7 +1,8 @@
 import { HeaderCreated } from "../../generated/TextDAO/TextDAOEvents";
-import { Header } from "../../generated/schema";
-import { genHeaderId } from "../utils/entity-id-provider";
-import { createProposalIfNotExist } from "../utils/entity-provider";
+import {
+    createNewHeader,
+    loadOrCreateProposal,
+} from "../utils/entity-provider";
 
 /**
  * Handles the HeaderCreated event by creating Header and Proposal entities.
@@ -13,13 +14,9 @@ import { createProposalIfNotExist } from "../utils/entity-provider";
  * @param event The HeaderCreated event containing the event data
  */
 export function handleHeaderCreated(event: HeaderCreated): void {
-    const headerEntityId = genHeaderId(event.params.pid, event.params.headerId);
+    const header = createNewHeader(event.params.pid, event.params.headerId);
 
-    let header = Header.load(headerEntityId);
-    if (header) return; // Header already exists, no need to create it again
-    header = new Header(headerEntityId);
-
-    header.proposal = createProposalIfNotExist(event.params.pid);
+    header.proposal = loadOrCreateProposal(event.params.pid).id;
     header.metadataURI = event.params.metadataURI;
 
     header.save();

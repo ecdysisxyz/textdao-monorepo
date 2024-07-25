@@ -20,7 +20,7 @@ import {
     createMockProposalTalliedWithTieEvent,
 } from "../utils/mock-events";
 import { createMockProposalEntity } from "../utils/mock-entities";
-import { formatBigIntArray } from "../utils/type-formatter";
+import { formatBigIntIdArray } from "../../src/utils/type-formatter";
 
 describe("ProposalTallied Event Handler", () => {
     beforeEach(() => {
@@ -64,21 +64,25 @@ describe("ProposalTallied Event Handler", () => {
         );
     });
 
-    test("Should log warning if Proposal entity does not exist", () => {
-        const pid = BigInt.fromI32(100);
-        const approvedHeaderId = BigInt.fromI32(1);
-        const approvedCommandId = BigInt.fromI32(2);
+    test(
+        "Should fail if Proposal entity does not exist",
+        () => {
+            const pid = BigInt.fromI32(100);
+            const approvedHeaderId = BigInt.fromI32(1);
+            const approvedCommandId = BigInt.fromI32(2);
 
-        handleProposalTallied(
-            createMockProposalTalliedEvent(
-                pid,
-                approvedHeaderId,
-                approvedCommandId
-            )
-        );
+            handleProposalTallied(
+                createMockProposalTalliedEvent(
+                    pid,
+                    approvedHeaderId,
+                    approvedCommandId
+                )
+            );
 
-        assert.entityCount("Proposal", 0);
-    });
+            assert.entityCount("Proposal", 0);
+        },
+        true
+    );
 });
 
 describe("ProposalTalliedWithTie Event Handler", () => {
@@ -100,7 +104,7 @@ describe("ProposalTalliedWithTie Event Handler", () => {
             BigInt.fromI32(6),
         ];
 
-        let proposal = createMockProposalEntity(pid);
+        createMockProposalEntity(pid);
 
         handleProposalTalliedWithTie(
             createMockProposalTalliedWithTieEvent(
@@ -124,40 +128,42 @@ describe("ProposalTalliedWithTie Event Handler", () => {
             "Proposal",
             proposalEntityId,
             "top3Headers",
-            formatBigIntArray(pid, approvedHeaderIds, genHeaderId)
+            formatBigIntIdArray(pid, approvedHeaderIds, genHeaderId)
         );
 
         assert.fieldEquals(
             "Proposal",
             proposalEntityId,
             "top3Commands",
-            formatBigIntArray(pid, approvedCommandIds, genCommandId)
+            formatBigIntIdArray(pid, approvedCommandIds, genCommandId)
         );
     });
 
-    test("Should log warning if Proposal entity does not exist", () => {
-        const pid = BigInt.fromI32(100);
-        const extendedExpirationTime = BigInt.fromI32(123456);
-        const approvedHeaderIds = [
-            BigInt.fromI32(1),
-            BigInt.fromI32(2),
-            BigInt.fromI32(3),
-        ];
-        const approvedCommandIds = [
-            BigInt.fromI32(4),
-            BigInt.fromI32(5),
-            BigInt.fromI32(6),
-        ];
+    test(
+        "Should fail if Proposal entity does not exist",
+        () => {
+            const pid = BigInt.fromI32(100);
+            const extendedExpirationTime = BigInt.fromI32(123456);
+            const approvedHeaderIds = [
+                BigInt.fromI32(1),
+                BigInt.fromI32(2),
+                BigInt.fromI32(3),
+            ];
+            const approvedCommandIds = [
+                BigInt.fromI32(4),
+                BigInt.fromI32(5),
+                BigInt.fromI32(6),
+            ];
 
-        handleProposalTalliedWithTie(
-            createMockProposalTalliedWithTieEvent(
-                pid,
-                approvedHeaderIds,
-                approvedCommandIds,
-                extendedExpirationTime
-            )
-        );
-
-        assert.entityCount("Proposal", 0);
-    });
+            handleProposalTalliedWithTie(
+                createMockProposalTalliedWithTieEvent(
+                    pid,
+                    approvedHeaderIds,
+                    approvedCommandIds,
+                    extendedExpirationTime
+                )
+            );
+        },
+        true
+    );
 });

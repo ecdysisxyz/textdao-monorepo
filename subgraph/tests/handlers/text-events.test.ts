@@ -38,26 +38,22 @@ describe("Text Event Handlers", () => {
         );
     });
 
-    test("Should update existing Text entity on TextCreated event", () => {
-        const textId = BigInt.fromI32(1);
-        const initialMetadataURI = "ipfs://QmTest1";
-        const updatedMetadataURI = "ipfs://QmTest2";
+    test(
+        "Should fail if Text entity exists on TextCreated event",
+        () => {
+            const textId = BigInt.fromI32(1);
+            const initialMetadataURI = "ipfs://QmTest1";
+            const updatedMetadataURI = "ipfs://QmTest2";
 
-        handleTextCreated(
-            createMockTextCreatedEvent(textId, initialMetadataURI)
-        );
-        handleTextCreated(
-            createMockTextCreatedEvent(textId, updatedMetadataURI)
-        );
-
-        assert.entityCount("Text", 1);
-        assert.fieldEquals(
-            "Text",
-            genTextId(textId),
-            "metadataURI",
-            updatedMetadataURI
-        );
-    });
+            handleTextCreated(
+                createMockTextCreatedEvent(textId, initialMetadataURI)
+            );
+            handleTextCreated(
+                createMockTextCreatedEvent(textId, updatedMetadataURI)
+            );
+        },
+        true
+    );
 
     test("Should update existing Text entity on TextUpdated event", () => {
         const textId = BigInt.fromI32(1);
@@ -80,20 +76,16 @@ describe("Text Event Handlers", () => {
         );
     });
 
-    test("Should create new Text entity if it doesn't exist on TextUpdated event", () => {
-        const textId = BigInt.fromI32(1);
-        const metadataURI = "ipfs://QmTest1";
+    test(
+        "Should fail if Text entity doesn't exist on TextUpdated event",
+        () => {
+            const textId = BigInt.fromI32(1);
+            const metadataURI = "ipfs://QmTest1";
 
-        handleTextUpdated(createMockTextUpdatedEvent(textId, metadataURI));
-
-        assert.entityCount("Text", 1);
-        assert.fieldEquals(
-            "Text",
-            genTextId(textId),
-            "metadataURI",
-            metadataURI
-        );
-    });
+            handleTextUpdated(createMockTextUpdatedEvent(textId, metadataURI));
+        },
+        true
+    );
 
     test("Should remove Text entity on TextDeleted event", () => {
         const textId = BigInt.fromI32(1);
@@ -106,12 +98,15 @@ describe("Text Event Handlers", () => {
         assert.entityCount("Text", 0);
     });
 
-    test("Should handle TextDeleted event for non-existent Text entity", () => {
-        const textId = BigInt.fromI32(1);
+    test(
+        "Should fail if Text entity doesn't exist on TextDeleted event",
+        () => {
+            const textId = BigInt.fromI32(1);
 
-        handleTextDeleted(createMockTextDeletedEvent(textId));
-        assert.entityCount("Text", 0);
-    });
+            handleTextDeleted(createMockTextDeletedEvent(textId));
+        },
+        true
+    );
 
     test("Should handle multiple Text entities", () => {
         const textId1 = BigInt.fromI32(1);

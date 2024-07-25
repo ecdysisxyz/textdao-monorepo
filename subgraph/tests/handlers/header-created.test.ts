@@ -89,29 +89,23 @@ describe("HeaderCreated Event Handler", () => {
         }
     });
 
-    test("Should not update an existing Header entity if it already exists", () => {
-        const pid = BigInt.fromI32(100);
-        const headerId = BigInt.fromI32(1);
-        const initialMetadataURI = "Qm...abc";
-        const updatedMetadataURI = "Qm...xyz";
+    test(
+        "Should fail update an existing Header entity",
+        () => {
+            const pid = BigInt.fromI32(100);
+            const headerId = BigInt.fromI32(1);
+            const initialMetadataURI = "Qm...abc";
+            const updatedMetadataURI = "Qm...xyz";
 
-        handleHeaderCreated(
-            createMockHeaderCreatedEvent(pid, headerId, initialMetadataURI)
-        );
-        handleHeaderCreated(
-            createMockHeaderCreatedEvent(pid, headerId, updatedMetadataURI)
-        );
-
-        assert.entityCount("Header", 1);
-
-        const headerEntityId = genHeaderId(pid, headerId);
-        assert.fieldEquals(
-            "Header",
-            headerEntityId,
-            "metadataURI",
-            initialMetadataURI
-        );
-    });
+            handleHeaderCreated(
+                createMockHeaderCreatedEvent(pid, headerId, initialMetadataURI)
+            );
+            handleHeaderCreated(
+                createMockHeaderCreatedEvent(pid, headerId, updatedMetadataURI)
+            );
+        },
+        true
+    );
 
     test("Should handle Headers with empty metadataURI", () => {
         const pid = BigInt.fromI32(100);
@@ -168,7 +162,7 @@ describe("HeaderCreated Event Handler", () => {
                 createMockHeaderCreatedEvent(pid, headerIds[i], metadataURIs[i])
             );
 
-            assert.entityCount("Header", i + 1);
+            assert.entityCount("Header", 1 + i);
             assert.entityCount("Proposal", 1);
 
             const headerEntityId = genHeaderId(pid, headerIds[i]);

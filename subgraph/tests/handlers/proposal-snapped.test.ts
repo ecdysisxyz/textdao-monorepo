@@ -79,27 +79,33 @@ describe("ProposalSnapped Event Handler", () => {
         );
     });
 
-    test("Should not create Proposal entity if it doesn't exist", () => {
-        const pid = BigInt.fromI32(100);
-        const top3HeaderIds = [
-            BigInt.fromI32(1),
-            BigInt.fromI32(2),
-            BigInt.fromI32(3),
-        ];
-        const top3CommandIds = [
-            BigInt.fromI32(1),
-            BigInt.fromI32(2),
-            BigInt.fromI32(3),
-        ];
+    test(
+        "Should fail if Proposal entity doesn't exist",
+        () => {
+            const pid = BigInt.fromI32(100);
+            const top3HeaderIds = [
+                BigInt.fromI32(1),
+                BigInt.fromI32(2),
+                BigInt.fromI32(3),
+            ];
+            const top3CommandIds = [
+                BigInt.fromI32(1),
+                BigInt.fromI32(2),
+                BigInt.fromI32(3),
+            ];
 
-        assert.entityCount("Proposal", 0);
+            assert.entityCount("Proposal", 0);
 
-        handleProposalSnapped(
-            createMockProposalSnappedEvent(pid, top3HeaderIds, top3CommandIds)
-        );
-
-        assert.entityCount("Proposal", 0);
-    });
+            handleProposalSnapped(
+                createMockProposalSnappedEvent(
+                    pid,
+                    top3HeaderIds,
+                    top3CommandIds
+                )
+            );
+        },
+        true
+    );
 
     test("Should update existing Proposal entity with new values", () => {
         const pid = BigInt.fromI32(100);

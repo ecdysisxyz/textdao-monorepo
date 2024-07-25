@@ -1,14 +1,9 @@
-import { log } from "@graphprotocol/graph-ts";
 import {
     ProposalTallied,
     ProposalTalliedWithTie,
 } from "../../generated/TextDAO/TextDAOEvents";
-import { Proposal } from "../../generated/schema";
-import {
-    genProposalId,
-    genHeaderIds,
-    genCommandIds,
-} from "../utils/entity-id-provider";
+import { genHeaderIds, genCommandIds } from "../utils/entity-id-provider";
+import { loadProposal } from "../utils/entity-provider";
 
 /**
  * Handles the ProposalTallied event by updating the Proposal entity.
@@ -19,15 +14,7 @@ import {
  * @param event The ProposalTallied event containing the event data
  */
 export function handleProposalTallied(event: ProposalTallied): void {
-    let proposalEntityId = genProposalId(event.params.pid);
-    let proposal = Proposal.load(proposalEntityId);
-    if (!proposal) {
-        log.warning(
-            "Proposal not found for ProposalTallied event. Proposal ID: {}",
-            [proposalEntityId]
-        );
-        return;
-    }
+    const proposal = loadProposal(event.params.pid);
     proposal.approvedHeaderId = event.params.approvedHeaderId;
     proposal.approvedCommandId = event.params.approvedCommandId;
     proposal.save();
@@ -44,16 +31,7 @@ export function handleProposalTallied(event: ProposalTallied): void {
 export function handleProposalTalliedWithTie(
     event: ProposalTalliedWithTie
 ): void {
-    let proposalEntityId = genProposalId(event.params.pid);
-    let proposal = Proposal.load(proposalEntityId);
-    if (!proposal) {
-        log.warning(
-            "Proposal not found for ProposalTalliedWithTie event. Proposal ID: {}",
-            [proposalEntityId]
-        );
-        return;
-    }
-    proposal.expirationTime = event.params.extendedExpirationTime;
+    const proposal = loadProposal(event.params.pid);
     proposal.top3Headers = genHeaderIds(
         event.params.pid,
         event.params.approvedHeaderIds
@@ -62,5 +40,6 @@ export function handleProposalTalliedWithTie(
         event.params.pid,
         event.params.approvedCommandIds
     );
+    proposal.expirationTime = event.params.extendedExpirationTime;
     proposal.save();
 }

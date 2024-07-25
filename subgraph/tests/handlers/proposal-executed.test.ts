@@ -119,30 +119,34 @@ describe("ProposalExecuted Event Handler", () => {
         );
     });
 
-    test("Should handle non-existent proposal gracefully", () => {
-        const pid = BigInt.fromI32(104);
-        const approvedCommandId = BigInt.fromI32(1);
+    test(
+        "Should fail if Proposal entity doesn't exist",
+        () => {
+            const pid = BigInt.fromI32(104);
+            const approvedCommandId = BigInt.fromI32(1);
 
-        handleProposalExecuted(
-            createMockProposalExecutedEvent(pid, approvedCommandId)
-        );
+            handleProposalExecuted(
+                createMockProposalExecutedEvent(pid, approvedCommandId)
+            );
+        },
+        true
+    );
 
-        assert.entityCount("Proposal", 0);
-    });
+    test(
+        "Should fail if Command entity doesn't exist",
+        () => {
+            const pid = BigInt.fromI32(105);
+            const approvedCommandId = BigInt.fromI32(1);
+            const proposalId = genProposalId(pid);
 
-    test("Should handle non-existent command gracefully", () => {
-        const pid = BigInt.fromI32(105);
-        const approvedCommandId = BigInt.fromI32(1);
-        const proposalId = genProposalId(pid);
+            createMockProposalEntity(pid, false);
 
-        createMockProposalEntity(pid, false);
-
-        handleProposalExecuted(
-            createMockProposalExecutedEvent(pid, approvedCommandId)
-        );
-
-        assert.fieldEquals("Proposal", proposalId, "fullyExecuted", "true");
-    });
+            handleProposalExecuted(
+                createMockProposalExecutedEvent(pid, approvedCommandId)
+            );
+        },
+        true
+    );
 
     test("Should handle partial action execution", () => {
         const pid = BigInt.fromI32(106);

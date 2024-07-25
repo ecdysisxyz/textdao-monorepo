@@ -1,7 +1,6 @@
-import { log, Bytes } from "@graphprotocol/graph-ts";
 import { RepresentativesAssigned } from "../../generated/TextDAO/TextDAOEvents";
-import { genProposalId } from "../utils/entity-id-provider";
-import { Proposal } from "../../generated/schema";
+import { loadOrCreateProposal } from "../utils/entity-provider";
+import { formatAddressArrayToBytesArray } from "../utils/type-formatter";
 
 /**
  * Handles the RepresentativesAssigned event by updating or creating the Proposal entity with assigned representatives.
@@ -15,15 +14,9 @@ import { Proposal } from "../../generated/schema";
 export function handleRepresentativesAssigned(
     event: RepresentativesAssigned
 ): void {
-    const proposalEntityId = genProposalId(event.params.pid);
-    let proposal = new Proposal(proposalEntityId);
+    const proposal = loadOrCreateProposal(event.params.pid);
 
-    let repsBytesArray: Array<Bytes> = [];
-    for (let i = 0; i < event.params.reps.length; i++) {
-        repsBytesArray.push(event.params.reps[i]);
-    }
-
-    proposal.reps = repsBytesArray;
+    proposal.reps = formatAddressArrayToBytesArray(event.params.reps);
 
     proposal.save();
 
