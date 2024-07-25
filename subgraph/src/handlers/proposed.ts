@@ -14,17 +14,14 @@ import { Proposal } from "../../generated/schema";
  */
 export function handleProposed(event: Proposed): void {
     const proposalEntityId = genProposalId(event.params.pid);
-    let proposal = Proposal.load(proposalEntityId);
-    if (proposal) {
-        log.warning("Proposal already exists with ID: {}.", [proposalEntityId]);
-        return;
-    }
-    proposal = new Proposal(proposalEntityId);
+    const proposal = new Proposal(proposalEntityId);
 
     proposal.proposer = event.params.proposer;
     proposal.createdAt = event.params.createdAt;
     proposal.expirationTime = event.params.expirationTime;
     proposal.save();
 
-    // log.info("Proposal created/updated with ID: {}", [proposalEntityId]);
+    log.info("Proposal updated with Proposed event data. Proposal ID: {}", [
+        proposalEntityId,
+    ]);
 }

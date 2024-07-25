@@ -10,12 +10,17 @@ import {
     handleProposalTallied,
     handleProposalTalliedWithTie,
 } from "../../src/handlers/proposal-tallied";
-import { genProposalId, genHeaderId } from "../../src/utils/entity-id-provider";
+import {
+    genProposalId,
+    genHeaderId,
+    genCommandId,
+} from "../../src/utils/entity-id-provider";
 import {
     createMockProposalTalliedEvent,
     createMockProposalTalliedWithTieEvent,
 } from "../utils/mock-events";
 import { createMockProposalEntity } from "../utils/mock-entities";
+import { formatBigIntArray } from "../utils/type-formatter";
 
 describe("ProposalTallied Event Handler", () => {
     beforeEach(() => {
@@ -115,26 +120,18 @@ describe("ProposalTalliedWithTie Event Handler", () => {
             extendedExpirationTime.toString()
         );
 
-        let expectedTop3Headers: Array<string> = [];
-        for (let i = 0; i < approvedHeaderIds.length; i++) {
-            expectedTop3Headers.push(genHeaderId(pid, approvedHeaderIds[i]));
-        }
         assert.fieldEquals(
             "Proposal",
             proposalEntityId,
             "top3Headers",
-            "[" + expectedTop3Headers.join(", ") + "]"
+            formatBigIntArray(pid, approvedHeaderIds, genHeaderId)
         );
 
-        let expectedTop3Commands: Array<string> = [];
-        for (let i = 0; i < approvedCommandIds.length; i++) {
-            expectedTop3Commands.push(genHeaderId(pid, approvedCommandIds[i]));
-        }
         assert.fieldEquals(
             "Proposal",
             proposalEntityId,
             "top3Commands",
-            "[" + expectedTop3Commands.join(", ") + "]"
+            formatBigIntArray(pid, approvedCommandIds, genCommandId)
         );
     });
 

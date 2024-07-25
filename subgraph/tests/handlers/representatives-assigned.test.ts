@@ -5,11 +5,11 @@ import {
     clearStore,
     beforeEach,
 } from "matchstick-as/assembly/index";
-import { BigInt, Address, ethereum, Bytes } from "@graphprotocol/graph-ts";
+import { BigInt, Address } from "@graphprotocol/graph-ts";
 import { handleRepresentativesAssigned } from "../../src/handlers/representatives-assigned";
 import { genProposalId } from "../../src/utils/entity-id-provider";
-import { Proposal } from "../../generated/schema";
 import { createMockRepresentativesAssignedEvent } from "../utils/mock-events";
+import { formatAddressArray } from "../utils/type-formatter";
 
 describe("RepresentativesAssigned Event Handler", () => {
     beforeEach(() => {
@@ -25,9 +25,9 @@ describe("RepresentativesAssigned Event Handler", () => {
             Address.fromString("0x0987654321098765432109876543210987654321"),
         ];
 
-        const mockEvent = createMockRepresentativesAssignedEvent(pid, reps);
-
-        handleRepresentativesAssigned(mockEvent);
+        handleRepresentativesAssigned(
+            createMockRepresentativesAssignedEvent(pid, reps)
+        );
 
         assert.entityCount("Proposal", 1);
         assert.fieldEquals(
@@ -36,14 +36,11 @@ describe("RepresentativesAssigned Event Handler", () => {
             "id",
             proposalEntityId
         );
-
-        const savedProposal = Proposal.load(proposalEntityId);
-        if (savedProposal == null || savedProposal.reps == null) {
-            throw new Error("Saved proposal or reps should not be null");
-        }
-        assert.equals(
-            ethereum.Value.fromAddressArray(reps),
-            ethereum.Value.fromBytesArray(savedProposal.reps as Bytes[])
+        assert.fieldEquals(
+            "Proposal",
+            proposalEntityId,
+            "reps",
+            formatAddressArray(reps)
         );
     });
 
@@ -69,14 +66,11 @@ describe("RepresentativesAssigned Event Handler", () => {
         );
 
         assert.entityCount("Proposal", 1);
-
-        const savedProposal = Proposal.load(proposalEntityId);
-        if (savedProposal == null || savedProposal.reps == null) {
-            throw new Error("Saved proposal or reps should not be null");
-        }
-        assert.equals(
-            ethereum.Value.fromAddressArray(newReps),
-            ethereum.Value.fromBytesArray(savedProposal.reps as Bytes[])
+        assert.fieldEquals(
+            "Proposal",
+            proposalEntityId,
+            "reps",
+            formatAddressArray(newReps)
         );
     });
 
@@ -85,22 +79,17 @@ describe("RepresentativesAssigned Event Handler", () => {
         const proposalEntityId = genProposalId(pid);
 
         const emptyReps: Address[] = [];
-        const mockEvent = createMockRepresentativesAssignedEvent(
-            pid,
-            emptyReps
+
+        handleRepresentativesAssigned(
+            createMockRepresentativesAssignedEvent(pid, emptyReps)
         );
 
-        handleRepresentativesAssigned(mockEvent);
-
         assert.entityCount("Proposal", 1);
-
-        const savedProposal = Proposal.load(proposalEntityId);
-        if (savedProposal == null || savedProposal.reps == null) {
-            throw new Error("Saved proposal or reps should not be null");
-        }
-        assert.equals(
-            ethereum.Value.fromAddressArray([]),
-            ethereum.Value.fromBytesArray(savedProposal.reps as Bytes[])
+        assert.fieldEquals(
+            "Proposal",
+            proposalEntityId,
+            "reps",
+            formatAddressArray(emptyReps)
         );
     });
 });
