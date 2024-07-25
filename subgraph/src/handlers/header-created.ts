@@ -10,13 +10,13 @@ import { createProposalIfNotExist } from "../utils/entity-provider";
  * 2. A corresponding Proposal entity is created if it doesn't exist.
  * 3. The Header entity is properly linked to its Proposal.
  *
- * @param event - The HeaderCreated containing the event data
+ * @param event The HeaderCreated event containing the event data
  */
 export function handleHeaderCreated(event: HeaderCreated): void {
     const headerEntityId = genHeaderId(event.params.pid, event.params.headerId);
 
     let header = Header.load(headerEntityId);
-    if (header) return; // If the Header already exists, we don't want to overwrite it, so we return early
+    if (header) return; // Header already exists, no need to create it again
     header = new Header(headerEntityId);
 
     header.proposal = createProposalIfNotExist(event.params.pid);

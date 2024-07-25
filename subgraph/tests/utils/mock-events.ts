@@ -16,11 +16,7 @@ import {
     TextDeleted,
     Initialized,
 } from "../../generated/TextDAO/TextDAOEvents";
-
-interface Action {
-    funcSig: string;
-    abiParams: Bytes;
-}
+import { Action } from "../../src/types/schema";
 
 /**
  * Creates a mock HeaderCreated event
@@ -57,17 +53,25 @@ export function createMockHeaderCreatedEvent(
 /**
  * Creates a mock CommandCreated event
  * @param pid - Proposal ID
+ * @param commandId - Command ID
  * @param actions - Array of actions (each containing funcSig and abiParams)
  * @returns MockEvent of type CommandCreated
  */
 export function createMockCommandCreatedEvent(
     pid: BigInt,
+    commandId: BigInt,
     actions: Array<Action>
 ): CommandCreated {
     let event = changetype<CommandCreated>(newMockEvent());
     event.parameters = new Array();
     event.parameters.push(
         new ethereum.EventParam("pid", ethereum.Value.fromUnsignedBigInt(pid))
+    );
+    event.parameters.push(
+        new ethereum.EventParam(
+            "commandId",
+            ethereum.Value.fromUnsignedBigInt(commandId)
+        )
     );
 
     let actionsArray = new Array<ethereum.Tuple>();

@@ -8,7 +8,7 @@ import {
 import { BigInt } from "@graphprotocol/graph-ts";
 import { handleHeaderCreated } from "../../src/handlers/header-created";
 import { genHeaderId, genProposalId } from "../../src/utils/entity-id-provider";
-import { createMockHeaderCreatedEvent } from "./fixtures/mock-events";
+import { createMockHeaderCreatedEvent } from "../utils/mock-events";
 
 describe("HeaderCreated Event Handler", () => {
     beforeEach(() => {
@@ -17,16 +17,20 @@ describe("HeaderCreated Event Handler", () => {
 
     test("Should create and store a single Header entity", () => {
         assert.entityCount("Header", 0);
+
         const pid = BigInt.fromI32(100);
         const headerId = BigInt.fromI32(222);
         const metadataURI = "Qc...abc";
+
         handleHeaderCreated(
             createMockHeaderCreatedEvent(pid, headerId, metadataURI)
         );
+
         assert.entityCount("Header", 1);
 
         const headerEntityId = genHeaderId(pid, headerId);
         const proposalEntityId = genProposalId(pid);
+
         assert.fieldEquals("Header", headerEntityId, "id", headerEntityId);
         assert.fieldEquals(
             "Header",
