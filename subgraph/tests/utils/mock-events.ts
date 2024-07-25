@@ -14,7 +14,8 @@ import {
     TextCreated,
     TextUpdated,
     TextDeleted,
-    Initialized,
+    MemberAdded,
+    MemberUpdated,
 } from "../../generated/TextDAO/TextDAOEvents";
 import { Action, Vote } from "../../src/utils/schema-types";
 
@@ -427,17 +428,64 @@ export function createMockTextDeletedEvent(textId: BigInt): TextDeleted {
 }
 
 /**
- * Creates a mock Initialized event
- * @param version - Version number
- * @returns MockEvent of type Initialized
+ * Creates a mock MemberAdded event
+ * @param memberId - Member ID
+ * @param addr - Member address
+ * @param metadataURI - Member profile metadata's URI
+ * @returns MockEvent of type MemberAdded
  */
-export function createMockInitializedEvent(version: BigInt): Initialized {
-    let event = changetype<Initialized>(newMockEvent());
+export function createMockMemberAddedEvent(
+    memberId: BigInt,
+    addr: Address,
+    metadataURI: string
+): MemberAdded {
+    let event = changetype<MemberAdded>(newMockEvent());
     event.parameters = new Array();
     event.parameters.push(
         new ethereum.EventParam(
-            "version",
-            ethereum.Value.fromUnsignedBigInt(version)
+            "memberId",
+            ethereum.Value.fromUnsignedBigInt(memberId)
+        )
+    );
+    event.parameters.push(
+        new ethereum.EventParam("addr", ethereum.Value.fromAddress(addr))
+    );
+    event.parameters.push(
+        new ethereum.EventParam(
+            "metadataURI",
+            ethereum.Value.fromString(metadataURI)
+        )
+    );
+    return event;
+}
+
+/**
+ * Creates a mock MemberUpdated event
+ * @param memberId - Member ID
+ * @param addr - Member address
+ * @param metadataURI - Member profile metadata's URI
+ * @returns MockEvent of type MemberUpdated
+ */
+export function createMockMemberUpdatedEvent(
+    memberId: BigInt,
+    addr: Address,
+    metadataURI: string
+): MemberUpdated {
+    let event = changetype<MemberUpdated>(newMockEvent());
+    event.parameters = new Array();
+    event.parameters.push(
+        new ethereum.EventParam(
+            "memberId",
+            ethereum.Value.fromUnsignedBigInt(memberId)
+        )
+    );
+    event.parameters.push(
+        new ethereum.EventParam("addr", ethereum.Value.fromAddress(addr))
+    );
+    event.parameters.push(
+        new ethereum.EventParam(
+            "metadataURI",
+            ethereum.Value.fromString(metadataURI)
         )
     );
     return event;

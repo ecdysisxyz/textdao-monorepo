@@ -61,5 +61,5 @@ type Text @entity {
 type Member @entity {
     id: ID!
     addr: Bytes!
-    metadataURI: Bytes!
+    metadataURI: String!
 }

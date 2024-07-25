@@ -3,6 +3,7 @@ import {
     Action,
     Command,
     Header,
+    Member,
     Proposal,
     Text,
     Vote,
@@ -11,6 +12,7 @@ import {
     genActionId,
     genCommandId,
     genHeaderId,
+    genMemberId,
     genProposalId,
     genTextId,
     genVoteId,
@@ -197,4 +199,23 @@ export function removeTextEntity(textId: BigInt): void {
     } else {
         store.remove("Text", id);
     }
+}
+
+// Member
+
+export function createNewMember(memberId: BigInt): Member {
+    const id = genMemberId(memberId);
+    if (Member.load(id) !== null) {
+        throw new Error("Member already exists");
+    }
+    return new Member(id);
+}
+
+export function loadMember(memberId: BigInt): Member {
+    const id = genMemberId(memberId);
+    const member = Member.load(id);
+    if (member == null) {
+        throw new Error("Member not found");
+    }
+    return member;
 }

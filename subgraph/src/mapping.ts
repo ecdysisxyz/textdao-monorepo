@@ -15,3 +15,7 @@ export {
 } from "./handlers/text-events";
 export { handleVoted } from "./handlers/voted";
 export { handleVRFRequested } from "./handlers/vrf-requested";
+export {
+    handleMemberAdded,
+    handleMemberUpdated,
+} from "./handlers/member-events";

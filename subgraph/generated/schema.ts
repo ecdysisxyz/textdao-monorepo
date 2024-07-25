@@ -762,17 +762,17 @@ export class Member extends Entity {
     this.set("addr", Value.fromBytes(value));
   }
 
-  get metadataURI(): Bytes {
+  get metadataURI(): string {
     let value = this.get("metadataURI");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set metadataURI(value: Bytes) {
-    this.set("metadataURI", Value.fromBytes(value));
+  set metadataURI(value: string) {
+    this.set("metadataURI", Value.fromString(value));
   }
 }
 

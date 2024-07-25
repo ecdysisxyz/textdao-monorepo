@@ -51,3 +51,7 @@ export function genActionId(
 export function genTextId(textId: BigInt): string {
     return textId.toString();
 }
+
+export function genMemberId(memberId: BigInt): string {
+    return memberId.toString();
+}

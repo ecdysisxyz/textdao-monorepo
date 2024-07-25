@@ -53,4 +53,8 @@ dataSources:
           handler: handleVoted
         - event: VRFRequested(uint256,uint256)
           handler: handleVRFRequested
+        - event: MemberAdded(uint256,address,string)
+          handler: handleMemberAdded
+        - event: MemberUpdated(uint256,address,string)
+          handler: handleMemberUpdated
       file: ./src/mapping.ts
