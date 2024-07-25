@@ -45,12 +45,12 @@ dataSources:
           handler: handleRepresentativesAssigned
         - event: TextCreated(uint256,string)
           handler: handleTextCreated
-        - event: TextDeleted(uint256)
-          handler: handleTextDeleted
         - event: TextUpdated(uint256,string)
           handler: handleTextUpdated
-        - event: VRFRequested(uint256,uint256)
-          handler: handleVRFRequested
+        - event: TextDeleted(uint256)
+          handler: handleTextDeleted
         - event: Voted(uint256,address,(uint256[3],uint256[3]))
           handler: handleVoted
-      file: ./src/text-dao-event-handlers.ts
+        - event: VRFRequested(uint256,uint256)
+          handler: handleVRFRequested
+      file: ./src/mapping.ts

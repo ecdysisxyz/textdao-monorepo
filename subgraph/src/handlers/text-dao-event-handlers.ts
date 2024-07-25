@@ -13,7 +13,7 @@ import {
     TextUpdated as TextUpdatedEvent,
     VRFRequested as VRFRequestedEvent,
     Voted as VotedEvent,
-} from "../generated/TextDAO/TextDAOEvents";
+} from "../../generated/TextDAO/TextDAOEvents";
 import {
     genCommandId,
     genCommandIds,
@@ -21,22 +21,17 @@ import {
     genHeaderIds,
     genProposalId,
     genTextId,
-} from "./entity-id-provider";
+} from "../utils/entity-id-provider";
 import {
+    createHeader,
     createOrLoadAction,
     createOrLoadCommand,
     createOrLoadHeader,
     createOrLoadProposal,
     createOrLoadText,
     createOrLoadVote,
-} from "./entity-provider";
-
-export function handleHeaderCreated(event: HeaderCreatedEvent): void {
-    let header = createOrLoadHeader(event.params.pid, event.params.headerId);
-    header.proposal = genProposalId(event.params.pid);
-    header.metadataURI = event.params.metadataURI;
-    header.save();
-}
+} from "../utils/entity-provider";
+import { Header, Proposal } from "../../generated/schema";
 
 export function handleCommandCreated(event: CommandCreatedEvent): void {
     let command = createOrLoadCommand(event.params.pid, event.params.commandId);

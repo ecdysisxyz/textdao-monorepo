@@ -6,7 +6,7 @@ import {
     Proposal,
     Text,
     Vote,
-} from "../generated/schema";
+} from "../../generated/schema";
 import {
     genActionId,
     genCommandId,
@@ -16,6 +16,19 @@ import {
     genVoteId,
 } from "./entity-id-provider";
 
+export function createProposalIfNotExist(pid: BigInt): string {
+    const proposalEntityId = genProposalId(pid);
+
+    // Check if the Proposal entity exists, create it if it doesn't
+    let proposal = Proposal.load(proposalEntityId);
+    if (proposal == null) {
+        proposal = new Proposal(proposalEntityId);
+        proposal.save(); // Ensure the new Proposal is saved to the store
+    }
+
+    return proposalEntityId;
+}
+
 export function createOrLoadProposal(pid: BigInt): Proposal {
     const id = genProposalId(pid);
     let proposal = Proposal.load(id);
@@ -23,6 +36,10 @@ export function createOrLoadProposal(pid: BigInt): Proposal {
         proposal = new Proposal(id);
     }
     return proposal;
+}
+
+export function createHeader(pid: BigInt, headerId: BigInt): Header {
+    return new Header(genHeaderId(pid, headerId));
 }
 
 export function createOrLoadHeader(pid: BigInt, headerId: BigInt): Header {
