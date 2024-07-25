@@ -8,10 +8,18 @@ import {
 
 export function createMockProposalEntity(
     pid: BigInt,
-    fullyExecuted: boolean
+    fullyExecuted: boolean = false,
+    top3Headers: string[] | null = null,
+    top3Commands: string[] | null = null
 ): void {
     let proposal = new Proposal(genProposalId(pid));
     proposal.fullyExecuted = fullyExecuted;
+    if (top3Headers !== null) {
+        proposal.top3Headers = top3Headers;
+    }
+    if (top3Commands !== null) {
+        proposal.top3Commands = top3Commands;
+    }
     proposal.save();
 }
 
@@ -25,12 +33,14 @@ export function createMockActionEntity(
     pid: BigInt,
     commandId: BigInt,
     actionId: i32,
-    status: string
+    status: string = "Proposed",
+    func: string = "mockFunction()",
+    abiParams: Bytes = Bytes.fromHexString("0x")
 ): void {
     let action = new Action(genActionId(pid, commandId, actionId));
     action.command = genCommandId(pid, commandId);
-    action.func = "mockFunction()";
-    action.abiParams = Bytes.fromHexString("0x");
     action.status = status;
+    action.func = func;
+    action.abiParams = abiParams;
     action.save();
 }

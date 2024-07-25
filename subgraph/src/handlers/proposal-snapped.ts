@@ -1,40 +1,31 @@
-import { Bytes, store } from "@graphprotocol/graph-ts";
+import { log } from "@graphprotocol/graph-ts";
+import { Proposal } from "../../generated/schema";
+import { ProposalSnapped } from "../../generated/TextDAO/TextDAOEvents";
 import {
-    HeaderCreated as HeaderCreatedEvent,
-    CommandCreated as CommandCreatedEvent,
-    Proposed as ProposedEvent,
-    ProposalExecuted as ProposalExecutedEvent,
-    ProposalSnapped as ProposalSnappedEvent,
-    ProposalTallied as ProposalTalliedEvent,
-    ProposalTalliedWithTie as ProposalTalliedWithTieEvent,
-    RepresentativesAssigned as RepresentativesAssignedEvent,
-    TextCreated as TextCreatedEvent,
-    TextDeleted as TextDeletedEvent,
-    TextUpdated as TextUpdatedEvent,
-    VRFRequested as VRFRequestedEvent,
-    Voted as VotedEvent,
-} from "../../generated/TextDAO/TextDAOEvents";
-import {
-    genCommandId,
-    genCommandIds,
-    genHeaderId,
     genHeaderIds,
+    genCommandIds,
     genProposalId,
-    genTextId,
 } from "../utils/entity-id-provider";
-import {
-    createHeader,
-    createOrLoadAction,
-    createOrLoadCommand,
-    createOrLoadHeader,
-    createOrLoadProposal,
-    createOrLoadText,
-    createOrLoadVote,
-} from "../utils/entity-provider";
-import { Header, Proposal } from "../../generated/schema";
 
-export function handleProposalSnapped(event: ProposalSnappedEvent): void {
-    let proposal = createOrLoadProposal(event.params.pid);
+/**
+ * Handles the ProposalSnapped event by updating the Proposal entity with top3 headers and commands.
+ * This function ensures that:
+ * 1. The corresponding Proposal entity exists before updating.
+ * 2. The top3Headers and top3Commands fields of the Proposal are updated.
+ *
+ * @param event - The ProposalSnapped event containing the event data
+ */
+export function handleProposalSnapped(event: ProposalSnapped): void {
+    let proposalEntityId = genProposalId(event.params.pid);
+    let proposal = Proposal.load(proposalEntityId);
+    if (!proposal) {
+        log.warning(
+            "Proposal not found for ProposalSnapped event. Proposal ID: {}",
+            [proposalEntityId]
+        );
+        return;
+    }
+
     proposal.top3Headers = genHeaderIds(
         event.params.pid,
         event.params.top3HeaderIds
@@ -43,5 +34,6 @@ export function handleProposalSnapped(event: ProposalSnappedEvent): void {
         event.params.pid,
         event.params.top3CommandIds
     );
+
     proposal.save();
 }

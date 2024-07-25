@@ -296,13 +296,17 @@ export function createMockProposalSnappedEvent(
     event.parameters.push(
         new ethereum.EventParam(
             "top3HeaderIds",
-            ethereum.Value.fromBigIntArray(top3HeaderIds)
+            ethereum.Value.fromI32Array(
+                top3HeaderIds.map<i32>((id) => id.toI32())
+            )
         )
     );
     event.parameters.push(
         new ethereum.EventParam(
             "top3CommandIds",
-            ethereum.Value.fromBigIntArray(top3CommandIds)
+            ethereum.Value.fromI32Array(
+                top3CommandIds.map<i32>((id) => id.toI32())
+            )
         )
     );
     return event;
