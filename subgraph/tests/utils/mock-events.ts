@@ -217,12 +217,14 @@ export function createMockVotedEvent(
  * @param pid - Proposal ID
  * @param approvedHeaderIds - Array of approved header IDs
  * @param approvedCommandIds - Array of approved command IDs
+ * @param extendedExpirationTime The unix timestamp
  * @returns MockEvent of type ProposalTalliedWithTie
  */
 export function createMockProposalTalliedWithTieEvent(
     pid: BigInt,
     approvedHeaderIds: BigInt[],
-    approvedCommandIds: BigInt[]
+    approvedCommandIds: BigInt[],
+    extendedExpirationTime: BigInt
 ): ProposalTalliedWithTie {
     let event = changetype<ProposalTalliedWithTie>(newMockEvent());
     event.parameters = new Array();
@@ -232,13 +234,23 @@ export function createMockProposalTalliedWithTieEvent(
     event.parameters.push(
         new ethereum.EventParam(
             "approvedHeaderIds",
-            ethereum.Value.fromBigIntArray(approvedHeaderIds)
+            ethereum.Value.fromI32Array(
+                approvedHeaderIds.map<i32>((id) => id.toI32())
+            )
         )
     );
     event.parameters.push(
         new ethereum.EventParam(
             "approvedCommandIds",
-            ethereum.Value.fromBigIntArray(approvedCommandIds)
+            ethereum.Value.fromI32Array(
+                approvedCommandIds.map<i32>((id) => id.toI32())
+            )
+        )
+    );
+    event.parameters.push(
+        new ethereum.EventParam(
+            "extendedExpirationTime",
+            ethereum.Value.fromUnsignedBigInt(extendedExpirationTime)
         )
     );
     return event;

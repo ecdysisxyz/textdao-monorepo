@@ -11,7 +11,7 @@ export function createMockProposalEntity(
     fullyExecuted: boolean = false,
     top3Headers: string[] | null = null,
     top3Commands: string[] | null = null
-): void {
+): Proposal {
     let proposal = new Proposal(genProposalId(pid));
     proposal.fullyExecuted = fullyExecuted;
     if (top3Headers !== null) {
@@ -21,6 +21,7 @@ export function createMockProposalEntity(
         proposal.top3Commands = top3Commands;
     }
     proposal.save();
+    return proposal;
 }
 
 export function createMockCommandEntity(pid: BigInt, commandId: BigInt): void {

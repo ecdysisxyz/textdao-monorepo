@@ -5,7 +5,7 @@ export { handleProposalSnapped } from "./handlers/proposal-snapped";
 export {
     handleProposalTalliedWithTie,
     handleProposalTallied,
-} from "./handlers/proposal-tallied-events";
+} from "./handlers/proposal-tallied";
 export { handleProposed } from "./handlers/proposed";
 export { handleRepresentativesAssigned } from "./handlers/representatives-assigned";
 export {
