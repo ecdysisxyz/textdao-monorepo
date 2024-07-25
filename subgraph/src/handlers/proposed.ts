@@ -21,7 +21,7 @@ export function handleProposed(event: Proposed): void {
     proposal.expirationTime = event.params.expirationTime;
     proposal.save();
 
-    log.info("Proposal updated with Proposed event data. Proposal ID: {}", [
-        proposalEntityId,
-    ]);
+    // log.info("Proposal updated with Proposed event data. Proposal ID: {}", [
+    //     proposalEntityId,
+    // ]);
 }
