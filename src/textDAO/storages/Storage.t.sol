@@ -3,8 +3,8 @@ pragma solidity ^0.8.24;
 
 import {MCTest, console2} from "@devkit/Flattened.sol";
 
-import {Storage} from "bundle/textdao/storages/Storage.sol";
-import {BaseSlots} from "bundle/textdao/storages/BaseSlots.sol";
+import {Storage} from "bundle/textDAO/storages/Storage.sol";
+import {BaseSlots} from "bundle/textDAO/storages/BaseSlots.sol";
 
 contract StorageTest is MCTest {
     function _erc7201(string memory namespace) internal returns(bytes32) {

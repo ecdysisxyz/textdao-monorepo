@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: TextDAO
-    network: sepolia
+    network: holesky
     source:
-      address: "0x9628C83b4988D0cc7Dc13e227b2114cB3cF39D53"
+      address: "0x80ca951439B06451B5162415B758F256242cf92A"
       abi: TextDAOEvents
-      startBlock: 6354206
+      startBlock: 2003956
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
