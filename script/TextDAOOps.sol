@@ -71,24 +71,24 @@ library TextDAOOps {
         _reps[0] = __.sender;
         _reps[1] = __.sender2;
         // _reps[2] = MEMBER3;
-        string memory _metadataURI = "QmStEMeSBhmakCDyKQDYuTcRCMveCMmA5C5kwmXLBbr8YD";
+        string memory _metadataCid = "QmStEMeSBhmakCDyKQDYuTcRCMveCMmA5C5kwmXLBbr8YD";
         vm.expectEmit();
-        emit TextDAOEvents.HeaderCreated(0, 1, _metadataURI);
+        emit TextDAOEvents.HeaderCreated(0, 1, _metadataCid);
         emit TextDAOEvents.RepresentativesAssigned(0, _reps);
         emit TextDAOEvents.Proposed(0, __.sender, block.timestamp, _expirationTime);
-        uint256 _pid = textDAO.propose(_metadataURI, new Schema.Action[](0));
+        uint256 _pid = textDAO.propose(_metadataCid, new Schema.Action[](0));
 
         // Fork proposal
-        string memory _forkURI = "forkedProposalURI";
+        string memory _forkCid = "forkedProposalCid";
         Schema.Action[] memory _actions = new Schema.Action[](1);
         _actions[0] = Schema.Action({
             funcSig: "memberJoin(uint256,(address,string)[])",
             abiParams: abi.encode(_pid, new Schema.Member[](1))
         });
         vm.expectEmit(true, true, true, true);
-        emit TextDAOEvents.HeaderCreated(_pid, 2, _forkURI);
+        emit TextDAOEvents.HeaderCreated(_pid, 2, _forkCid);
         emit TextDAOEvents.CommandCreated(_pid, 1, _actions);
-        textDAO.fork(_pid, _forkURI, _actions);
+        textDAO.fork(_pid, _forkCid, _actions);
 
         // Two members vote differently, causing a tie
         Schema.Vote memory _vote1 = Schema.Vote({

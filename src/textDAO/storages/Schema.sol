@@ -22,7 +22,7 @@ interface Schema {
         ProposalMeta meta;
     }
     struct Header {
-        string metadataURI;
+        string metadataCid;
         uint[] tagIds;
     }
     struct Command {
@@ -61,7 +61,7 @@ interface Schema {
         Text[] texts;
     }
     struct Text {
-        string metadataURI;
+        string metadataCid;
     }
 
 
@@ -71,7 +71,7 @@ interface Schema {
     }
     struct Member {
         address addr;
-        string metadataURI;
+        string metadataCid;
     }
 
 
@@ -111,7 +111,7 @@ interface Schema {
     }
     struct Tag {
         uint id;
-        bytes32 metadataURI;
+        bytes32 metadataCid;
     }
 
     /// @custom:storage-location erc7201:textDAO.TagRelationStorage

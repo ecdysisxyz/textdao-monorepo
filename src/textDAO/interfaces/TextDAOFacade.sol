@@ -9,15 +9,15 @@ contract TextDAOFacade is ITextDAO {
     // TextDAO core functions
     function clone(bytes calldata initData) external returns(address proxy) {}
     function initialize(Member[] calldata initialMembers, DeliberationConfig calldata pConfig) external {}
-    function propose(string calldata headerMetadataURI, Action[] calldata actions) external returns (uint) {}
-    function fork(uint pid, string calldata headerMetadataURI, Action[] calldata actions) external {}
+    function propose(string calldata headerMetadataCid, Action[] calldata actions) external returns (uint) {}
+    function fork(uint pid, string calldata headerMetadataCid, Action[] calldata actions) external {}
     function vote(uint pid, Vote calldata repVote) external {}
     function tally(uint _proposalId) external {}
     function execute(uint _proposalId) external {}
     // TextDAO protected functions
     function memberJoin(uint _proposalId, Member[] calldata _candidates) external {}
-    function createText(uint256 pid, string memory metadataURI) external returns (uint256 textId) {}
-    function updateText(uint256 pid, uint256 textId, string memory newMetadataURI) external {}
+    function createText(uint256 pid, string memory metadataCid) external returns (uint256 textId) {}
+    function updateText(uint256 pid, uint256 textId, string memory newMetadataCid) external {}
     function deleteText(uint256 pid, uint256 textId) external {}
     // function setProposalsConfig(DeliberationConfig calldata _config) external {}
     // function overrideProposalsConfig(uint _proposalId, DeliberationConfig calldata _config) external {}

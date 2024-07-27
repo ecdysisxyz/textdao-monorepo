@@ -66,8 +66,8 @@ contract TextDAOStateTest is MCTest {
     function test_scenario_fullLifecycle() public {
         // 1. Initialize TextDAO
         Schema.Member[] memory _initialMembers = new Schema.Member[](2);
-        _initialMembers[0] = Schema.Member({addr: MEMBER1, metadataURI: "member1URI"});
-        _initialMembers[1] = Schema.Member({addr: MEMBER2, metadataURI: "member2URI"});
+        _initialMembers[0] = Schema.Member({addr: MEMBER1, metadataCid: "member1Cid"});
+        _initialMembers[1] = Schema.Member({addr: MEMBER2, metadataCid: "member2Cid"});
 
         Schema.DeliberationConfig memory _config = Schema.DeliberationConfig({
             expiryDuration: 2 minutes,
@@ -80,8 +80,8 @@ contract TextDAOStateTest is MCTest {
 
         // 2. Create proposals
         vm.startPrank(MEMBER1);
-        uint256 _pid0 = textDAO.propose("proposal1URI", new Schema.Action[](0));
-        uint256 _pid1 = textDAO.propose("proposal2URI", new Schema.Action[](0));
+        uint256 _pid0 = textDAO.propose("proposal1Cid", new Schema.Action[](0));
+        uint256 _pid1 = textDAO.propose("proposal2Cid", new Schema.Action[](0));
         vm.stopPrank();
 
         Schema.Proposal storage $proposal = Storage.Deliberation().getProposal(_pid0);
@@ -93,15 +93,15 @@ contract TextDAOStateTest is MCTest {
             funcSig: "memberJoin(uint256,(address,string)[])",
             abiParams: abi.encode(_pid0, new Schema.Member[](1))
         });
-        textDAO.fork(_pid0, "proposal0 - fork1URI", _actions1);
-        textDAO.fork(_pid0, "proposal0 - fork2URI", _actions1);
+        textDAO.fork(_pid0, "proposal0 - fork1Cid", _actions1);
+        textDAO.fork(_pid0, "proposal0 - fork2Cid", _actions1);
 
         Schema.Action[] memory _actions2 = new Schema.Action[](1);
         _actions2[0] = Schema.Action({
             funcSig: "saveText(uint256,uint256,string[])",
             abiParams: abi.encode(_pid1, 0, new string[](1))
         });
-        textDAO.fork(_pid1, "fork2URI", _actions2);
+        textDAO.fork(_pid1, "fork2Cid", _actions2);
         vm.stopPrank();
 
         // 4. Vote on proposals
@@ -143,9 +143,9 @@ contract TextDAOStateTest is MCTest {
     function test_scenario_vrfRequestAndFulfillment() public {
         // Initialize TextDAO
         Schema.Member[] memory _initialMembers = new Schema.Member[](3);
-        _initialMembers[0] = Schema.Member({addr: MEMBER1, metadataURI: "member1URI"});
-        _initialMembers[1] = Schema.Member({addr: MEMBER2, metadataURI: "member2URI"});
-        _initialMembers[2] = Schema.Member({addr: MEMBER3, metadataURI: "member3URI"});
+        _initialMembers[0] = Schema.Member({addr: MEMBER1, metadataCid: "member1Cid"});
+        _initialMembers[1] = Schema.Member({addr: MEMBER2, metadataCid: "member2Cid"});
+        _initialMembers[2] = Schema.Member({addr: MEMBER3, metadataCid: "member3Cid"});
 
         Schema.DeliberationConfig memory _config = Schema.DeliberationConfig({
             expiryDuration: 2 minutes,
@@ -185,7 +185,7 @@ contract TextDAOStateTest is MCTest {
 
         // Create a proposal
         vm.prank(MEMBER1);
-        uint256 _pid = textDAO.propose("proposalURI", new Schema.Action[](0));
+        uint256 _pid = textDAO.propose("proposalCid", new Schema.Action[](0));
 
         // Check that VRF request was made
         Schema.Proposal storage $proposal = Storage.Deliberation().getProposal(_pid);
@@ -219,9 +219,9 @@ contract TextDAOStateTest is MCTest {
     function test_scenario_votingTieWithResolution() public {
         // Initialize TextDAO
         Schema.Member[] memory _initialMembers = new Schema.Member[](3);
-        _initialMembers[0] = Schema.Member({addr: MEMBER1, metadataURI: "member1URI"});
-        _initialMembers[1] = Schema.Member({addr: MEMBER2, metadataURI: "member2URI"});
-        _initialMembers[2] = Schema.Member({addr: address(0x3), metadataURI: "member3URI"});
+        _initialMembers[0] = Schema.Member({addr: MEMBER1, metadataCid: "member1Cid"});
+        _initialMembers[1] = Schema.Member({addr: MEMBER2, metadataCid: "member2Cid"});
+        _initialMembers[2] = Schema.Member({addr: address(0x3), metadataCid: "member3Cid"});
 
         Schema.DeliberationConfig memory _config = Schema.DeliberationConfig({
             expiryDuration: 2 minutes,
@@ -234,7 +234,7 @@ contract TextDAOStateTest is MCTest {
 
         // Create a proposal
         vm.prank(MEMBER1);
-        uint256 _pid = textDAO.propose("tieProposalURI", new Schema.Action[](0));
+        uint256 _pid = textDAO.propose("tieProposalCid", new Schema.Action[](0));
 
         Schema.Proposal storage $proposal = Storage.Deliberation().getProposal(_pid);
 
@@ -245,7 +245,7 @@ contract TextDAOStateTest is MCTest {
             funcSig: "memberJoin(uint256,(address,string)[])",
             abiParams: abi.encode(_pid, new Schema.Member[](1))
         });
-        textDAO.fork(_pid, "proposal0 - fork1URI", _actions);
+        textDAO.fork(_pid, "proposal0 - fork1Cid", _actions);
         vm.stopPrank();
 
         // Two members vote differently, causing a tie
@@ -324,12 +324,12 @@ contract TextDAOStateTest is MCTest {
         uint _pid = 0;
         uint _textId = 0;
 
-        string memory _metadataURI1 = "text1URI";
-        string memory _metadataURI2 = "text2URI";
+        string memory _metadataCid1 = "text1Cid";
+        string memory _metadataCid2 = "text2Cid";
 
         Schema.Command storage $cmd = $proposal.cmds.push();
-        $cmd.createCreateTextAction(_pid, _metadataURI1);
-        $cmd.createCreateTextAction(_pid, _metadataURI2);
+        $cmd.createCreateTextAction(_pid, _metadataCid1);
+        $cmd.createCreateTextAction(_pid, _metadataCid2);
 
         $proposal.meta.actionStatuses[0] = Schema.ActionStatus.Approved;
         $proposal.meta.actionStatuses[1] = Schema.ActionStatus.Approved;
@@ -342,8 +342,8 @@ contract TextDAOStateTest is MCTest {
         textDAO.execute(_pid);
 
         assertEq($texts.length, 2, "Two texts should be added after execution");
-        assertEq($texts[0].metadataURI, _metadataURI1, "First metadata URI mismatch");
-        assertEq($texts[1].metadataURI, _metadataURI2, "Second metadata URI mismatch");
+        assertEq($texts[0].metadataCid, _metadataCid1, "First metadata Cid mismatch");
+        assertEq($texts[1].metadataCid, _metadataCid2, "Second metadata Cid mismatch");
     }
 
     /**
@@ -355,8 +355,8 @@ contract TextDAOStateTest is MCTest {
         uint _pid = 0;
 
         Schema.Member[] memory _candidates = new Schema.Member[](2);
-        _candidates[0] = Schema.Member({addr: address(0x1234), metadataURI: "member1URI"});
-        _candidates[1] = Schema.Member({addr: address(0x5678), metadataURI: "member2URI"});
+        _candidates[0] = Schema.Member({addr: address(0x1234), metadataCid: "member1Cid"});
+        _candidates[1] = Schema.Member({addr: address(0x5678), metadataCid: "member2Cid"});
 
         $proposal.cmds.push().createMemberJoinAction(_pid, _candidates);
         $proposal.meta.actionStatuses[0] = Schema.ActionStatus.Approved;
@@ -371,8 +371,8 @@ contract TextDAOStateTest is MCTest {
         assertEq($members.members.length, 2, "Two members should be added after execution");
         assertEq($members.members[0].addr, address(0x1234), "First member address mismatch");
         assertEq($members.members[1].addr, address(0x5678), "Second member address mismatch");
-        assertEq($members.members[0].metadataURI, "member1URI", "First member metadata URI mismatch");
-        assertEq($members.members[1].metadataURI, "member2URI", "Second member metadata URI mismatch");
+        assertEq($members.members[0].metadataCid, "member1Cid", "First member metadata Cid mismatch");
+        assertEq($members.members[1].metadataCid, "member2Cid", "Second member metadata Cid mismatch");
     }
 
     /**
@@ -380,7 +380,7 @@ contract TextDAOStateTest is MCTest {
      */
     function test_failedInitializationAttempt() public {
         Schema.Member[] memory _initialMembers = new Schema.Member[](1);
-        _initialMembers[0] = Schema.Member({addr: MEMBER1, metadataURI: "member1URI"});
+        _initialMembers[0] = Schema.Member({addr: MEMBER1, metadataCid: "member1Cid"});
 
         Schema.DeliberationConfig memory _config = Schema.DeliberationConfig({
             expiryDuration: 1 days,
@@ -400,7 +400,7 @@ contract TextDAOStateTest is MCTest {
      */
     function test_nonMemberProposalAttempt() public {
         Schema.Member[] memory _initialMembers = new Schema.Member[](1);
-        _initialMembers[0] = Schema.Member({addr: MEMBER1, metadataURI: "member1URI"});
+        _initialMembers[0] = Schema.Member({addr: MEMBER1, metadataCid: "member1Cid"});
 
         Schema.DeliberationConfig memory _config = Schema.DeliberationConfig({
             expiryDuration: 1 days,
@@ -413,7 +413,7 @@ contract TextDAOStateTest is MCTest {
 
         vm.prank(NON_MEMBER);
         vm.expectRevert(TextDAOErrors.YouAreNotTheMember.selector);
-        textDAO.propose("nonMemberProposalURI", new Schema.Action[](0));
+        textDAO.propose("nonMemberProposalCid", new Schema.Action[](0));
     }
 
     /**
@@ -421,7 +421,7 @@ contract TextDAOStateTest is MCTest {
      */
     function test_prematureTallyAttempt() public {
         Schema.Member[] memory _initialMembers = new Schema.Member[](1);
-        _initialMembers[0] = Schema.Member({addr: MEMBER1, metadataURI: "member1URI"});
+        _initialMembers[0] = Schema.Member({addr: MEMBER1, metadataCid: "member1Cid"});
 
         Schema.DeliberationConfig memory _config = Schema.DeliberationConfig({
             expiryDuration: 1 days,
@@ -433,7 +433,7 @@ contract TextDAOStateTest is MCTest {
         textDAO.initialize(_initialMembers, _config);
 
         vm.prank(MEMBER1);
-        uint256 pid = textDAO.propose("proposalURI", new Schema.Action[](0));
+        uint256 pid = textDAO.propose("proposalCid", new Schema.Action[](0));
         uint _epoch = Storage.Deliberation().getProposal(pid).calcCurrentEpoch();
 
         vm.expectEmit(true, true, true, true);

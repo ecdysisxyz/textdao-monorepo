@@ -25,7 +25,7 @@ contract OnlyAdminCheats {
         for (uint i; i < newMembers.length; ++i) {
             Storage.Members().addMember(Schema.Member({
                 addr: newMembers[i],
-                metadataURI: ""
+                metadataCid: ""
             }));
         }
     }
@@ -37,7 +37,7 @@ contract OnlyAdminCheats {
     function transferAdmin(address newAdmin) external onlyAdmin {
         Schema.Member storage $member = Storage.Members().members[0];
         $member.addr = newAdmin;
-        emit TextDAOEvents.MemberUpdated(0, newAdmin, $member.metadataURI);
+        emit TextDAOEvents.MemberUpdated(0, newAdmin, $member.metadataCid);
     }
 
     function forceTally(uint pid) external onlyAdmin {

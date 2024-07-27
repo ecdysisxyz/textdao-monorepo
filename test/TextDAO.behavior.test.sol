@@ -20,9 +20,9 @@ contract TextDAOBehaviorTest is MCTest {
 
     function setUp() public {
         Schema.Member[] memory _initialMembers = new Schema.Member[](3);
-        _initialMembers[0] = Schema.Member({addr: MEMBER1, metadataURI: "member1URI"});
-        _initialMembers[1] = Schema.Member({addr: MEMBER2, metadataURI: "member2URI"});
-        _initialMembers[2] = Schema.Member({addr: MEMBER3, metadataURI: "member3URI"});
+        _initialMembers[0] = Schema.Member({addr: MEMBER1, metadataCid: "member1Cid"});
+        _initialMembers[1] = Schema.Member({addr: MEMBER2, metadataCid: "member2Cid"});
+        _initialMembers[2] = Schema.Member({addr: MEMBER3, metadataCid: "member3Cid"});
 
         textDAO = ITextDAO(TextDAODeployer.deploy(mc, _initialMembers));
     }
@@ -37,26 +37,26 @@ contract TextDAOBehaviorTest is MCTest {
         _reps[0] = MEMBER1;
         _reps[1] = MEMBER2;
         _reps[2] = MEMBER3;
-        string memory _metadataURI = "originalProposalURI";
+        string memory _metadataCid = "originalProposalCid";
         vm.prank(MEMBER1);
         vm.expectEmit(true, true, true, true);
-        emit TextDAOEvents.HeaderCreated(0, 1, _metadataURI);
+        emit TextDAOEvents.HeaderCreated(0, 1, _metadataCid);
         emit TextDAOEvents.RepresentativesAssigned(0, _reps);
         emit TextDAOEvents.Proposed(0, MEMBER1, block.timestamp, _expirationTime);
-        uint256 _pid = textDAO.propose(_metadataURI, new Schema.Action[](0));
+        uint256 _pid = textDAO.propose(_metadataCid, new Schema.Action[](0));
 
         // Fork proposal
         vm.prank(MEMBER2);
-        string memory _forkURI = "forkedProposalURI";
+        string memory _forkCid = "forkedProposalCid";
         Schema.Action[] memory _actions = new Schema.Action[](1);
         _actions[0] = Schema.Action({
             funcSig: "memberJoin(uint256,(address,string)[])",
             abiParams: abi.encode(_pid, new Schema.Member[](1))
         });
         vm.expectEmit(true, true, true, true);
-        emit TextDAOEvents.HeaderCreated(_pid, 2, _forkURI);
+        emit TextDAOEvents.HeaderCreated(_pid, 2, _forkCid);
         emit TextDAOEvents.CommandCreated(_pid, 1, _actions);
-        textDAO.fork(_pid, _forkURI, _actions);
+        textDAO.fork(_pid, _forkCid, _actions);
 
         // Vote on proposal
         vm.prank(MEMBER1);
@@ -110,26 +110,26 @@ contract TextDAOBehaviorTest is MCTest {
         _reps[0] = MEMBER1;
         _reps[1] = MEMBER2;
         _reps[2] = MEMBER3;
-        string memory _metadataURI = "tieProposalURI";
+        string memory _metadataCid = "tieProposalCid";
         vm.prank(MEMBER1);
         vm.expectEmit(true, true, true, true);
-        emit TextDAOEvents.HeaderCreated(0, 1, _metadataURI);
+        emit TextDAOEvents.HeaderCreated(0, 1, _metadataCid);
         emit TextDAOEvents.RepresentativesAssigned(0, _reps);
         emit TextDAOEvents.Proposed(0, MEMBER1, block.timestamp, _expirationTime);
-        uint256 _pid = textDAO.propose(_metadataURI, new Schema.Action[](0));
+        uint256 _pid = textDAO.propose(_metadataCid, new Schema.Action[](0));
 
         // Fork proposal
         vm.prank(MEMBER2);
-        string memory _forkURI = "forkedProposalURI";
+        string memory _forkCid = "forkedProposalCid";
         Schema.Action[] memory _actions = new Schema.Action[](1);
         _actions[0] = Schema.Action({
             funcSig: "memberJoin(uint256,(address,string)[])",
             abiParams: abi.encode(_pid, new Schema.Member[](1))
         });
         vm.expectEmit(true, true, true, true);
-        emit TextDAOEvents.HeaderCreated(_pid, 2, _forkURI);
+        emit TextDAOEvents.HeaderCreated(_pid, 2, _forkCid);
         emit TextDAOEvents.CommandCreated(_pid, 1, _actions);
-        textDAO.fork(_pid, _forkURI, _actions);
+        textDAO.fork(_pid, _forkCid, _actions);
 
         // Two members vote differently, causing a tie
         vm.prank(MEMBER1);
@@ -190,20 +190,20 @@ contract TextDAOBehaviorTest is MCTest {
         uint256 _expirationTime = block.timestamp + TextDAODeployer.initialConfig().expiryDuration;
         vm.prank(NON_MEMBER);
         vm.expectRevert(TextDAOErrors.YouAreNotTheMember.selector);
-        textDAO.propose("nonMemberProposalURI", new Schema.Action[](0));
+        textDAO.propose("nonMemberProposalCid", new Schema.Action[](0));
 
         // Test premature tally attempt
         address[] memory _reps = new address[](3);
         _reps[0] = MEMBER1;
         _reps[1] = MEMBER2;
         _reps[2] = MEMBER3;
-        string memory _metadataURI = "proposalURI";
+        string memory _metadataCid = "proposalCid";
         vm.prank(MEMBER1);
         vm.expectEmit(true, true, true, true);
-        emit TextDAOEvents.HeaderCreated(0, 1, _metadataURI);
+        emit TextDAOEvents.HeaderCreated(0, 1, _metadataCid);
         emit TextDAOEvents.RepresentativesAssigned(0, _reps);
         emit TextDAOEvents.Proposed(0, MEMBER1, block.timestamp, _expirationTime);
-        uint256 proposalId = textDAO.propose(_metadataURI, new Schema.Action[](0));
+        uint256 proposalId = textDAO.propose(_metadataCid, new Schema.Action[](0));
 
         // uint256 _snapInterval = TextDAODeployer.initialConfig().snapInterval;
         // uint256 _epoch = block.timestamp / _snapInterval * _snapInterval;

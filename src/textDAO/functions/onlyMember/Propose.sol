@@ -25,18 +25,18 @@ contract Propose is IPropose, OnlyMemberBase {
 
     /**
      * @notice Proposes a new proposal
-     * @param headerMetadataURI The URI for the header metadata
+     * @param headerMetadataCid The content id for the header metadata
      * @param actions The array of actions for the proposal
      * @return pid The ID of the newly created proposal
      */
-    function propose(string calldata headerMetadataURI, Schema.Action[] calldata actions) external onlyMember returns (uint pid) {
+    function propose(string calldata headerMetadataCid, Schema.Action[] calldata actions) external onlyMember returns (uint pid) {
         Schema.Deliberation storage $deliberation = Storage.Deliberation();
 
         pid = $deliberation.proposals.length;
         Schema.Proposal storage $proposal = $deliberation.createProposal();
 
-        uint _headerId = $proposal.createHeader(headerMetadataURI);
-        emit TextDAOEvents.HeaderCreated(pid, _headerId, headerMetadataURI);
+        uint _headerId = $proposal.createHeader(headerMetadataCid);
+        emit TextDAOEvents.HeaderCreated(pid, _headerId, headerMetadataCid);
 
         if (actions.length > 0) {
             uint _cmdId = $proposal.createCommand(actions);
@@ -164,16 +164,16 @@ contract ProposeTest is MCTest {
         $m.members.push().addr = address(0x1);
         Storage.Deliberation().config.repsNum = 3;
 
-        string memory _headerMetadataURI = "Qc.....xh";
+        string memory _headerMetadataCid = "Qc.....xh";
         Schema.Action[] memory _actions = new Schema.Action[](0);
 
         // Act
-        uint256 _pid = Propose(target).propose(_headerMetadataURI, _actions);
+        uint256 _pid = Propose(target).propose(_headerMetadataCid, _actions);
 
         // Assert
         Schema.Proposal storage $p = Storage.Deliberation().getProposal(_pid);
         assertEq(_pid, 0, "Proposal ID should be 0 for the first proposal");
-        assertEq($p.headers[1].metadataURI, _headerMetadataURI, "Header metadata should match the input");
+        assertEq($p.headers[1].metadataCid, _headerMetadataCid, "Header metadata should match the input");
         assertEq($p.meta.reps.length, 2, "All members should be assigned as representatives");
         assertEq($p.meta.reps[0], address(this), "First member should be a representative");
         assertEq($p.meta.reps[1], address(0x1), "Second member should be a representative");
@@ -200,7 +200,7 @@ contract ProposeTest is MCTest {
         uint256 _requestId = 1;
         _setupVRFMock($vrf, _requestId);
 
-        string memory _headerMetadataURI = "Qc.....xh";
+        string memory _headerMetadataCid = "Qc.....xh";
         Schema.Action[] memory _actions = new Schema.Action[](0);
 
         // Expect
@@ -220,14 +220,14 @@ contract ProposeTest is MCTest {
         // Act & Record
         uint256 _proposedTime = block.timestamp;
         // vm.record();
-        uint256 _pid = Propose(address(this)).propose(_headerMetadataURI, _actions);
+        uint256 _pid = Propose(address(this)).propose(_headerMetadataCid, _actions);
         // (, bytes32[] memory writes) = vm.accesses(address(this));
         // assertEq(writes.length, 12);
 
         // Assert
         Schema.Proposal storage $p = Storage.Deliberation().getProposal(_pid);
         assertEq(_pid, 0, "Proposal ID should be 0 for the first proposal");
-        assertEq($p.headers[1].metadataURI, _headerMetadataURI, "Header metadata should match the input");
+        assertEq($p.headers[1].metadataCid, _headerMetadataCid, "Header metadata should match the input");
         assertEq($p.meta.vrfRequestId, _requestId, "VRF request ID should be stored");
         assertEq($p.meta.reps.length, 0, "Representatives should not be assigned before VRF fulfillment");
         assertEq($vrf.requests[_requestId].proposalId, _pid, "VRF request should be associated with the proposal");
@@ -250,18 +250,18 @@ contract ProposeTest is MCTest {
         $m.members.push().addr = address(0x1234);
         Storage.Deliberation().config.repsNum = 1;
 
-        string memory _headerMetadataURI1 = "Qc.....xh1";
+        string memory _headerMetadataCid1 = "Qc.....xh1";
         Schema.Action[] memory _actions1 = new Schema.Action[](0);
 
-        string memory _headerMetadataURI2 = "Qc.....xh2";
+        string memory _headerMetadataCid2 = "Qc.....xh2";
         Schema.Action[] memory _actions2 = new Schema.Action[](0);
 
         // Act
         _setupVRFMock($vrf, 1); // Setup VRF mock for first proposal
-        uint256 pid1 = Propose(target).propose(_headerMetadataURI1, _actions1);
+        uint256 pid1 = Propose(target).propose(_headerMetadataCid1, _actions1);
 
         _setupVRFMock($vrf, 3); // Setup VRF mock for second proposal
-        uint256 pid2 = Propose(target).propose(_headerMetadataURI2, _actions2);
+        uint256 pid2 = Propose(target).propose(_headerMetadataCid2, _actions2);
 
         // Assert
         assertEq(pid1, 0, "First proposal ID should be 0");
@@ -270,8 +270,8 @@ contract ProposeTest is MCTest {
         Schema.Proposal storage $p1 = Storage.Deliberation().getProposal(pid1);
         Schema.Proposal storage $p2 = Storage.Deliberation().getProposal(pid2);
 
-        assertEq($p1.headers[1].metadataURI, _headerMetadataURI1, "First proposal header metadata should match");
-        assertEq($p2.headers[1].metadataURI, _headerMetadataURI2, "Second proposal header metadata should match");
+        assertEq($p1.headers[1].metadataCid, _headerMetadataCid1, "First proposal header metadata should match");
+        assertEq($p2.headers[1].metadataCid, _headerMetadataCid2, "Second proposal header metadata should match");
 
         assertEq($p1.meta.reps.length, 0, "First proposal should have 1 representative");
         assertEq($p2.meta.reps.length, 0, "Second proposal should have 1 representative");
@@ -295,7 +295,7 @@ contract ProposeTest is MCTest {
         $m.members.push().addr = address(this);
         Storage.Deliberation().config.repsNum = 1;
 
-        string memory _headerMetadataURI = "Qc.....xh";
+        string memory _headerMetadataCid = "Qc.....xh";
         Schema.Action[] memory _actions = new Schema.Action[](1);
         _actions[0] = Schema.Action({
             funcSig: "testFunction(uint256)",
@@ -303,7 +303,7 @@ contract ProposeTest is MCTest {
         });
 
         // Act
-        uint256 pid = Propose(target).propose(_headerMetadataURI, _actions);
+        uint256 pid = Propose(target).propose(_headerMetadataCid, _actions);
 
         // Assert
         Schema.Proposal storage $p = Storage.Deliberation().getProposal(pid);
@@ -324,11 +324,11 @@ contract ProposeTest is MCTest {
         $m.members.push().addr = address(0x1);
         Storage.Deliberation().config.repsNum = 2;
 
-        string memory _headerMetadataURI = "Qc.....xh";
+        string memory _headerMetadataCid = "Qc.....xh";
         Schema.Action[] memory _actions = new Schema.Action[](0);
 
         // Act
-        uint256 pid = Propose(target).propose(_headerMetadataURI, _actions);
+        uint256 pid = Propose(target).propose(_headerMetadataCid, _actions);
 
         // Assert
         Schema.Proposal storage $p = Storage.Deliberation().getProposal(pid);
@@ -346,11 +346,11 @@ contract ProposeTest is MCTest {
      * @dev This test checks that the onlyMember modifier is working correctly
      */
     function test_propose_revert_notMember() public {
-        string memory _headerMetadataURI = "Qc.....xh";
+        string memory _headerMetadataCid = "Qc.....xh";
         Schema.Action[] memory _actions = new Schema.Action[](0);
 
         vm.expectRevert(TextDAOErrors.YouAreNotTheMember.selector);
-        Propose(target).propose(_headerMetadataURI, _actions);
+        Propose(target).propose(_headerMetadataCid, _actions);
     }
 
     /**
@@ -362,11 +362,11 @@ contract ProposeTest is MCTest {
         Schema.Members storage $m = Storage.Members();
         $m.members.push().addr = address(this);
 
-        string memory _headerMetadataURI = ""; // empty metadata
+        string memory _headerMetadataCid = ""; // empty metadata
         Schema.Action[] memory _actions = new Schema.Action[](0);
 
         vm.expectRevert(TextDAOErrors.HeaderMetadataIsRequired.selector);
-        Propose(target).propose(_headerMetadataURI, _actions);
+        Propose(target).propose(_headerMetadataCid, _actions);
     }
 
     /**
@@ -384,11 +384,11 @@ contract ProposeTest is MCTest {
 
         // Intentionally leave VRF config invalid
 
-        string memory _headerMetadataURI = "Qc.....xh";
+        string memory _headerMetadataCid = "Qc.....xh";
         Schema.Action[] memory _actions = new Schema.Action[](0);
 
         vm.expectRevert(TextDAOErrors.InvalidVRFSubscription.selector);
-        Propose(target).propose(_headerMetadataURI, _actions);
+        Propose(target).propose(_headerMetadataCid, _actions);
     }
 
     //=========================
@@ -405,13 +405,13 @@ contract ProposeTest is MCTest {
         $m.members.push().addr = address(this);
         Storage.Deliberation().config.repsNum = 1;
 
-        string memory _headerMetadataURI = "Qc.....xh";
+        string memory _headerMetadataCid = "Qc.....xh";
         Schema.Action[] memory _actions = new Schema.Action[](1);
         _actions[0] = Schema.Action("test()", "0x");
 
         // Expect events
         vm.expectEmit(true, true, true, true);
-        emit TextDAOEvents.HeaderCreated(0, 1, _headerMetadataURI);
+        emit TextDAOEvents.HeaderCreated(0, 1, _headerMetadataCid);
 
         vm.expectEmit(true, true, true, true);
         emit TextDAOEvents.CommandCreated(0, 1, _actions);
@@ -425,7 +425,7 @@ contract ProposeTest is MCTest {
         emit TextDAOEvents.Proposed(0, address(this), block.timestamp, block.timestamp + Storage.Deliberation().config.expiryDuration);
 
         // Act
-        Propose(target).propose(_headerMetadataURI, _actions);
+        Propose(target).propose(_headerMetadataCid, _actions);
     }
 
     //==================================
@@ -443,12 +443,12 @@ contract ProposeTest is MCTest {
         $m.members.push().addr = address(this);
         Storage.Deliberation().config.repsNum = 1;
 
-        string memory _headerMetadataURI = "Qc.....xh";
+        string memory _headerMetadataCid = "Qc.....xh";
         Schema.Action[] memory _actions = new Schema.Action[](0);
 
         // Measure gas for proposal without VRF
         uint256 gasStart = gasleft();
-        Propose(target).propose(_headerMetadataURI, _actions);
+        Propose(target).propose(_headerMetadataCid, _actions);
         uint256 gasUsedWithoutVRF = gasStart - gasleft();
 
         // Setup for VRF
@@ -458,7 +458,7 @@ contract ProposeTest is MCTest {
 
         // Measure gas for proposal with VRF
         gasStart = gasleft();
-        Propose(target).propose(_headerMetadataURI, _actions);
+        Propose(target).propose(_headerMetadataCid, _actions);
         uint256 gasUsedWithVRF = gasStart - gasleft();
 
         console2.log("Gas used without VRF:", gasUsedWithoutVRF);
@@ -476,7 +476,7 @@ contract ProposeTest is MCTest {
     /**
      * @notice Fuzz test for proposal creation with various input sizes
      * @dev This test creates proposals with randomly generated inputs
-     * @param headerLength The length of the header metadata URI
+     * @param headerLength The length of the header metadata Cid
      * @param actionCount The number of actions in the proposal
      */
     function testFuzz_propose_success_withRandomInputs(uint8 headerLength, uint8 actionCount) public {
@@ -505,7 +505,7 @@ contract ProposeTest is MCTest {
 
         // Assert
         Schema.Proposal storage $p = Storage.Deliberation().getProposal(pid);
-        assertEq($p.headers[1].metadataURI, _headerMetadata, "Header metadata should match");
+        assertEq($p.headers[1].metadataCid, _headerMetadata, "Header metadata should match");
 
         if (actionCount == 0) {
             assertEq($p.cmds.length, 1, "No Action, No command"); // commandId 0 is unused id
@@ -531,7 +531,7 @@ contract ProposeTest is MCTest {
         // Assume maximum allowed actions is 200 (adjust as needed)
         uint256 MAX_ACTIONS = 200;
 
-        string memory _headerMetadataURI = "Qc.....xh";
+        string memory _headerMetadataCid = "Qc.....xh";
         Schema.Action[] memory _actions = new Schema.Action[](MAX_ACTIONS);
 
         for (uint i; i < MAX_ACTIONS; ++i) {
@@ -542,7 +542,7 @@ contract ProposeTest is MCTest {
         }
 
         // Act
-        uint256 _pid = Propose(target).propose(_headerMetadataURI, _actions);
+        uint256 _pid = Propose(target).propose(_headerMetadataCid, _actions);
 
         // Assert
         Schema.Proposal storage $p = Storage.Deliberation().getProposal(_pid);
@@ -567,11 +567,11 @@ contract ProposeTest is MCTest {
 
         Storage.Deliberation().config.repsNum = MAX_MEMBERS; // Set repsNum not to trigger VRF
 
-        string memory _headerMetadataURI = "Qc.....xh";
+        string memory _headerMetadataCid = "Qc.....xh";
         Schema.Action[] memory _actions = new Schema.Action[](0);
 
         // Act
-        uint256 _pid = Propose(target).propose(_headerMetadataURI, _actions);
+        uint256 _pid = Propose(target).propose(_headerMetadataCid, _actions);
 
         // Assert
         Schema.Proposal storage $p = Storage.Deliberation().getProposal(_pid);

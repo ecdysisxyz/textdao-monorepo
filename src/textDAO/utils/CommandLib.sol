@@ -22,19 +22,19 @@ library CommandLib {
         });
     }
 
-    function createCreateTextAction(Schema.Command storage cmd, uint pid, string memory metadataURI) internal returns(Schema.Action storage) {
+    function createCreateTextAction(Schema.Command storage cmd, uint pid, string memory metadataCid) internal returns(Schema.Action storage) {
         return createAction({
             cmd: cmd,
             funcSig: "createText(uint256,string)",
-            abiParams: abi.encode(pid, metadataURI)
+            abiParams: abi.encode(pid, metadataCid)
         });
     }
 
-    function createUpdateTextAction(Schema.Command storage cmd, uint pid, uint textId, string memory metadataURI) internal returns(Schema.Action storage) {
+    function createUpdateTextAction(Schema.Command storage cmd, uint pid, uint textId, string memory metadataCid) internal returns(Schema.Action storage) {
         return createAction({
             cmd: cmd,
             funcSig: "updateText(uint256,uint256,string)",
-            abiParams: abi.encode(pid, textId, metadataURI)
+            abiParams: abi.encode(pid, textId, metadataCid)
         });
     }
 

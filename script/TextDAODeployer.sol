@@ -159,13 +159,13 @@ library TextDAODeployer {
     function initialMembers(address[] memory initialMemberAddrs) internal pure returns(Schema.Member[] memory initialMembers) {
         initialMembers = new Schema.Member[](initialMemberAddrs.length);
         for (uint i; i < initialMemberAddrs.length; ++i) {
-            initialMembers[i] = Schema.Member({addr: initialMemberAddrs[i], metadataURI: ""});
+            initialMembers[i] = Schema.Member({addr: initialMemberAddrs[i], metadataCid: ""});
         }
     }
 
     function initialMember(address initialMemberAddr) internal pure returns(Schema.Member[] memory initialMembers) {
         initialMembers = new Schema.Member[](1);
-        initialMembers[0] = Schema.Member({addr: initialMemberAddr, metadataURI: ""});
+        initialMembers[0] = Schema.Member({addr: initialMemberAddr, metadataCid: ""});
     }
 
     /**

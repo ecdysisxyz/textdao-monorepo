@@ -12,14 +12,14 @@ interface IInitialize {
 }
 
 interface IPropose {
-    function propose(string calldata headerMetadataURI, Schema.Action[] calldata actions) external returns(uint proposalId);
+    function propose(string calldata headerMetadataCid, Schema.Action[] calldata actions) external returns(uint proposalId);
 }
 
 interface IFork {
     /**
      * @param pid proposalId
      */
-    function fork(uint pid, string calldata headerMetadataURI, Schema.Action[] calldata actions) external;
+    function fork(uint pid, string calldata headerMetadataCid, Schema.Action[] calldata actions) external;
 }
 
 interface IVote {
@@ -35,8 +35,8 @@ interface IExecute {
 }
 
 interface ISaveText {
-    function createText(uint256 pid, string memory metadataURI) external returns (uint256 textId);
-    function updateText(uint256 pid, uint256 textId, string memory newMetadataURI) external;
+    function createText(uint256 pid, string memory metadataCid) external returns (uint256 textId);
+    function updateText(uint256 pid, uint256 textId, string memory newMetadataCid) external;
     function deleteText(uint256 pid, uint256 textId) external;
 }
 

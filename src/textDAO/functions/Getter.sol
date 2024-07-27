@@ -120,15 +120,15 @@
 //     function test_Texts_success() public {
 //         Schema.Texts storage $ = Storage.Texts();
 
-//         string[] memory _metadataURIs = new string[](2);
-//         _metadataURIs[0] = "pseudo metadata";
-//         _metadataURIs[1] = "metadata2";
-//         $.texts.push().metadataURIs = _metadataURIs;
+//         string[] memory _metadataCids = new string[](2);
+//         _metadataCids[0] = "pseudo metadata";
+//         _metadataCids[1] = "metadata2";
+//         $.texts.push().metadataCids = _metadataCids;
 
 //         Schema.Text memory _resText = Getter(target).getText(0);
 //         assertEq(
-//             keccak256(abi.encode(_resText.metadataURIs)),
-//             keccak256(abi.encode(_metadataURIs))
+//             keccak256(abi.encode(_resText.metadataCids)),
+//             keccak256(abi.encode(_metadataCids))
 //         );
 
 //         Schema.Text[] memory _resTexts = Getter(target).getTexts();
@@ -139,11 +139,11 @@
 //         Schema.Members storage $ = Storage.Members();
 
 //         string memory _metadata = "pseudo metadata";
-//         $.members.push().metadataURI = _metadata;
+//         $.members.push().metadataCid = _metadata;
 
 //         Schema.Member memory resMember = Getter(address(this)).getMember(0);
 //         assertEq(
-//             keccak256(abi.encode(resMember.metadataURI)),
+//             keccak256(abi.encode(resMember.metadataCid)),
 //             keccak256(abi.encode(_metadata))
 //         );
 

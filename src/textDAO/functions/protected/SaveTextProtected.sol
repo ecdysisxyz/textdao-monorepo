@@ -19,29 +19,29 @@ contract SaveTextProtected is ISaveText, ProtectionBase {
     /**
      * @notice Creates a new text entry
      * @param pid Proposal ID
-     * @param metadataURI Metadata URI for the text
+     * @param metadataCid Metadata Cid for the text
      * @return textId The ID of the newly created text
      */
-    function createText(uint256 pid, string memory metadataURI) external protected(pid) returns (uint256 textId) {
-        if (bytes(metadataURI).length == 0) revert TextDAOErrors.TextMetadataURIIsRequired();
+    function createText(uint256 pid, string memory metadataCid) external protected(pid) returns (uint256 textId) {
+        if (bytes(metadataCid).length == 0) revert TextDAOErrors.TextMetadataCidIsRequired();
 
         textId = Storage.Texts().texts.length;
-        Storage.Texts().texts.push().metadataURI = metadataURI;
-        emit TextDAOEvents.TextCreated(textId, metadataURI);
+        Storage.Texts().texts.push().metadataCid = metadataCid;
+        emit TextDAOEvents.TextCreated(textId, metadataCid);
     }
 
     /**
      * @notice Updates an existing text entry
      * @param pid Proposal ID
      * @param textId ID of the text to update
-     * @param newMetadataURI New metadata URI for the text
+     * @param newMetadataCid New metadata Cid for the text
      */
-    function updateText(uint256 pid, uint256 textId, string memory newMetadataURI) external protected(pid) {
+    function updateText(uint256 pid, uint256 textId, string memory newMetadataCid) external protected(pid) {
         if (textId >= Storage.Texts().texts.length) revert TextDAOErrors.TextNotFound(textId);
-        if (bytes(newMetadataURI).length == 0) revert TextDAOErrors.TextMetadataURIIsRequired();
+        if (bytes(newMetadataCid).length == 0) revert TextDAOErrors.TextMetadataCidIsRequired();
 
-        Storage.Texts().texts[textId].metadataURI = newMetadataURI;
-        emit TextDAOEvents.TextUpdated(textId, newMetadataURI);
+        Storage.Texts().texts[textId].metadataCid = newMetadataCid;
+        emit TextDAOEvents.TextUpdated(textId, newMetadataCid);
     }
 
     /**
@@ -79,15 +79,15 @@ contract SaveTextProtectedTest is MCTest {
 
     /**
      * @dev Helper function to set up the protected environment for creating a text
-     * @param metadataURI The metadata URI for the text to be created
+     * @param metadataCid The metadata Cid for the text to be created
      * @return pid The proposal ID for the created environment
      */
-    function _setupCreateTextProtectedEnv(string memory metadataURI) internal returns (uint pid) {
+    function _setupCreateTextProtectedEnv(string memory metadataCid) internal returns (uint pid) {
         pid = Storage.Deliberation().proposals.length;
         Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
         $proposal.cmds.push().createCreateTextAction({
             pid: pid,
-            metadataURI: metadataURI
+            metadataCid: metadataCid
         });
         $proposal.meta.approvedCommandId = 1;
         $proposal.meta.actionStatuses[0] = (Schema.ActionStatus.Approved);
@@ -96,16 +96,16 @@ contract SaveTextProtectedTest is MCTest {
     /**
      * @dev Helper function to set up the protected environment for updating a text
      * @param textId The ID of the text to be updated
-     * @param metadataURI The new metadata URI for the text
+     * @param metadataCid The new metadata Cid for the text
      * @return pid The proposal ID for the created environment
      */
-    function _setupUpdateTextProtectedEnv(uint textId, string memory metadataURI) internal returns (uint pid) {
+    function _setupUpdateTextProtectedEnv(uint textId, string memory metadataCid) internal returns (uint pid) {
         pid = Storage.Deliberation().proposals.length;
         Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
         $proposal.cmds.push().createUpdateTextAction({
             pid: pid,
             textId: textId,
-            metadataURI: metadataURI
+            metadataCid: metadataCid
         });
         $proposal.meta.approvedCommandId = 1;
         $proposal.meta.actionStatuses[0] = (Schema.ActionStatus.Approved);
@@ -131,23 +131,23 @@ contract SaveTextProtectedTest is MCTest {
      * @dev Test successful text creation
      */
     function test_createText_success() public {
-        string memory metadataURI = "ipfs://test1";
-        uint256 pid = _setupCreateTextProtectedEnv(metadataURI);
+        string memory metadataCid = "ipfs://test1";
+        uint256 pid = _setupCreateTextProtectedEnv(metadataCid);
 
-        uint256 textId = SaveTextProtected(target).createText(pid, metadataURI);
+        uint256 textId = SaveTextProtected(target).createText(pid, metadataCid);
 
         assertEq(textId, 0, "First text should have ID 0");
         assertEq(Storage.Texts().texts.length, 1, "Texts array should have one entry");
-        assertEq(Storage.Texts().texts[0].metadataURI, "ipfs://test1", "MetadataURI should match");
+        assertEq(Storage.Texts().texts[0].metadataCid, "ipfs://test1", "MetadataCid should match");
     }
 
     /**
-     * @dev Test text creation with empty metadata URI (should revert)
+     * @dev Test text creation with empty metadata Cid (should revert)
      */
-    function test_createText_revert_emptyMetadataURI() public {
+    function test_createText_revert_emptyMetadataCid() public {
         uint256 pid = _setupCreateTextProtectedEnv("");
 
-        vm.expectRevert(TextDAOErrors.TextMetadataURIIsRequired.selector);
+        vm.expectRevert(TextDAOErrors.TextMetadataCidIsRequired.selector);
         SaveTextProtected(target).createText(pid, "");
     }
 
@@ -155,15 +155,15 @@ contract SaveTextProtectedTest is MCTest {
      * @dev Test successful text update
      */
     function test_updateText_success() public {
-        string memory initialMetadataURI = "ipfs://initial";
-        uint256 createPid = _setupCreateTextProtectedEnv(initialMetadataURI);
-        uint256 textId = SaveTextProtected(target).createText(createPid, initialMetadataURI);
+        string memory initialMetadataCid = "ipfs://initial";
+        uint256 createPid = _setupCreateTextProtectedEnv(initialMetadataCid);
+        uint256 textId = SaveTextProtected(target).createText(createPid, initialMetadataCid);
 
-        string memory updatedMetadataURI = "ipfs://updated";
-        uint256 updatePid = _setupUpdateTextProtectedEnv(textId, updatedMetadataURI);
-        SaveTextProtected(target).updateText(updatePid, textId, updatedMetadataURI);
+        string memory updatedMetadataCid = "ipfs://updated";
+        uint256 updatePid = _setupUpdateTextProtectedEnv(textId, updatedMetadataCid);
+        SaveTextProtected(target).updateText(updatePid, textId, updatedMetadataCid);
 
-        assertEq(Storage.Texts().texts[textId].metadataURI, "ipfs://updated", "MetadataURI should be updated");
+        assertEq(Storage.Texts().texts[textId].metadataCid, "ipfs://updated", "MetadataCid should be updated");
     }
 
     /**
@@ -177,15 +177,15 @@ contract SaveTextProtectedTest is MCTest {
     }
 
     /**
-     * @dev Test text update with empty metadata URI (should revert)
+     * @dev Test text update with empty metadata Cid (should revert)
      */
-    function test_updateText_revert_emptyMetadataURI() public {
-        string memory initialMetadataURI = "ipfs://initial";
-        uint256 createPid = _setupCreateTextProtectedEnv(initialMetadataURI);
-        uint256 textId = SaveTextProtected(target).createText(createPid, initialMetadataURI);
+    function test_updateText_revert_emptyMetadataCid() public {
+        string memory initialMetadataCid = "ipfs://initial";
+        uint256 createPid = _setupCreateTextProtectedEnv(initialMetadataCid);
+        uint256 textId = SaveTextProtected(target).createText(createPid, initialMetadataCid);
 
         uint256 updatePid = _setupUpdateTextProtectedEnv(textId, "");
-        vm.expectRevert(TextDAOErrors.TextMetadataURIIsRequired.selector);
+        vm.expectRevert(TextDAOErrors.TextMetadataCidIsRequired.selector);
         SaveTextProtected(target).updateText(updatePid, textId, "");
     }
 
@@ -193,14 +193,14 @@ contract SaveTextProtectedTest is MCTest {
      * @dev Test successful text deletion
      */
     function test_deleteText_success() public {
-        string memory metadataURI = "ipfs://test";
-        uint256 createPid = _setupCreateTextProtectedEnv(metadataURI);
-        uint256 textId = SaveTextProtected(target).createText(createPid, metadataURI);
+        string memory metadataCid = "ipfs://test";
+        uint256 createPid = _setupCreateTextProtectedEnv(metadataCid);
+        uint256 textId = SaveTextProtected(target).createText(createPid, metadataCid);
 
         uint256 deletePid = _setupDeleteTextProtectedEnv(textId);
         SaveTextProtected(target).deleteText(deletePid, textId);
 
-        assertEq(Storage.Texts().texts[textId].metadataURI, "", "Text metadata should be empty after deletion");
+        assertEq(Storage.Texts().texts[textId].metadataCid, "", "Text metadata should be empty after deletion");
     }
 
     /**

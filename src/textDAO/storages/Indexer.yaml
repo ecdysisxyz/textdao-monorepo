@@ -52,11 +52,11 @@ relations:
     through: TagRelation.relations # TagRelation will have index
 
 ipfs:
-  - ref: TextSaveProtectedStorage.texts[i].metadataURIs[i]
+  - ref: TextSaveProtectedStorage.texts[i].metadataCids[i]
     as: TextMetadata
-  - ref: MemberJoinProtectedStorage.members[i].metadataURI
+  - ref: MemberJoinProtectedStorage.members[i].metadataCid
     as: MemberMetadata
-  - ref: TagStorage.tags[i].metadataURI
+  - ref: TagStorage.tags[i].metadataCid
     as: TagMetadata
 
 fulltext:

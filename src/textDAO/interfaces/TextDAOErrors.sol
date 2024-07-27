@@ -77,6 +77,6 @@ interface TextDAOErrors {
     error InvalidCommandId(uint commandId);
 
     // DaveText
-    error TextMetadataURIIsRequired();
+    error TextMetadataCidIsRequired();
     error TextNotFound(uint textId);
 }

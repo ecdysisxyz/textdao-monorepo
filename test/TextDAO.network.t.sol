@@ -132,9 +132,9 @@
 //      */
 //     function _initializeTextDAO() internal {
 //         Schema.Member[] memory initialMembers = new Schema.Member[](3);
-//         initialMembers[0] = Schema.Member({addr: MEMBER1, metadataURI: "member1URI"});
-//         initialMembers[1] = Schema.Member({addr: MEMBER2, metadataURI: "member2URI"});
-//         initialMembers[2] = Schema.Member({addr: MEMBER3, metadataURI: "member3URI"});
+//         initialMembers[0] = Schema.Member({addr: MEMBER1, metadataCid: "member1Cid"});
+//         initialMembers[1] = Schema.Member({addr: MEMBER2, metadataCid: "member2Cid"});
+//         initialMembers[2] = Schema.Member({addr: MEMBER3, metadataCid: "member3Cid"});
 
 //         Schema.DeliberationConfig memory deliberationConfig = Schema.DeliberationConfig({
 //             expiryDuration: 7 days,
@@ -156,13 +156,13 @@
 //      */
 //     function _createProposal() internal returns (uint256 _pid) {
 //         vm.prank(MEMBER1); // TODO get from storage to impersonate
-//         string memory _headerMetadataURI = "Proposal for new feature";
+//         string memory _headerMetadataCid = "Proposal for new feature";
 //         Schema.Action[] memory _actions = new Schema.Action[](1);
 //         _actions[0] = Schema.Action({
 //             funcSig: "memberJoin(uint256,(address,string)[])",
 //             abiParams: abi.encode(0, new Schema.Member[](1))
 //         });
-//         _pid = textDAO.propose(_headerMetadataURI, _actions);
+//         _pid = textDAO.propose(_headerMetadataCid, _actions);
 //         console2.log("Proposal created with ID:", _pid);
 //     }
 
@@ -172,13 +172,13 @@
 //      */
 //     function _forkProposal(uint256 _pid) internal {
 //         vm.prank(MEMBER2);
-//         string memory _headerMetadataURI = "Forked proposal";
+//         string memory _headerMetadataCid = "Forked proposal";
 //         Schema.Action[] memory _actions = new Schema.Action[](1);
 //         _actions[0] = Schema.Action({
 //             funcSig: "memberJoin(uint256,(address,string)[])",
 //             abiParams: abi.encode(0, new Schema.Member[](1))
 //         });
-//         textDAO.fork(_pid, _headerMetadataURI, _actions);
+//         textDAO.fork(_pid, _headerMetadataCid, _actions);
 //         console2.log("Proposal forked");
 //     }
 
@@ -239,9 +239,9 @@
 //      */
 //     function _createVRFProposal() internal returns (uint256 _pid) {
 //         vm.prank(MEMBER1);
-//         string memory _headerMetadataURI = "VRF Test Proposal";
+//         string memory _headerMetadataCid = "VRF Test Proposal";
 //         Schema.Action[] memory _actions = new Schema.Action[](0);
-//         _pid = textDAO.propose(_headerMetadataURI, _actions);
+//         _pid = textDAO.propose(_headerMetadataCid, _actions);
 //         console2.log("VRF test proposal created with ID:", _pid);
 //     }
 
@@ -303,7 +303,7 @@
 //     //     // });
 //     //     // proposalMeta.reps[0] = address(this);
 //     //     IPropose.ProposeArgs memory _proposeArgs = IPropose.ProposeArgs({
-//     //         headerMetadataURI: "Implement MemberJoinProtected",
+//     //         headerMetadataCid: "Implement MemberJoinProtected",
 //     //         actions: new Schema.Action[](1)
 //     //     });
 
@@ -311,7 +311,7 @@
 //     //     Schema.Member[] memory candidates = new Schema.Member[](1); // Assuming there's one candidate for demonstration
 //     //     candidates[0] = Schema.Member({
 //     //         addr: 0x1234567890123456789012345678901234567890, // Example candidate address
-//     //         metadataURI: "exampleURI" // Example metadata URI
+//     //         metadataCid: "exampleCid" // Example metadata Cid
 //     //     });
 
 //     //     _proposeArgs.actions[0] = Schema.Action({

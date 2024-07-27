@@ -15,16 +15,16 @@ library ProposalLib {
     /**
      * @notice Creates a new header for a proposal
      * @param $proposal The proposal to add the header to
-     * @param metadataURI The URI of the metadata for the header
+     * @param metadataCid The content id of the metadata for the header
      * @dev Initializes a new header with empty tag list
      * @return headerId The index of the newly created header
      */
-    function createHeader(Schema.Proposal storage $proposal, string memory metadataURI) internal returns(uint headerId) {
-        if (bytes(metadataURI).length == 0) revert TextDAOErrors.HeaderMetadataIsRequired();
+    function createHeader(Schema.Proposal storage $proposal, string memory metadataCid) internal returns(uint headerId) {
+        if (bytes(metadataCid).length == 0) revert TextDAOErrors.HeaderMetadataIsRequired();
 
         headerId = $proposal.headers.length;
         $proposal.headers.push(Schema.Header({
-            metadataURI: metadataURI,
+            metadataCid: metadataCid,
             tagIds: new uint[](0)
         }));
     }
@@ -150,7 +150,7 @@ contract ProposalLibTest is Test {
         uint _initialLength = $testProposal.headers.length;
         uint _headerId = $testProposal.createHeader("test://metadata");
         assertEq(_headerId, _initialLength, "Header ID should match");
-        assertEq($testProposal.headers[_headerId].metadataURI, "test://metadata", "Metadata URI should match");
+        assertEq($testProposal.headers[_headerId].metadataCid, "test://metadata", "Metadata Cid should match");
         assertEq($testProposal.headers[_headerId].tagIds.length, 0, "Tag IDs should be empty");
         assertEq($testProposal.headers.length, _initialLength + 1, "Should have added one header");
     }

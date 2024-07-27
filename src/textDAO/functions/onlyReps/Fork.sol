@@ -21,15 +21,15 @@ contract Fork is IFork, OnlyRepsBase {
     /**
      * @notice Forks an existing proposal by adding a new header or command
      * @param pid The ID of the proposal to fork
-     * @param headerMetadataURI The URI for the new header metadata (can be empty)
+     * @param headerMetadataCid The content id for the new header metadata (can be empty)
      * @param actions The array of actions for the new command (can be empty)
      */
-    function fork(uint pid, string calldata headerMetadataURI, Schema.Action[] calldata actions) external onlyReps(pid) {
+    function fork(uint pid, string calldata headerMetadataCid, Schema.Action[] calldata actions) external onlyReps(pid) {
         Schema.Proposal storage $proposal = Storage.Deliberation().proposals[pid];
 
-        if (bytes(headerMetadataURI).length > 0) {
-            uint _headerId = $proposal.createHeader(headerMetadataURI);
-            emit TextDAOEvents.HeaderCreated(pid, _headerId, headerMetadataURI);
+        if (bytes(headerMetadataCid).length > 0) {
+            uint _headerId = $proposal.createHeader(headerMetadataCid);
+            emit TextDAOEvents.HeaderCreated(pid, _headerId, headerMetadataCid);
         }
         if (actions.length > 0) {
             uint _cmdId = $proposal.createCommand(actions);
@@ -80,7 +80,7 @@ contract ForkTest is MCTest {
 
         Fork(target).fork({
             pid: pid,
-            headerMetadataURI: "Qc.....xh",
+            headerMetadataCid: "Qc.....xh",
             actions: new Schema.Action[](1)
         });
 
@@ -105,7 +105,7 @@ contract ForkTest is MCTest {
 
         Fork(target).fork({
             pid: pid,
-            headerMetadataURI: "Qc.....xh",
+            headerMetadataCid: "Qc.....xh",
             actions: new Schema.Action[](0)
         });
 
@@ -130,7 +130,7 @@ contract ForkTest is MCTest {
 
         Fork(target).fork({
             pid: pid,
-            headerMetadataURI: "",
+            headerMetadataCid: "",
             actions: new Schema.Action[](1)
         });
 
@@ -149,7 +149,7 @@ contract ForkTest is MCTest {
         vm.expectRevert(TextDAOErrors.YouAreNotTheRep.selector);
         Fork(target).fork({
             pid: 0,
-            headerMetadataURI: "Qc.....xh",
+            headerMetadataCid: "Qc.....xh",
             actions: new Schema.Action[](1)
         });
     }
