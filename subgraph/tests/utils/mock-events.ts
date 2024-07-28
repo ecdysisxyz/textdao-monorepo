@@ -1,6 +1,7 @@
 import { newMockEvent } from "matchstick-as";
 import { ethereum, BigInt, Address } from "@graphprotocol/graph-ts";
 import {
+    DeliberationConfigUpdated,
     HeaderCreated,
     CommandCreated,
     Proposed,
@@ -23,13 +24,13 @@ import { Action, Vote } from "../../src/utils/schema-types";
  * Creates a mock HeaderCreated event
  * @param pid - Proposal ID
  * @param header - Header ID
- * @param metadataURI - Metadata URI for the header
+ * @param metadataCid - Metadata Cid for the header
  * @returns MockEvent of type HeaderCreated
  */
 export function createMockHeaderCreatedEvent(
     pid: BigInt,
     headerId: BigInt,
-    metadataURI: string
+    metadataCid: string
 ): HeaderCreated {
     let event = changetype<HeaderCreated>(newMockEvent());
     event.parameters = new Array();
@@ -44,8 +45,8 @@ export function createMockHeaderCreatedEvent(
     );
     event.parameters.push(
         new ethereum.EventParam(
-            "metadataURI",
-            ethereum.Value.fromString(metadataURI)
+            "metadataCid",
+            ethereum.Value.fromString(metadataCid)
         )
     );
     return event;
@@ -359,12 +360,12 @@ export function createMockProposalExecutedEvent(
 /**
  * Creates a mock TextCreated event
  * @param textId - Text ID
- * @param metadataURI - Metadata URI for the text
+ * @param metadataCid - Metadata Cid for the text
  * @returns MockEvent of type TextCreated
  */
 export function createMockTextCreatedEvent(
     textId: BigInt,
-    metadataURI: string
+    metadataCid: string
 ): TextCreated {
     let event = changetype<TextCreated>(newMockEvent());
     event.parameters = new Array();
@@ -376,8 +377,8 @@ export function createMockTextCreatedEvent(
     );
     event.parameters.push(
         new ethereum.EventParam(
-            "metadataURI",
-            ethereum.Value.fromString(metadataURI)
+            "metadataCid",
+            ethereum.Value.fromString(metadataCid)
         )
     );
     return event;
@@ -386,12 +387,12 @@ export function createMockTextCreatedEvent(
 /**
  * Creates a mock TextUpdated event
  * @param textId - Text ID
- * @param newMetadataURI - New metadata URI for the text
+ * @param newMetadataCid - New metadata Cid for the text
  * @returns MockEvent of type TextUpdated
  */
 export function createMockTextUpdatedEvent(
     textId: BigInt,
-    newMetadataURI: string
+    newMetadataCid: string
 ): TextUpdated {
     let event = changetype<TextUpdated>(newMockEvent());
     event.parameters = new Array();
@@ -403,8 +404,8 @@ export function createMockTextUpdatedEvent(
     );
     event.parameters.push(
         new ethereum.EventParam(
-            "newMetadataURI",
-            ethereum.Value.fromString(newMetadataURI)
+            "newMetadataCid",
+            ethereum.Value.fromString(newMetadataCid)
         )
     );
     return event;
@@ -431,13 +432,13 @@ export function createMockTextDeletedEvent(textId: BigInt): TextDeleted {
  * Creates a mock MemberAdded event
  * @param memberId - Member ID
  * @param addr - Member address
- * @param metadataURI - Member profile metadata's URI
+ * @param metadataCid - Member profile metadata's content id
  * @returns MockEvent of type MemberAdded
  */
 export function createMockMemberAddedEvent(
     memberId: BigInt,
     addr: Address,
-    metadataURI: string
+    metadataCid: string
 ): MemberAdded {
     let event = changetype<MemberAdded>(newMockEvent());
     event.parameters = new Array();
@@ -452,8 +453,8 @@ export function createMockMemberAddedEvent(
     );
     event.parameters.push(
         new ethereum.EventParam(
-            "metadataURI",
-            ethereum.Value.fromString(metadataURI)
+            "metadataCid",
+            ethereum.Value.fromString(metadataCid)
         )
     );
     return event;
@@ -463,13 +464,13 @@ export function createMockMemberAddedEvent(
  * Creates a mock MemberUpdated event
  * @param memberId - Member ID
  * @param addr - Member address
- * @param metadataURI - Member profile metadata's URI
+ * @param metadataCid - Member profile metadata's content id
  * @returns MockEvent of type MemberUpdated
  */
 export function createMockMemberUpdatedEvent(
     memberId: BigInt,
     addr: Address,
-    metadataURI: string
+    metadataCid: string
 ): MemberUpdated {
     let event = changetype<MemberUpdated>(newMockEvent());
     event.parameters = new Array();
@@ -484,9 +485,39 @@ export function createMockMemberUpdatedEvent(
     );
     event.parameters.push(
         new ethereum.EventParam(
-            "metadataURI",
-            ethereum.Value.fromString(metadataURI)
+            "metadataCid",
+            ethereum.Value.fromString(metadataCid)
         )
     );
+    return event;
+}
+
+/**
+ * Creates a mock DeliberationConfigUpdated event
+ * @param expiryDuration - Expiry duration for proposals
+ * @param snapInterval - Interval for proposal snapshots
+ * @param repsNum - Number of representatives
+ * @param quorumScore - Quorum score required
+ * @returns MockEvent of type DeliberationConfigUpdated
+ */
+export function createMockDeliberationConfigUpdatedEvent(
+    expiryDuration: BigInt,
+    snapInterval: BigInt,
+    repsNum: BigInt,
+    quorumScore: BigInt
+): DeliberationConfigUpdated {
+    let event = changetype<DeliberationConfigUpdated>(newMockEvent());
+    event.parameters = new Array();
+
+    let configTuple = new ethereum.Tuple(4);
+    configTuple[0] = ethereum.Value.fromUnsignedBigInt(expiryDuration);
+    configTuple[1] = ethereum.Value.fromUnsignedBigInt(snapInterval);
+    configTuple[2] = ethereum.Value.fromUnsignedBigInt(repsNum);
+    configTuple[3] = ethereum.Value.fromUnsignedBigInt(quorumScore);
+
+    event.parameters.push(
+        new ethereum.EventParam("config", ethereum.Value.fromTuple(configTuple))
+    );
+
     return event;
 }

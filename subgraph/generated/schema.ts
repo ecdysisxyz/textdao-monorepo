@@ -105,6 +105,19 @@ export class DeliberationConfig extends Entity {
   set quorumScore(value: BigInt) {
     this.set("quorumScore", Value.fromBigInt(value));
   }
+
+  get lastUpdated(): BigInt {
+    let value = this.get("lastUpdated");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set lastUpdated(value: BigInt) {
+    this.set("lastUpdated", Value.fromBigInt(value));
+  }
 }
 
 export class Proposal extends Entity {
@@ -394,17 +407,38 @@ export class Header extends Entity {
     this.set("proposal", Value.fromString(value));
   }
 
-  get metadataURI(): string {
-    let value = this.get("metadataURI");
+  get title(): string | null {
+    let value = this.get("title");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return null;
     } else {
       return value.toString();
     }
   }
 
-  set metadataURI(value: string) {
-    this.set("metadataURI", Value.fromString(value));
+  set title(value: string | null) {
+    if (!value) {
+      this.unset("title");
+    } else {
+      this.set("title", Value.fromString(<string>value));
+    }
+  }
+
+  get body(): string | null {
+    let value = this.get("body");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set body(value: string | null) {
+    if (!value) {
+      this.unset("body");
+    } else {
+      this.set("body", Value.fromString(<string>value));
+    }
   }
 }
 
@@ -696,17 +730,38 @@ export class Text extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get metadataURI(): string {
-    let value = this.get("metadataURI");
+  get title(): string | null {
+    let value = this.get("title");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return null;
     } else {
       return value.toString();
     }
   }
 
-  set metadataURI(value: string) {
-    this.set("metadataURI", Value.fromString(value));
+  set title(value: string | null) {
+    if (!value) {
+      this.unset("title");
+    } else {
+      this.set("title", Value.fromString(<string>value));
+    }
+  }
+
+  get body(): string | null {
+    let value = this.get("body");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set body(value: string | null) {
+    if (!value) {
+      this.unset("body");
+    } else {
+      this.set("body", Value.fromString(<string>value));
+    }
   }
 }
 
@@ -762,17 +817,55 @@ export class Member extends Entity {
     this.set("addr", Value.fromBytes(value));
   }
 
-  get metadataURI(): string {
-    let value = this.get("metadataURI");
+  get name(): string | null {
+    let value = this.get("name");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return null;
     } else {
       return value.toString();
     }
   }
 
-  set metadataURI(value: string) {
-    this.set("metadataURI", Value.fromString(value));
+  set name(value: string | null) {
+    if (!value) {
+      this.unset("name");
+    } else {
+      this.set("name", Value.fromString(<string>value));
+    }
+  }
+
+  get image(): string | null {
+    let value = this.get("image");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set image(value: string | null) {
+    if (!value) {
+      this.unset("image");
+    } else {
+      this.set("image", Value.fromString(<string>value));
+    }
+  }
+
+  get bio(): string | null {
+    let value = this.get("bio");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set bio(value: string | null) {
+    if (!value) {
+      this.unset("bio");
+    } else {
+      this.set("bio", Value.fromString(<string>value));
+    }
   }
 }
 

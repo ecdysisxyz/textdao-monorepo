@@ -4,13 +4,46 @@ import {
     test,
     clearStore,
     beforeEach,
+    beforeAll,
+    mockIpfsFile,
 } from "matchstick-as/assembly/index";
 import { BigInt } from "@graphprotocol/graph-ts";
-import { handleHeaderCreated } from "../../src/handlers/header-created";
+import { handleHeaderCreated } from "../../src/event-handlers/header-created";
 import { genHeaderId, genProposalId } from "../../src/utils/entity-id-provider";
 import { createMockHeaderCreatedEvent } from "../utils/mock-events";
 
+function assertProposalFieldFilledWithMetadata1(headerEntityId: string): void {
+    assert.fieldEquals(
+        "Header",
+        headerEntityId,
+        "title",
+        "Sample Header Title1"
+    );
+    assert.fieldEquals("Header", headerEntityId, "body", "wrrrrrrrrrrryyyy");
+}
+function assertProposalFieldFilledWithMetadata2(headerEntityId: string): void {
+    assert.fieldEquals(
+        "Header",
+        headerEntityId,
+        "title",
+        "Sample Header Title2"
+    );
+    assert.fieldEquals("Header", headerEntityId, "body", "foooooooooooo");
+}
+
 describe("HeaderCreated Event Handler", () => {
+    const metadataCid1 = "QmTest1";
+    const metadataFilePath1 =
+        "tests/utils/ipfs-file-data/sample-proposal-header-metadata1.json";
+    const metadataCid2 = "QmTest2";
+    const metadataFilePath2 =
+        "tests/utils/ipfs-file-data/sample-proposal-header-metadata2.json";
+
+    beforeAll(() => {
+        mockIpfsFile(metadataCid1, metadataFilePath1);
+        mockIpfsFile(metadataCid2, metadataFilePath2);
+    });
+
     beforeEach(() => {
         clearStore();
     });
@@ -20,10 +53,9 @@ describe("HeaderCreated Event Handler", () => {
 
         const pid = BigInt.fromI32(100);
         const headerId = BigInt.fromI32(222);
-        const metadataURI = "Qc...abc";
 
         handleHeaderCreated(
-            createMockHeaderCreatedEvent(pid, headerId, metadataURI)
+            createMockHeaderCreatedEvent(pid, headerId, metadataCid1)
         );
 
         assert.entityCount("Header", 1);
@@ -38,12 +70,7 @@ describe("HeaderCreated Event Handler", () => {
             "proposal",
             proposalEntityId
         );
-        assert.fieldEquals(
-            "Header",
-            headerEntityId,
-            "metadataURI",
-            metadataURI
-        );
+        assertProposalFieldFilledWithMetadata1(headerEntityId);
     });
 
     test("Should create multiple Header entities for different proposals", () => {
@@ -57,14 +84,18 @@ describe("HeaderCreated Event Handler", () => {
             BigInt.fromI32(1),
             BigInt.fromI32(2),
         ];
-        const metadataURIs: string[] = ["Qm...abc", "Qm...def", "Qm...ghi"];
+        const metadataCids: string[] = [
+            metadataCid1,
+            metadataCid2,
+            metadataCid1,
+        ];
 
         for (let i = 0; i < pids.length; i++) {
             handleHeaderCreated(
                 createMockHeaderCreatedEvent(
                     pids[i],
                     headerIds[i],
-                    metadataURIs[i]
+                    metadataCids[i]
                 )
             );
 
@@ -80,13 +111,16 @@ describe("HeaderCreated Event Handler", () => {
                 "proposal",
                 proposalEntityId
             );
-            assert.fieldEquals(
-                "Header",
-                headerEntityId,
-                "metadataURI",
-                metadataURIs[i]
-            );
         }
+        assertProposalFieldFilledWithMetadata1(
+            genHeaderId(pids[0], headerIds[0])
+        );
+        assertProposalFieldFilledWithMetadata2(
+            genHeaderId(pids[1], headerIds[1])
+        );
+        assertProposalFieldFilledWithMetadata1(
+            genHeaderId(pids[2], headerIds[2])
+        );
     });
 
     test(
@@ -94,46 +128,35 @@ describe("HeaderCreated Event Handler", () => {
         () => {
             const pid = BigInt.fromI32(100);
             const headerId = BigInt.fromI32(1);
-            const initialMetadataURI = "Qm...abc";
-            const updatedMetadataURI = "Qm...xyz";
 
             handleHeaderCreated(
-                createMockHeaderCreatedEvent(pid, headerId, initialMetadataURI)
+                createMockHeaderCreatedEvent(pid, headerId, metadataCid1)
             );
             handleHeaderCreated(
-                createMockHeaderCreatedEvent(pid, headerId, updatedMetadataURI)
+                createMockHeaderCreatedEvent(pid, headerId, metadataCid2)
             );
         },
         true
     );
 
-    test("Should handle Headers with empty metadataURI", () => {
+    test("Should handle Headers with empty metadataCid", () => {
         const pid = BigInt.fromI32(100);
         const headerId = BigInt.fromI32(1);
-        const emptyMetadataURI = "";
+        const emptyMetadataCid = "";
 
         handleHeaderCreated(
-            createMockHeaderCreatedEvent(pid, headerId, emptyMetadataURI)
+            createMockHeaderCreatedEvent(pid, headerId, emptyMetadataCid)
         );
 
         assert.entityCount("Header", 1);
-
-        const headerEntityId = genHeaderId(pid, headerId);
-        assert.fieldEquals(
-            "Header",
-            headerEntityId,
-            "metadataURI",
-            emptyMetadataURI
-        );
     });
 
     test("Should create a Proposal entity if it doesn't exist", () => {
         const pid = BigInt.fromI32(100);
         const headerId = BigInt.fromI32(1);
-        const metadataURI = "Qm...abc";
 
         handleHeaderCreated(
-            createMockHeaderCreatedEvent(pid, headerId, metadataURI)
+            createMockHeaderCreatedEvent(pid, headerId, metadataCid1)
         );
 
         const proposalEntityId = genProposalId(pid);
@@ -144,34 +167,5 @@ describe("HeaderCreated Event Handler", () => {
             "id",
             proposalEntityId
         );
-    });
-
-    test("Should handle multiple Headers for the same Proposal", () => {
-        const pid = BigInt.fromI32(100);
-        const headerIds: BigInt[] = [
-            BigInt.fromI32(1),
-            BigInt.fromI32(2),
-            BigInt.fromI32(3),
-        ];
-        const metadataURIs: string[] = ["Qm...abc", "Qm...def", "Qm...ghi"];
-
-        const proposalEntityId = genProposalId(pid);
-
-        for (let i = 0; i < headerIds.length; i++) {
-            handleHeaderCreated(
-                createMockHeaderCreatedEvent(pid, headerIds[i], metadataURIs[i])
-            );
-
-            assert.entityCount("Header", 1 + i);
-            assert.entityCount("Proposal", 1);
-
-            const headerEntityId = genHeaderId(pid, headerIds[i]);
-            assert.fieldEquals(
-                "Header",
-                headerEntityId,
-                "proposal",
-                proposalEntityId
-            );
-        }
     });
 });

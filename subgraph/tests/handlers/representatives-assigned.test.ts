@@ -6,7 +6,7 @@ import {
     beforeEach,
 } from "matchstick-as/assembly/index";
 import { BigInt, Address } from "@graphprotocol/graph-ts";
-import { handleRepresentativesAssigned } from "../../src/handlers/representatives-assigned";
+import { handleRepresentativesAssigned } from "../../src/event-handlers/representatives-assigned";
 import { genProposalId } from "../../src/utils/entity-id-provider";
 import { createMockRepresentativesAssignedEvent } from "../utils/mock-events";
 import { formatAddressArray } from "../../src/utils/type-formatter";

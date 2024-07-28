@@ -6,7 +6,7 @@ import {
     beforeEach,
 } from "matchstick-as/assembly/index";
 import { BigInt, Bytes } from "@graphprotocol/graph-ts";
-import { handleCommandCreated } from "../../src/handlers/command-created";
+import { handleCommandCreated } from "../../src/event-handlers/command-created";
 import {
     genCommandId,
     genActionId,

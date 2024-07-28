@@ -8,6 +8,7 @@ import {
     loadText,
     removeTextEntity,
 } from "../utils/entity-provider";
+import { saveTextMetadata } from "../file-data-handlers/text-metadata";
 
 /**
  * Handles the TextCreated event by creating a new Text entity or updating an existing one.
@@ -15,8 +16,8 @@ import {
  */
 export function handleTextCreated(event: TextCreated): void {
     const text = createNewText(event.params.textId);
-    text.metadataURI = event.params.metadataURI;
     text.save();
+    saveTextMetadata(event.params.metadataCid, text);
 }
 
 /**
@@ -25,8 +26,8 @@ export function handleTextCreated(event: TextCreated): void {
  */
 export function handleTextUpdated(event: TextUpdated): void {
     const text = loadText(event.params.textId);
-    text.metadataURI = event.params.newMetadataURI;
     text.save();
+    saveTextMetadata(event.params.newMetadataCid, text);
 }
 
 /**

@@ -6,7 +6,7 @@ import {
     beforeEach,
 } from "matchstick-as/assembly/index";
 import { BigInt, Address } from "@graphprotocol/graph-ts";
-import { handleVoted } from "../../src/handlers/voted";
+import { handleVoted } from "../../src/event-handlers/voted";
 import { genProposalId, genVoteId } from "../../src/utils/entity-id-provider";
 import { createMockVotedEvent } from "../utils/mock-events";
 import { Vote } from "../../src/utils/schema-types";

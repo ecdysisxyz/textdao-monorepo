@@ -6,8 +6,8 @@ import {
     beforeEach,
 } from "matchstick-as/assembly/index";
 import { BigInt, Address } from "@graphprotocol/graph-ts";
-import { handleProposed } from "../../src/handlers/proposed";
-import { handleRepresentativesAssigned } from "../../src/handlers/representatives-assigned";
+import { handleProposed } from "../../src/event-handlers/proposed";
+import { handleRepresentativesAssigned } from "../../src/event-handlers/representatives-assigned";
 import { genProposalId } from "../../src/utils/entity-id-provider";
 import {
     createMockProposedEvent,

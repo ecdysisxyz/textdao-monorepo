@@ -2,8 +2,8 @@ specVersion: 1.0.0
 schema:
   file: ./schema.graphql
 dataSources:
-  - kind: ethereum
-    name: TextDAO
+  - name: TextDAO
+    kind: ethereum
     network: holesky
     source:
       address: "0x80ca951439B06451B5162415B758F256242cf92A"
@@ -13,6 +13,9 @@ dataSources:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
+      abis:
+        - name: TextDAOEvents
+          file: ../out/TextDAOEvents.sol/TextDAOEvents.json
       entities:
         - DeliberationConfig
         - Proposal
@@ -23,10 +26,10 @@ dataSources:
         - Vote
         - Text
         - Member
-      abis:
-        - name: TextDAOEvents
-          file: ../out/TextDAOEvents.sol/TextDAOEvents.json
+      file: ./src/mapping.ts
       eventHandlers:
+        - event: DeliberationConfigUpdated((uint256,uint256,uint256,uint256))
+          handler: handleDeliberationConfigUpdated
         - event: CommandCreated(uint256,uint256,(string,bytes)[])
           handler: handleCommandCreated
         - event: HeaderCreated(uint256,uint256,string)
@@ -57,4 +60,3 @@ dataSources:
           handler: handleMemberAdded
         - event: MemberUpdated(uint256,address,string)
           handler: handleMemberUpdated
-      file: ./src/mapping.ts

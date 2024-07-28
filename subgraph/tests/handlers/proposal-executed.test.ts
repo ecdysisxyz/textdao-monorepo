@@ -6,7 +6,7 @@ import {
     beforeEach,
 } from "matchstick-as/assembly/index";
 import { BigInt } from "@graphprotocol/graph-ts";
-import { handleProposalExecuted } from "../../src/handlers/proposal-executed";
+import { handleProposalExecuted } from "../../src/event-handlers/proposal-executed";
 import { createMockProposalExecutedEvent } from "../utils/mock-events";
 import {
     createMockProposalEntity,

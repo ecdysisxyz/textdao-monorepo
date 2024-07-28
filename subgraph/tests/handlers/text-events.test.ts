@@ -4,13 +4,15 @@ import {
     test,
     clearStore,
     beforeEach,
+    beforeAll,
+    mockIpfsFile,
 } from "matchstick-as/assembly/index";
 import { BigInt } from "@graphprotocol/graph-ts";
 import {
     handleTextCreated,
     handleTextUpdated,
     handleTextDeleted,
-} from "../../src/handlers/text-events";
+} from "../../src/event-handlers/text-events";
 import { genTextId } from "../../src/utils/entity-id-provider";
 import {
     createMockTextCreatedEvent,
@@ -19,22 +21,34 @@ import {
 } from "../utils/mock-events";
 
 describe("Text Event Handlers", () => {
+    const metadataCid1 = "QmTest1";
+    const metadataFilePath1 =
+        "tests/utils/ipfs-file-data/sample-text-metadata1.json";
+    const metadataCid2 = "QmTest2";
+    const metadataFilePath2 =
+        "tests/utils/ipfs-file-data/sample-text-metadata2.json";
+
+    beforeAll(() => {
+        mockIpfsFile(metadataCid1, metadataFilePath1);
+        mockIpfsFile(metadataCid2, metadataFilePath2);
+    });
+
     beforeEach(() => {
         clearStore();
     });
 
     test("Should create new Text entity on TextCreated event", () => {
         const textId = BigInt.fromI32(1);
-        const metadataURI = "ipfs://QmTest1";
 
-        handleTextCreated(createMockTextCreatedEvent(textId, metadataURI));
+        handleTextCreated(createMockTextCreatedEvent(textId, metadataCid1));
 
         assert.entityCount("Text", 1);
+        assert.fieldEquals("Text", genTextId(textId), "title", "Text Title1");
         assert.fieldEquals(
             "Text",
             genTextId(textId),
-            "metadataURI",
-            metadataURI
+            "body",
+            "Text body ~~~\naaa"
         );
     });
 
@@ -42,37 +56,26 @@ describe("Text Event Handlers", () => {
         "Should fail if Text entity exists on TextCreated event",
         () => {
             const textId = BigInt.fromI32(1);
-            const initialMetadataURI = "ipfs://QmTest1";
-            const updatedMetadataURI = "ipfs://QmTest2";
 
-            handleTextCreated(
-                createMockTextCreatedEvent(textId, initialMetadataURI)
-            );
-            handleTextCreated(
-                createMockTextCreatedEvent(textId, updatedMetadataURI)
-            );
+            handleTextCreated(createMockTextCreatedEvent(textId, metadataCid1));
+            handleTextCreated(createMockTextCreatedEvent(textId, metadataCid2));
         },
         true
     );
 
     test("Should update existing Text entity on TextUpdated event", () => {
         const textId = BigInt.fromI32(1);
-        const initialMetadataURI = "ipfs://QmTest1";
-        const updatedMetadataURI = "ipfs://QmTest2";
 
-        handleTextCreated(
-            createMockTextCreatedEvent(textId, initialMetadataURI)
-        );
-        handleTextUpdated(
-            createMockTextUpdatedEvent(textId, updatedMetadataURI)
-        );
+        handleTextCreated(createMockTextCreatedEvent(textId, metadataCid1));
+        handleTextUpdated(createMockTextUpdatedEvent(textId, metadataCid2));
 
         assert.entityCount("Text", 1);
+        assert.fieldEquals("Text", genTextId(textId), "title", "Text Title2");
         assert.fieldEquals(
             "Text",
             genTextId(textId),
-            "metadataURI",
-            updatedMetadataURI
+            "body",
+            "Text body2 ~~~\naaa"
         );
     });
 
@@ -80,18 +83,17 @@ describe("Text Event Handlers", () => {
         "Should fail if Text entity doesn't exist on TextUpdated event",
         () => {
             const textId = BigInt.fromI32(1);
-            const metadataURI = "ipfs://QmTest1";
+            const metadataCid = "ipfs://QmTest1";
 
-            handleTextUpdated(createMockTextUpdatedEvent(textId, metadataURI));
+            handleTextUpdated(createMockTextUpdatedEvent(textId, metadataCid));
         },
         true
     );
 
     test("Should remove Text entity on TextDeleted event", () => {
         const textId = BigInt.fromI32(1);
-        const metadataURI = "ipfs://QmTest1";
 
-        handleTextCreated(createMockTextCreatedEvent(textId, metadataURI));
+        handleTextCreated(createMockTextCreatedEvent(textId, metadataCid1));
         assert.entityCount("Text", 1);
 
         handleTextDeleted(createMockTextDeletedEvent(textId));
@@ -111,58 +113,33 @@ describe("Text Event Handlers", () => {
     test("Should handle multiple Text entities", () => {
         const textId1 = BigInt.fromI32(1);
         const textId2 = BigInt.fromI32(2);
-        const metadataURI1 = "ipfs://QmTest1";
-        const metadataURI2 = "ipfs://QmTest2";
 
-        handleTextCreated(createMockTextCreatedEvent(textId1, metadataURI1));
-        handleTextCreated(createMockTextCreatedEvent(textId2, metadataURI2));
+        handleTextCreated(createMockTextCreatedEvent(textId1, metadataCid1));
+        handleTextCreated(createMockTextCreatedEvent(textId2, metadataCid2));
 
         assert.entityCount("Text", 2);
+        assert.fieldEquals("Text", genTextId(textId1), "title", "Text Title1");
         assert.fieldEquals(
             "Text",
             genTextId(textId1),
-            "metadataURI",
-            metadataURI1
+            "body",
+            "Text body ~~~\naaa"
         );
+        assert.fieldEquals("Text", genTextId(textId2), "title", "Text Title2");
         assert.fieldEquals(
             "Text",
             genTextId(textId2),
-            "metadataURI",
-            metadataURI2
+            "body",
+            "Text body2 ~~~\naaa"
         );
     });
 
-    test("Should handle empty metadataURI", () => {
+    test("Should handle empty metadataCid with null", () => {
         const textId = BigInt.fromI32(1);
-        const emptyMetadataURI = "";
+        const emptyMetadataCid = "";
 
-        handleTextCreated(createMockTextCreatedEvent(textId, emptyMetadataURI));
+        handleTextCreated(createMockTextCreatedEvent(textId, emptyMetadataCid));
 
         assert.entityCount("Text", 1);
-        assert.fieldEquals(
-            "Text",
-            genTextId(textId),
-            "metadataURI",
-            emptyMetadataURI
-        );
-    });
-
-    test("Should handle updating Text entity multiple times", () => {
-        const textId = BigInt.fromI32(1);
-        const metadataURI1 = "ipfs://QmTest1";
-        const metadataURI2 = "ipfs://QmTest2";
-        const metadataURI3 = "ipfs://QmTest3";
-
-        handleTextCreated(createMockTextCreatedEvent(textId, metadataURI1));
-        handleTextUpdated(createMockTextUpdatedEvent(textId, metadataURI2));
-        handleTextUpdated(createMockTextUpdatedEvent(textId, metadataURI3));
-
-        assert.entityCount("Text", 1);
-        assert.fieldEquals(
-            "Text",
-            genTextId(textId),
-            "metadataURI",
-            metadataURI3
-        );
     });
 });

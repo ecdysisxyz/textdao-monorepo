@@ -1,7 +1,8 @@
-import { store, BigInt, Bytes } from "@graphprotocol/graph-ts";
+import { store, BigInt, Bytes, log } from "@graphprotocol/graph-ts";
 import {
     Action,
     Command,
+    DeliberationConfig,
     Header,
     Member,
     Proposal,
@@ -11,12 +12,24 @@ import {
 import {
     genActionId,
     genCommandId,
+    genDeliberationConfigId,
     genHeaderId,
     genMemberId,
     genProposalId,
     genTextId,
     genVoteId,
 } from "./entity-id-provider";
+
+// DeliberationConfig
+
+export function loadOrCreateDeliberationConfig(): DeliberationConfig {
+    const id = genDeliberationConfigId();
+    let deliberationConfig = DeliberationConfig.load(id);
+    if (deliberationConfig == null) {
+        deliberationConfig = new DeliberationConfig(id);
+    }
+    return deliberationConfig;
+}
 
 // Proposal
 
@@ -219,3 +232,28 @@ export function loadMember(memberId: BigInt): Member {
     }
     return member;
 }
+
+// export function loadOrCreateProposalHeaderMetadata(cid: string): void {
+//     const id = genProposalHeaderMetadataId(cid);
+//     let proposalHeaderMetadata = ProposalHeaderMetadata.load(id);
+//     if (proposalHeaderMetadata == null) {
+//         ProposalHeaderMetadataTemplate.create(cid);
+//     }
+// }
+
+// export function loadOrCreateMemberMetadata(cid: string): void {
+//     const id = genMemberMetadataId(cid);
+//     let memebrMetadata = MemberMetadata.load(id);
+//     if (memebrMetadata == null) {
+//         log.warning("member metadata creating: {}", [cid]);
+//         MemberMetadataTemplate.create(cid);
+//     }
+// }
+
+// export function loadOrCreateTextMetadata(cid: string): void {
+//     const id = genTextMetadataId(cid);
+//     let textMetadata = TextMetadata.load(id);
+//     if (textMetadata == null) {
+//         TextMetadataTemplate.create(cid);
+//     }
+// }

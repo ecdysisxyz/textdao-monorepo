@@ -6,7 +6,7 @@ import {
     beforeEach,
 } from "matchstick-as/assembly/index";
 import { BigInt } from "@graphprotocol/graph-ts";
-import { handleProposalSnapped } from "../../src/handlers/proposal-snapped";
+import { handleProposalSnapped } from "../../src/event-handlers/proposal-snapped";
 import {
     genProposalId,
     genHeaderId,

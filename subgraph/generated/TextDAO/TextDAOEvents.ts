@@ -48,6 +48,44 @@ export class CommandCreatedActionsStruct extends ethereum.Tuple {
   }
 }
 
+export class DeliberationConfigUpdated extends ethereum.Event {
+  get params(): DeliberationConfigUpdated__Params {
+    return new DeliberationConfigUpdated__Params(this);
+  }
+}
+
+export class DeliberationConfigUpdated__Params {
+  _event: DeliberationConfigUpdated;
+
+  constructor(event: DeliberationConfigUpdated) {
+    this._event = event;
+  }
+
+  get config(): DeliberationConfigUpdatedConfigStruct {
+    return changetype<DeliberationConfigUpdatedConfigStruct>(
+      this._event.parameters[0].value.toTuple()
+    );
+  }
+}
+
+export class DeliberationConfigUpdatedConfigStruct extends ethereum.Tuple {
+  get expiryDuration(): BigInt {
+    return this[0].toBigInt();
+  }
+
+  get snapInterval(): BigInt {
+    return this[1].toBigInt();
+  }
+
+  get repsNum(): BigInt {
+    return this[2].toBigInt();
+  }
+
+  get quorumScore(): BigInt {
+    return this[3].toBigInt();
+  }
+}
+
 export class HeaderCreated extends ethereum.Event {
   get params(): HeaderCreated__Params {
     return new HeaderCreated__Params(this);
@@ -69,7 +107,7 @@ export class HeaderCreated__Params {
     return this._event.parameters[1].value.toBigInt();
   }
 
-  get metadataURI(): string {
+  get metadataCid(): string {
     return this._event.parameters[2].value.toString();
   }
 }
@@ -113,7 +151,7 @@ export class MemberAdded__Params {
     return this._event.parameters[1].value.toAddress();
   }
 
-  get metadataURI(): string {
+  get metadataCid(): string {
     return this._event.parameters[2].value.toString();
   }
 }
@@ -139,7 +177,7 @@ export class MemberUpdated__Params {
     return this._event.parameters[1].value.toAddress();
   }
 
-  get metadataURI(): string {
+  get metadataCid(): string {
     return this._event.parameters[2].value.toString();
   }
 }
@@ -321,7 +359,7 @@ export class TextCreated__Params {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get metadataURI(): string {
+  get metadataCid(): string {
     return this._event.parameters[1].value.toString();
   }
 }
@@ -361,7 +399,7 @@ export class TextUpdated__Params {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get newMetadataURI(): string {
+  get newMetadataCid(): string {
     return this._event.parameters[1].value.toString();
   }
 }

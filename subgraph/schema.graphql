@@ -4,6 +4,7 @@ type DeliberationConfig @entity {
     snapInterval: BigInt!
     repsNum: BigInt!
     quorumScore: BigInt!
+    lastUpdated: BigInt!
 }
 type Proposal @entity {
     id: ID!
@@ -28,7 +29,8 @@ type Proposal @entity {
 type Header @entity {
     id: ID!
     proposal: Proposal!
-    metadataURI: String!
+    title: String
+    body: String
 }
 type Command @entity {
     id: ID!
@@ -56,10 +58,13 @@ enum ActionStatus {
 }
 type Text @entity {
     id: ID!
-    metadataURI: String!
+    title: String
+    body: String
 }
 type Member @entity {
     id: ID!
     addr: Bytes!
-    metadataURI: String!
+    name: String
+    image: String
+    bio: String
 }

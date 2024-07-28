@@ -9,7 +9,7 @@ import { BigInt } from "@graphprotocol/graph-ts";
 import {
     handleProposalTallied,
     handleProposalTalliedWithTie,
-} from "../../src/handlers/proposal-tallied";
+} from "../../src/event-handlers/proposal-tallied";
 import {
     genProposalId,
     genHeaderId,

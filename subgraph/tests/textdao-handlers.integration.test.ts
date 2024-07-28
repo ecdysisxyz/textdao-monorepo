@@ -4,20 +4,22 @@ import {
     test,
     clearStore,
     beforeAll,
+    beforeEach,
+    mockIpfsFile,
     log,
 } from "matchstick-as/assembly/index";
 import { BigInt, Address, Bytes } from "@graphprotocol/graph-ts";
-import { handleRepresentativesAssigned } from "../src/handlers/representatives-assigned";
-import { handleProposed } from "../src/handlers/proposed";
-import { handleVoted } from "../src/handlers/voted";
-import { handleHeaderCreated } from "../src/handlers/header-created";
-import { handleCommandCreated } from "../src/handlers/command-created";
+import { handleRepresentativesAssigned } from "../src/event-handlers/representatives-assigned";
+import { handleProposed } from "../src/event-handlers/proposed";
+import { handleVoted } from "../src/event-handlers/voted";
+import { handleHeaderCreated } from "../src/event-handlers/header-created";
+import { handleCommandCreated } from "../src/event-handlers/command-created";
 import {
     handleProposalTallied,
     handleProposalTalliedWithTie,
-} from "../src/handlers/proposal-tallied";
-import { handleProposalExecuted } from "../src/handlers/proposal-executed";
-import { handleProposalSnapped } from "../src/handlers/proposal-snapped";
+} from "../src/event-handlers/proposal-tallied";
+import { handleProposalExecuted } from "../src/event-handlers/proposal-executed";
+import { handleProposalSnapped } from "../src/event-handlers/proposal-snapped";
 import {
     createMockRepresentativesAssignedEvent,
     createMockProposedEvent,
@@ -51,7 +53,15 @@ import { Vote as VoteEntity } from "../generated/schema";
  * ensuring that the subgraph correctly processes and stores data from multiple related events.
  */
 describe("TextDAO Subgraph Integration Tests", () => {
+    const headerMetadataCid = "QmHeader";
+    const headerMetadataFilePath =
+        "tests/utils/ipfs-file-data/sample-proposal-header-metadata1.json";
+
     beforeAll(() => {
+        mockIpfsFile(headerMetadataCid, headerMetadataFilePath);
+    });
+
+    beforeEach(() => {
         clearStore();
     });
 
@@ -65,14 +75,13 @@ describe("TextDAO Subgraph Integration Tests", () => {
             Address.fromString("0x2345000000000000000000000000000000000000"),
             Address.fromString("0x3456000000000000000000000000000000000000"),
         ];
-        const metadataURI = "originalProposalURI";
         const proposer = Address.fromString(
             "0xaaaa000000000000000000000000000000000000"
         );
 
         // Create proposal
         handleHeaderCreated(
-            createMockHeaderCreatedEvent(pid, headerId1, metadataURI)
+            createMockHeaderCreatedEvent(pid, headerId1, headerMetadataCid)
         );
         handleRepresentativesAssigned(
             createMockRepresentativesAssignedEvent(pid, reps)
@@ -96,7 +105,7 @@ describe("TextDAO Subgraph Integration Tests", () => {
             if (
                 headers[i].id == headerEntityId &&
                 headers[i].proposal == proposalEntityId &&
-                headers[i].metadataURI == metadataURI
+                headers[i].title == "Sample Header Title1"
             ) {
                 foundMatchingHeader = true;
                 break;
@@ -147,7 +156,6 @@ describe("TextDAO Subgraph Integration Tests", () => {
         // Fork proposal
         const headerId2 = BigInt.fromI32(2);
         const commandId1 = BigInt.fromI32(1);
-        const forkURI = "forkedProposalURI";
         const actions = [
             new Action(
                 "memberJoin(uint256,(address,string)[])",
@@ -155,7 +163,7 @@ describe("TextDAO Subgraph Integration Tests", () => {
             ),
         ];
         handleHeaderCreated(
-            createMockHeaderCreatedEvent(pid, headerId2, forkURI)
+            createMockHeaderCreatedEvent(pid, headerId2, headerMetadataCid)
         );
         handleCommandCreated(
             createMockCommandCreatedEvent(pid, commandId1, actions)
@@ -169,7 +177,7 @@ describe("TextDAO Subgraph Integration Tests", () => {
             if (
                 headers[i].id == genHeaderId(pid, headerId2) &&
                 headers[i].proposal == proposalEntityId &&
-                headers[i].metadataURI == forkURI
+                headers[i].title == "Sample Header Title1"
             ) {
                 foundForkHeader = true;
                 break;
@@ -315,11 +323,14 @@ describe("TextDAO Subgraph Integration Tests", () => {
             Address.fromString("0x2345000000000000000000000000000000000000"),
             Address.fromString("0x3456000000000000000000000000000000000000"),
         ];
-        const metadataURI = "tieProposalURI";
 
         // Create proposal
         handleHeaderCreated(
-            createMockHeaderCreatedEvent(pid, BigInt.fromI32(1), metadataURI)
+            createMockHeaderCreatedEvent(
+                pid,
+                BigInt.fromI32(1),
+                headerMetadataCid
+            )
         );
         handleRepresentativesAssigned(
             createMockRepresentativesAssignedEvent(pid, reps)
@@ -334,7 +345,6 @@ describe("TextDAO Subgraph Integration Tests", () => {
         );
 
         // Fork proposal
-        const forkURI = "forkedProposalURI";
         const actions = [
             new Action(
                 "memberJoin(uint256,(address,string)[])",
@@ -342,7 +352,11 @@ describe("TextDAO Subgraph Integration Tests", () => {
             ),
         ];
         handleHeaderCreated(
-            createMockHeaderCreatedEvent(pid, BigInt.fromI32(2), forkURI)
+            createMockHeaderCreatedEvent(
+                pid,
+                BigInt.fromI32(2),
+                headerMetadataCid
+            )
         );
         handleCommandCreated(
             createMockCommandCreatedEvent(pid, BigInt.fromI32(1), actions)
@@ -444,11 +458,10 @@ describe("TextDAO Subgraph Integration Tests", () => {
             const createdAt = BigInt.fromI32(17200000);
             const expirationTime = BigInt.fromI32(3100000);
             const reps = [MEMBER1, MEMBER2, MEMBER3];
-            const metadataURI = "proposalURI";
 
             // Create proposal
             handleHeaderCreated(
-                createMockHeaderCreatedEvent(pid, headerId, metadataURI)
+                createMockHeaderCreatedEvent(pid, headerId, headerMetadataCid)
             );
             handleRepresentativesAssigned(
                 createMockRepresentativesAssignedEvent(pid, reps)

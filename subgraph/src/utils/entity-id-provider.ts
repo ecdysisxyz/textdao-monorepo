@@ -1,5 +1,9 @@
 import { BigInt, Bytes } from "@graphprotocol/graph-ts";
 
+export function genDeliberationConfigId(): string {
+    return "DeliberationConfigID";
+}
+
 export function genHeaderId(pid: BigInt, headerId: BigInt): string {
     return pid.toString() + "-" + headerId.toString();
 }

@@ -2,6 +2,7 @@ import {
     MemberAdded,
     MemberUpdated,
 } from "../../generated/TextDAO/TextDAOEvents";
+import { saveMemberMetadata } from "../file-data-handlers/member-metadata";
 import { createNewMember, loadMember } from "../utils/entity-provider";
 
 /**
@@ -11,8 +12,8 @@ import { createNewMember, loadMember } from "../utils/entity-provider";
 export function handleMemberAdded(event: MemberAdded): void {
     const member = createNewMember(event.params.memberId);
     member.addr = event.params.addr;
-    member.metadataURI = event.params.metadataURI;
     member.save();
+    saveMemberMetadata(event.params.metadataCid, member);
 }
 
 /**
@@ -22,6 +23,6 @@ export function handleMemberAdded(event: MemberAdded): void {
 export function handleMemberUpdated(event: MemberUpdated): void {
     const member = loadMember(event.params.memberId);
     member.addr = event.params.addr;
-    member.metadataURI = event.params.metadataURI;
     member.save();
+    saveMemberMetadata(event.params.metadataCid, member);
 }
