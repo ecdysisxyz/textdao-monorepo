@@ -8,6 +8,7 @@ import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
 import {MemberLib} from "bundle/textDAO/utils/MemberLib.sol";
 // Interface
 import {IInitialize} from "bundle/textDAO/interfaces/TextDAOFunctions.sol";
+import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
 
 contract Initialize is IInitialize, Initializable {
     using MemberLib for Schema.Members;
@@ -18,6 +19,7 @@ contract Initialize is IInitialize, Initializable {
 
         // 2. Set Initial DeliberationConfig
         Storage.Deliberation().config = _initialConfig;
+        emit TextDAOEvents.DeliberationConfigUpdated(_initialConfig);
 
         /// @dev emit Initialized(1) @Initializable.initializer()
     }

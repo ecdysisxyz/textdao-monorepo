@@ -50,6 +50,12 @@ library TextDAOOps {
         uint256 key2;
         address sender;
         address sender2;
+        string headerMetadataCid1;
+        string headerMetadataCid2;
+        string memberMetadataCid1;
+        string memberMetadataCid2;
+        string textMetadataCid1;
+        string textMetadataCid2;
     }
     function fillSampleData(MCDevKit storage mc, address _textDAO) internal {
         Vars memory __;
@@ -60,6 +66,12 @@ library TextDAOOps {
         __.key2 = mc.loadPrivateKey("MEMBER2_PRIV_KEY");
         __.sender = ForgeHelper.msgSender();
         __.sender2 = vm.addr(__.key2);
+        __.headerMetadataCid1 = "QmS2gdi4CRx4bXeaZgchp9SNs3B5oFaxjyDEVYTcdcfgzE";
+        __.headerMetadataCid2 = "Qmeo92GcxD6mamU5YbTiWAYJJRGrk8phUwcM4tMENLsBsC";
+        __.memberMetadataCid1 = "QmcLfVoJ8wi95symVPZTvKizjQsV7BFcTBRLxL8przFJrS";
+        __.memberMetadataCid2 = "QmXBH4kKdQTDWK5Yw677o5bENQHZaPqQsoSj1Ua39gZiAA";
+        __.textMetadataCid1 = "QmQEJ3TDEwG1PShJu1P2fw5W5Ap2AmPiLma3BJJ2xkTmfW";
+        __.textMetadataCid2 = "Qma9J9dqZC6ASDYahGRXsqewNMMe5o3pXne5F9d792pgpQ";
 
         address[] memory _newMembers = new address[](1);
         _newMembers[0] = __.sender2;
@@ -71,24 +83,31 @@ library TextDAOOps {
         _reps[0] = __.sender;
         _reps[1] = __.sender2;
         // _reps[2] = MEMBER3;
-        string memory _metadataCid = "QmStEMeSBhmakCDyKQDYuTcRCMveCMmA5C5kwmXLBbr8YD";
         vm.expectEmit();
-        emit TextDAOEvents.HeaderCreated(0, 1, _metadataCid);
+        emit TextDAOEvents.HeaderCreated(0, 1, __.headerMetadataCid1);
         emit TextDAOEvents.RepresentativesAssigned(0, _reps);
         emit TextDAOEvents.Proposed(0, __.sender, block.timestamp, _expirationTime);
-        uint256 _pid = textDAO.propose(_metadataCid, new Schema.Action[](0));
+        uint256 _pid = textDAO.propose(__.headerMetadataCid1, new Schema.Action[](0));
 
         // Fork proposal
-        string memory _forkCid = "forkedProposalCid";
-        Schema.Action[] memory _actions = new Schema.Action[](1);
+        Schema.Action[] memory _actions = new Schema.Action[](2);
         _actions[0] = Schema.Action({
+            funcSig: "createText(uint256,string)",
+            abiParams: abi.encode(_pid, __.textMetadataCid1)
+        });
+        Schema.Member[] memory _memberCandidates = new Schema.Member[](1);
+        _memberCandidates[0] = Schema.Member({
+            addr: address(this),
+            metadataCid: __.memberMetadataCid1
+        });
+        _actions[1] = Schema.Action({
             funcSig: "memberJoin(uint256,(address,string)[])",
-            abiParams: abi.encode(_pid, new Schema.Member[](1))
+            abiParams: abi.encode(_pid, _memberCandidates)
         });
         vm.expectEmit(true, true, true, true);
-        emit TextDAOEvents.HeaderCreated(_pid, 2, _forkCid);
+        emit TextDAOEvents.HeaderCreated(_pid, 2, __.headerMetadataCid2);
         emit TextDAOEvents.CommandCreated(_pid, 1, _actions);
-        textDAO.fork(_pid, _forkCid, _actions);
+        textDAO.fork(_pid, __.headerMetadataCid2, _actions);
 
         // Two members vote differently, causing a tie
         Schema.Vote memory _vote1 = Schema.Vote({

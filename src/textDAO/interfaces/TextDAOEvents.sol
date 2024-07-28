@@ -14,8 +14,11 @@ interface TextDAOEvents {
     /// @dev Thrown when a given command choice is duplicate
     event WARN_CommandChoiceIsDuplicate(uint commandChoice);
 
+    // event
+    event DeliberationConfigUpdated(Schema.DeliberationConfig config);
+
     // Proposal
-    event HeaderCreated(uint pid, uint headerId, string metadataURI);
+    event HeaderCreated(uint pid, uint headerId, string metadataCid);
     event CommandCreated(uint pid, uint commandId, Schema.Action[] actions);
 
     // Propose
@@ -31,12 +34,12 @@ interface TextDAOEvents {
     // Execute
     event ProposalExecuted(uint pid, uint approvedCommandId);
     // SaveText
-    event TextCreated(uint textId, string metadataURI);
-    event TextUpdated(uint textId, string newMetadataURI);
+    event TextCreated(uint textId, string metadataCid);
+    event TextUpdated(uint textId, string newMetadataCid);
     event TextDeleted(uint textId);
     /// @dev From Initializable @ openzeppelin-contracts~5.0.0
     event Initialized(uint64 version);
     // Member
-    event MemberAdded(uint memberId, address addr, string metadataURI);
-    event MemberUpdated(uint memberId, address addr, string metadataURI);
+    event MemberAdded(uint memberId, address addr, string metadataCid);
+    event MemberUpdated(uint memberId, address addr, string metadataCid);
 }
