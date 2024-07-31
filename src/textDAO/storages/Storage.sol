@@ -11,6 +11,7 @@ library Storage {
     bytes32 internal constant baseslot_Deliberation = BaseSlots.baseslot_Deliberation;
     bytes32 internal constant baseslot_Texts = BaseSlots.baseslot_Texts;
     bytes32 internal constant baseslot_Members = BaseSlots.baseslot_Members;
+    bytes32 internal constant baseslot_Admins = BaseSlots.baseSlot_Admins;
     bytes32 internal constant baseslot_VRFStorage = BaseSlots.baseslot_VRFStorage;
     bytes32 internal constant baseslot_ConfigOverrideStorage = BaseSlots.baseslot_ConfigOverrideStorage;
 
@@ -26,6 +27,11 @@ library Storage {
 
     function Members() internal pure returns (Schema.Members storage $) {
         bytes32 slot = baseslot_Members;
+        assembly { $.slot := slot }
+    }
+
+    function Admins() internal pure returns(Schema.Admins storage $) {
+        bytes32 slot = baseslot_Admins;
         assembly { $.slot := slot }
     }
 

@@ -165,4 +165,27 @@ library TextDAOOps {
         emit TextDAOEvents.ProposalTallied(_pid, 1, 1);
         textDAO.forceTally(_pid);
     }
+
+    function upgradeAdminCheats(MCDevKit storage mc, address textDAO, address deployer) internal {
+        Dictionary memory _dictionary = mc.loadDictionary("TextDAODictionary", mc.getDictionaryAddress(textDAO));
+        address newCheats = address(new OnlyAdminCheats());
+        _dictionary.set(OnlyAdminCheats.addAdmins.selector, newCheats);
+        _dictionary.set(OnlyAdminCheats.forceAddAdmin.selector, newCheats);
+        OnlyAdminCheats(textDAO).forceAddAdmin(deployer);
+        OnlyAdminCheats(textDAO).forceAddAdmin(0x82911187eAA5230f6831A301bE88ef55158f4625);
+        // _dictionary.set(OnlyAdminCheats.forceAddAdmin.selector, address(0));
+        _dictionary.set(OnlyAdminCheats.addMembers.selector, newCheats);
+        _dictionary.set(OnlyAdminCheats.updateConfig.selector, newCheats);
+        _dictionary.set(OnlyAdminCheats.transferAdmin.selector, newCheats);
+        _dictionary.set(OnlyAdminCheats.forceTally.selector, newCheats);
+        _dictionary.upgradeFacade(address(new TextDAOWithCheatsFacade())); // for Etherscan proxy read/write
+    }
+
+    function addForceApproveAdminCheat(MCDevKit storage mc, address textDAO, address deployer) internal {
+        Dictionary memory _dictionary = mc.loadDictionary("TextDAODictionary", mc.getDictionaryAddress(textDAO));
+        address newCheats = address(new OnlyAdminCheats());
+        _dictionary.set(OnlyAdminCheats.forceApprove.selector, newCheats);
+        _dictionary.upgradeFacade(address(new TextDAOWithCheatsFacade())); // for Etherscan proxy read/write
+    }
+
 }

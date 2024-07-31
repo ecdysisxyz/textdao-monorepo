@@ -24,10 +24,12 @@ contract TextDAOFacade is ITextDAO {
 }
 
 contract TextDAOWithCheatsFacade is TextDAOFacade {
-    function addMembers(address[] memory newMembers) public {}
+    function addAdmin(address[] memory newAdmins) external {}
+    function addMembers(address[] memory newMembers) external {}
     function updateConfig(DeliberationConfig calldata newConfig) external {}
     function transferAdmin(address newAdmin) external {}
     function forceTally(uint pid) external {}
+    function forceApprove(uint pid, uint headerId, uint commandId) external {}
 }
 
 contract TextDAOWithGetterFacade is TextDAOFacade {

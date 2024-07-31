@@ -74,6 +74,11 @@ interface Schema {
         string metadataCid;
     }
 
+    /// @custom:storage-location erc7201:textDAO.Admins
+    struct Admins {
+        address[] admins;
+    }
+
 
     /// @custom:storage-location erc7201:textDAO.VRFStorage
     struct VRFStorage {

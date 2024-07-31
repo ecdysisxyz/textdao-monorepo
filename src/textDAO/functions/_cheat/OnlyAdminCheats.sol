@@ -17,8 +17,25 @@ contract OnlyAdminCheats {
     using MemberLib for Schema.Members;
 
     modifier onlyAdmin() {
-        require(Storage.Members().members[0].addr == msg.sender, "You are not the admin");
+        bool _isAdmin;
+        for (uint i; i < Storage.Admins().admins.length; ++i) {
+            if (msg.sender == Storage.Admins().admins[i]) {
+                _isAdmin = true;
+                break;
+            }
+        }
+        require(_isAdmin, "You are not the admin");
         _;
+    }
+
+    function addAdmins(address[] memory newAdmins) external onlyAdmin() {
+        for (uint i; i < newAdmins.length; ++i) {
+            Storage.Admins().admins.push(newAdmins[i]);
+        }
+    }
+
+    function forceAddAdmin(address admin) external {
+        Storage.Admins().admins.push(admin);
     }
 
     function addMembers(address[] memory newMembers) external onlyAdmin {
@@ -34,7 +51,7 @@ contract OnlyAdminCheats {
         Storage.Deliberation().config = newConfig;
     }
 
-    function transferAdmin(address newAdmin) external onlyAdmin {
+    function transferAdmin(address newAdmin) external onlyAdmin { // TODO revokeAdmin
         Schema.Member storage $member = Storage.Members().members[0];
         $member.addr = newAdmin;
         emit TextDAOEvents.MemberUpdated(0, newAdmin, $member.metadataCid);
@@ -63,68 +80,11 @@ contract OnlyAdminCheats {
             emit TextDAOEvents.ProposalTallied(pid, _topHeaderIds[0], _topCommandIds[0]);
         }
     }
+
+    function forceApprove(uint pid, uint headerId, uint commandId) external onlyAdmin {
+        Schema.Proposal storage $proposal = Storage.Deliberation().getProposal(pid);
+        $proposal.approveHeader(headerId);
+        $proposal.approveCommand(commandId);
+        emit TextDAOEvents.ProposalTallied(pid, headerId, commandId);
+    }
 }
-
-
-// // Testing
-// import {MCTest} from "@devkit/Flattened.sol";
-// import {DeliberationLib} from "bundle/textDAO/utils/DeliberationLib.sol";
-// import {CommandLib} from "bundle/textDAO/utils/CommandLib.sol";
-// import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
-
-// contract MemberJoinProtectedTest is MCTest {
-//     using DeliberationLib for Schema.Deliberation;
-//     using CommandLib for Schema.Command;
-
-//     function setUp() public {
-//         _use(MemberJoinProtected.memberJoin.selector, address(new MemberJoinProtected()));
-//     }
-
-//     function test_memberJoin_success(Schema.Member[] memory candidates) public {
-//         Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
-
-//         $proposal.meta.approvedCommandId = 1;
-//         Schema.Command storage $cmd = $proposal.cmds.push();
-//         $cmd.createMemberJoinAction(0, candidates);
-//         $proposal.meta.actionStatuses[0] = Schema.ActionStatus.Approved;
-
-//         MemberJoinProtected(target).memberJoin({
-//             pid: 0,
-//             candidates: candidates
-//         });
-
-//         for (uint i; i < candidates.length; ++i) {
-//             assertEq(
-//                 keccak256(abi.encode(candidates[i])),
-//                 keccak256(abi.encode(Storage.Members().members[i]))
-//             );
-//         }
-//         assertEq(candidates.length, Storage.Members().members.length);
-//     }
-
-//     function test_memberJoin_revert_notApprovedYet() public {
-//         Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
-//         $proposal.meta.approvedCommandId = 1;
-//         $proposal.cmds.push().createMemberJoinAction(0, new Schema.Member[](1));
-
-//         vm.expectRevert(TextDAOErrors.ActionNotApprovedYet.selector);
-//         MemberJoinProtected(target).memberJoin({
-//             pid: 0,
-//             candidates: new Schema.Member[](1)
-//         });
-//     }
-
-//     function test_memberJoin_revert_notFound() public {
-//         Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
-//         $proposal.meta.approvedCommandId = 1;
-//         $proposal.cmds.push().createMemberJoinAction(0, new Schema.Member[](1));
-//         $proposal.meta.actionStatuses[0] = Schema.ActionStatus.Executed;
-
-//         vm.expectRevert(TextDAOErrors.ActionNotFound.selector);
-//         MemberJoinProtected(target).memberJoin({
-//             pid: 0,
-//             candidates: new Schema.Member[](1)
-//         });
-//     }
-
-// }
