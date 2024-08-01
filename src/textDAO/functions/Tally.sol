@@ -8,6 +8,7 @@ import {ProposalLib} from "bundle/textDAO/utils/ProposalLib.sol";
 import {RCVLib} from "bundle/textDAO/utils/RCVLib.sol";
 // Interface
 import {ITally} from "bundle/textDAO/interfaces/TextDAOFunctions.sol";
+import {IExecute} from "bundle/textDAO/interfaces/TextDAOFunctions.sol";
 import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
 import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
 
@@ -28,7 +29,7 @@ contract Tally is ITally {
      * @dev This function can be called by anyone, including keepers
      * @dev If the proposal is expired, it performs the final tally. Otherwise, it takes a snapshot.
      */
-    function tally(uint pid) external {
+    function tally(uint pid) public {
         Schema.Proposal storage $proposal = Storage.Deliberation().getProposal(pid);
 
         if ($proposal.isExpired()) {
@@ -67,6 +68,16 @@ contract Tally is ITally {
             $proposal.approveHeader(_topHeaderIds[0]);
             $proposal.approveCommand(_topCommandIds[0]);
             emit TextDAOEvents.ProposalTallied(pid, _topHeaderIds[0], _topCommandIds[0]);
+        }
+    }
+
+    function tallyAndExecute(uint pid) public {
+        tally(pid);
+
+        Schema.Proposal storage $proposal = Storage.Deliberation().getProposal(pid);
+        if ($proposal.meta.approvedCommandId != 0) {
+            // Execute the approved command
+            IExecute(address(this)).execute(pid);
         }
     }
 

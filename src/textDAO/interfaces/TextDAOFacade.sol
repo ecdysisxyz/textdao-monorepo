@@ -13,6 +13,7 @@ contract TextDAOFacade is ITextDAO {
     function fork(uint pid, string calldata headerMetadataCid, Action[] calldata actions) external {}
     function vote(uint pid, Vote calldata repVote) external {}
     function tally(uint _proposalId) external {}
+    function tallyAndExecute(uint _proposalId) external {}
     function execute(uint _proposalId) external {}
     // TextDAO protected functions
     function memberJoin(uint _proposalId, Member[] calldata _candidates) external {}
@@ -30,6 +31,7 @@ contract TextDAOWithCheatsFacade is TextDAOFacade {
     function transferAdmin(address newAdmin) external {}
     function forceTally(uint pid) external {}
     function forceApprove(uint pid, uint headerId, uint commandId) external {}
+    function forceApproveAndExecute(uint pid, uint headerId, uint commandId) external {}
 }
 
 contract TextDAOWithGetterFacade is TextDAOFacade {

@@ -105,7 +105,9 @@ library TextDAODeployer {
         mc.use("Propose", Propose.propose.selector, address(new Propose()));
         mc.use("Fork", Fork.fork.selector, address(new Fork()));
         mc.use("Vote", Vote.vote.selector, address(new Vote()));
-        mc.use("Tally", Tally.tally.selector, address(new Tally()));
+        address tally = address(new Tally());
+        mc.use("Tally", Tally.tally.selector, tally);
+        mc.use("TallyAndExecute", Tally.tallyAndExecute.selector, tally);
         mc.use("Execute", Execute.execute.selector, address(new Execute()));
 
         // TextDAO protected functions
@@ -124,10 +126,13 @@ library TextDAODeployer {
      */
     function _useCheatFunctions(MCDevKit storage mc) internal {
         address onlyAdminCheats = address(new OnlyAdminCheats());
-        mc.use("AddMember", OnlyAdminCheats.addMembers.selector, onlyAdminCheats);
+        mc.use("AddAdmins", OnlyAdminCheats.addAdmins.selector, onlyAdminCheats);
+        mc.use("AddMembers", OnlyAdminCheats.addMembers.selector, onlyAdminCheats);
         mc.use("UpdateConfig", OnlyAdminCheats.updateConfig.selector, onlyAdminCheats);
         mc.use("TransferAdmin", OnlyAdminCheats.transferAdmin.selector, onlyAdminCheats);
         mc.use("ForceTally", OnlyAdminCheats.forceTally.selector, onlyAdminCheats);
+        mc.use("ForceApprove", OnlyAdminCheats.forceApprove.selector, onlyAdminCheats);
+        mc.use("ForceApproveAndExecute", OnlyAdminCheats.forceApproveAndExecute.selector, onlyAdminCheats);
     }
 
     /**

@@ -188,4 +188,10 @@ library TextDAOOps {
         _dictionary.upgradeFacade(address(new TextDAOWithCheatsFacade())); // for Etherscan proxy read/write
     }
 
+    function upgradeTallyAndExecute(MCDevKit storage mc, address textDAO) internal {
+        Dictionary memory _dictionary = mc.loadDictionary("TextDAODictionary", mc.getDictionaryAddress(textDAO));
+        _dictionary.set(Tally.tally.selector, address(new Tally()));
+        // _dictionary.upgradeFacade(address(new TextDAOWithCheatsFacade())); // for Etherscan proxy read/write
+    }
+
 }

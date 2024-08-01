@@ -35,6 +35,7 @@ contract TextDAOStateTest is MCTest {
     ITextDAO public textDAO = ITextDAO(target);
     address saveText;
     address memberJoin;
+    address tally;
     address public constant MEMBER1 = address(0x1234);
     address public constant MEMBER2 = address(0x2345);
     address public constant MEMBER3 = address(0x3456);
@@ -50,7 +51,9 @@ contract TextDAOStateTest is MCTest {
         _use(Fork.fork.selector, address(new Fork()));
         _use(Vote.vote.selector, address(new Vote()));
         _use(Execute.execute.selector, address(new Execute()));
-        _use(Tally.tally.selector, address(new Tally()));
+        tally = address(new Tally());
+        _use(Tally.tally.selector, tally);
+        _use(Tally.tallyAndExecute.selector, tally);
         saveText = address(new SaveTextProtected());
         _use(SaveTextProtected.createText.selector, saveText);
         _use(SaveTextProtected.updateText.selector, saveText);
@@ -123,18 +126,20 @@ contract TextDAOStateTest is MCTest {
         vm.warp($proposal.meta.expirationTime + 1);
         vm.expectEmit();
         emit TextDAOEvents.ProposalTallied(_pid0, 2, 1);
-        textDAO.tally(_pid0);
+        emit TextDAOEvents.ProposalExecuted(_pid0, 1);
+        // 5'. Execute proposal in final tally
+        vm.expectCall(memberJoin, _actions1[0].calcCallData());
+        textDAO.tallyAndExecute(_pid0);
         assertEq($proposal.meta.approvedHeaderId, 2, "Incorrect approved header ID");
         assertEq($proposal.meta.approvedCommandId, 1, "Incorrect approved command ID");
-
-        // 6. Execute proposal
-        vm.expectCall(memberJoin, _actions1[0].calcCallData());
-        textDAO.execute(_pid0);
 
         // Verify execution results
         assertEq($proposal.headers.length, 4, "Incorrect number of headers after execution");
         assertEq($proposal.cmds.length, 3, "Incorrect number of commands after execution");
         assertTrue($proposal.meta.fullyExecuted, "Proposal should be fully executed");
+
+        vm.expectRevert(TextDAOErrors.ProposalAlreadyFullyExecuted.selector);
+        textDAO.execute(_pid0);
     }
 
     /**
@@ -274,7 +279,7 @@ contract TextDAOStateTest is MCTest {
         _tieCommandIds[0] = 1;
         vm.expectEmit(true, true, true, true);
         emit TextDAOEvents.ProposalTalliedWithTie(_pid, _tieHeaderIds, _tieCommandIds, $proposal.meta.expirationTime + _config.expiryDuration);
-        textDAO.tally(_pid);
+        textDAO.tallyAndExecute(_pid);
 
         // Verify that the expiration time has been extended
         uint256 _extendedExpirationTime = $proposal.meta.createdAt + _config.expiryDuration * 2;
@@ -302,17 +307,19 @@ contract TextDAOStateTest is MCTest {
         _winningCommandIds[0] = 1;
         vm.expectEmit(true, true, true, true);
         emit TextDAOEvents.ProposalTallied(_pid, _winningHeaderIds[0], _winningCommandIds[0]);
-        textDAO.tally(_pid);
+        emit TextDAOEvents.ProposalExecuted(_pid, _winningCommandIds[0]);
+        textDAO.tallyAndExecute(_pid);
 
         // Verify that the proposal is now approved
         assertEq($proposal.meta.approvedHeaderId, 1, "Header 1 should be approved after tie resolution");
         assertEq($proposal.meta.approvedCommandId, 1, "Command 1 should be approved after tie resolution");
 
-        // Try to execute the proposal
-        textDAO.execute(_pid);
-
         // Verify that the proposal is fully executed
         assertTrue($proposal.meta.fullyExecuted, "Proposal should be fully executed after tie resolution");
+
+        // Try to execute the proposal, should be reverted
+        vm.expectRevert(TextDAOErrors.ProposalAlreadyFullyExecuted.selector);
+        textDAO.execute(_pid);
     }
 
     /**
@@ -438,6 +445,6 @@ contract TextDAOStateTest is MCTest {
 
         vm.expectEmit(true, true, true, true);
         emit TextDAOEvents.ProposalSnapped(pid, _epoch, new uint[](0), new uint[](0));
-        textDAO.tally(pid);
+        textDAO.tallyAndExecute(pid);
     }
 }

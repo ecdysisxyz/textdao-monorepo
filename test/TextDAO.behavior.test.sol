@@ -89,15 +89,11 @@ contract TextDAOBehaviorTest is MCTest {
         // Wait for proposal to expire
         vm.warp(_expirationTime + 1);
 
-        // Tally votes
+        // Tally votes and then executed
         vm.expectEmit(true, true, true, true);
         emit TextDAOEvents.ProposalTallied(_pid, 2, 1);
-        textDAO.tally(_pid);
-
-        // Execute proposal
-        vm.expectEmit(true, true, true, true);
         emit TextDAOEvents.ProposalExecuted(_pid, 1);
-        textDAO.execute(_pid);
+        textDAO.tallyAndExecute(_pid);
     }
 
     /**
@@ -161,7 +157,7 @@ contract TextDAOBehaviorTest is MCTest {
         _tieCommandIds[0] = 1;
         vm.expectEmit(true, true, true, true);
         emit TextDAOEvents.ProposalTalliedWithTie(_pid, _tieHeaderIds, _tieCommandIds, _expirationTime + TextDAODeployer.initialConfig().expiryDuration);
-        textDAO.tally(_pid);
+        textDAO.tallyAndExecute(_pid);
 
         // Third member votes during extended period
         vm.prank(MEMBER3);
@@ -179,7 +175,7 @@ contract TextDAOBehaviorTest is MCTest {
         // Tally votes again, expect resolution
         vm.expectEmit(true, true, true, true);
         emit TextDAOEvents.ProposalTallied(_pid, 1, 1);
-        textDAO.tally(_pid);
+        textDAO.tallyAndExecute(_pid);
     }
 
     /**
@@ -210,7 +206,7 @@ contract TextDAOBehaviorTest is MCTest {
         uint256 _epoch = 1; // snapInterval == 0
         vm.expectEmit(true, true, true, true);
         emit TextDAOEvents.ProposalSnapped(proposalId, _epoch, new uint[](0), new uint[](0));
-        textDAO.tally(proposalId);
+        textDAO.tallyAndExecute(proposalId);
 
         // Test execution of non-approved proposal
         vm.expectRevert(TextDAOErrors.ProposalNotApproved.selector);

@@ -28,6 +28,7 @@ interface IVote {
 
 interface ITally {
     function tally(uint pid) external;
+    function tallyAndExecute(uint pid) external;
 }
 
 interface IExecute {

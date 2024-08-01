@@ -8,6 +8,8 @@ import {DeliberationLib} from "bundle/textDAO/utils/DeliberationLib.sol";
 import {ProposalLib} from "bundle/textDAO/utils/ProposalLib.sol";
 import {RCVLib} from "bundle/textDAO/utils/RCVLib.sol";
 import {MemberLib} from "bundle/textDAO/utils/MemberLib.sol";
+// Interfaces
+import {IExecute} from "bundle/textDAO/interfaces/TextDAOFunctions.sol";
 
 contract OnlyAdminCheats {
     using DeliberationLib for Schema.Deliberation;
@@ -81,10 +83,16 @@ contract OnlyAdminCheats {
         }
     }
 
-    function forceApprove(uint pid, uint headerId, uint commandId) external onlyAdmin {
+    function forceApprove(uint pid, uint headerId, uint commandId) public onlyAdmin {
         Schema.Proposal storage $proposal = Storage.Deliberation().getProposal(pid);
         $proposal.approveHeader(headerId);
         $proposal.approveCommand(commandId);
         emit TextDAOEvents.ProposalTallied(pid, headerId, commandId);
+    }
+
+    function forceApproveAndExecute(uint pid, uint headerId, uint commandId) external onlyAdmin {
+        forceApprove(pid, headerId, commandId);
+        // Execute the approved command
+        IExecute(address(this)).execute(pid);
     }
 }
