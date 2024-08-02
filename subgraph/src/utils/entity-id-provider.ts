@@ -39,7 +39,7 @@ export function genProposalId(pid: BigInt): string {
 }
 
 export function genVoteId(pid: BigInt, rep: Bytes): string {
-    return pid.toString() + "-" + rep.toString();
+    return pid.toString() + "-" + rep.toHexString();
 }
 
 export function genActionId(

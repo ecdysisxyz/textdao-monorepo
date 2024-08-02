@@ -7,7 +7,7 @@ import {
   Entity,
   Bytes,
   Address,
-  BigInt
+  BigInt,
 } from "@graphprotocol/graph-ts";
 
 export class CommandCreated extends ethereum.Event {
@@ -32,9 +32,7 @@ export class CommandCreated__Params {
   }
 
   get actions(): Array<CommandCreatedActionsStruct> {
-    return this._event.parameters[2].value.toTupleArray<
-      CommandCreatedActionsStruct
-    >();
+    return this._event.parameters[2].value.toTupleArray<CommandCreatedActionsStruct>();
   }
 }
 
@@ -63,7 +61,7 @@ export class DeliberationConfigUpdated__Params {
 
   get config(): DeliberationConfigUpdatedConfigStruct {
     return changetype<DeliberationConfigUpdatedConfigStruct>(
-      this._event.parameters[0].value.toTuple()
+      this._event.parameters[0].value.toTuple(),
     );
   }
 }
@@ -449,7 +447,7 @@ export class Voted__Params {
 
   get vote(): VotedVoteStruct {
     return changetype<VotedVoteStruct>(
-      this._event.parameters[2].value.toTuple()
+      this._event.parameters[2].value.toTuple(),
     );
   }
 }

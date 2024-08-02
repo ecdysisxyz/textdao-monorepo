@@ -8,7 +8,7 @@ import {
   store,
   Bytes,
   BigInt,
-  BigDecimal
+  BigDecimal,
 } from "@graphprotocol/graph-ts";
 
 export class DeliberationConfig extends Entity {
@@ -23,7 +23,7 @@ export class DeliberationConfig extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type DeliberationConfig must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type DeliberationConfig must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("DeliberationConfig", id.toString(), this);
     }
@@ -31,13 +31,13 @@ export class DeliberationConfig extends Entity {
 
   static loadInBlock(id: string): DeliberationConfig | null {
     return changetype<DeliberationConfig | null>(
-      store.get_in_block("DeliberationConfig", id)
+      store.get_in_block("DeliberationConfig", id),
     );
   }
 
   static load(id: string): DeliberationConfig | null {
     return changetype<DeliberationConfig | null>(
-      store.get("DeliberationConfig", id)
+      store.get("DeliberationConfig", id),
     );
   }
 
@@ -132,7 +132,7 @@ export class Proposal extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type Proposal must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type Proposal must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("Proposal", id.toString(), this);
     }
@@ -367,7 +367,7 @@ export class Header extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type Header must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type Header must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("Header", id.toString(), this);
     }
@@ -454,7 +454,7 @@ export class Command extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type Command must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type Command must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("Command", id.toString(), this);
     }
@@ -511,7 +511,7 @@ export class Action extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type Action must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type Action must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("Action", id.toString(), this);
     }
@@ -603,7 +603,7 @@ export class Vote extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type Vote must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type Vote must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("Vote", id.toString(), this);
     }
@@ -703,7 +703,7 @@ export class Text extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type Text must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type Text must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("Text", id.toString(), this);
     }
@@ -777,7 +777,7 @@ export class Member extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type Member must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type Member must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("Member", id.toString(), this);
     }

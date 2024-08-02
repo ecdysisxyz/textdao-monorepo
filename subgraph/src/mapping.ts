@@ -1,3 +1,4 @@
+export { handleDeliberationConfigUpdated } from "./event-handlers/deliberation-config-updated";
 export { handleCommandCreated } from "./event-handlers/command-created";
 export { handleHeaderCreated } from "./event-handlers/header-created";
 export { handleProposalExecuted } from "./event-handlers/proposal-executed";
