@@ -7,13 +7,17 @@ import {ProtectionBase} from "bundle/textDAO/functions/protected/ProtectionBase.
 import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
 // Interface
 import {IMemberJoin} from "bundle/textDAO/interfaces/TextDAOFunctions.sol";
+import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
 
 contract MemberJoinProtected is IMemberJoin, ProtectionBase {
     function memberJoin(uint pid, Schema.Member[] memory candidates) external protected(pid) {
-        Schema.Members storage $ = Storage.Members();
+        Schema.Member[] storage $members = Storage.Members().members;
 
         for (uint i; i < candidates.length; ++i) {
-            $.members.push(candidates[i]);
+            uint _memberId = $members.length;
+            Schema.Member memory _candidate = candidates[i];
+            $members.push(_candidate);
+            emit TextDAOEvents.MemberAddedByProposal(pid, _memberId, _candidate.addr, _candidate.metadataCid);
         }
     }
 }

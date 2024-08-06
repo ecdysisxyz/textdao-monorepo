@@ -79,9 +79,16 @@ contract TextDAOStateTest is MCTest {
             quorumScore: 2
         });
 
+        vm.expectEmit();
+        for (uint i; i < _initialMembers.length; ++i) {
+            emit TextDAOEvents.MemberAdded(i, _initialMembers[i].addr, _initialMembers[i].metadataCid);
+        }
+        emit TextDAOEvents.DeliberationConfigUpdated(_config);
+        emit TextDAOEvents.Initialized(1);
         textDAO.initialize(_initialMembers, _config);
 
         // 2. Create proposals
+        // TODO check event
         vm.startPrank(MEMBER1);
         uint256 _pid0 = textDAO.propose("proposal1Cid", new Schema.Action[](0));
         uint256 _pid1 = textDAO.propose("proposal2Cid", new Schema.Action[](0));
@@ -126,6 +133,7 @@ contract TextDAOStateTest is MCTest {
         vm.warp($proposal.meta.expirationTime + 1);
         vm.expectEmit();
         emit TextDAOEvents.ProposalTallied(_pid0, 2, 1);
+        emit TextDAOEvents.MemberAddedByProposal(_pid0, 2, address(0), "");
         emit TextDAOEvents.ProposalExecuted(_pid0, 1);
         // 5'. Execute proposal in final tally
         vm.expectCall(memberJoin, _actions1[0].calcCallData());

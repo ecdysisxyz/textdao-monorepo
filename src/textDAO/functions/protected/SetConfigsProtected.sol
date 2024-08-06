@@ -6,15 +6,14 @@ pragma solidity ^0.8.24;
 import {ProtectionBase} from "bundle/textDAO/functions/protected/ProtectionBase.sol";
 // Storage
 import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
-
+// Interfaces
+import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
 import "@chainlink/vrf/interfaces/VRFCoordinatorV2Interface.sol";
 
 contract SetConfigsProtected is ProtectionBase {
-    function setProposalsConfig(uint pid, Schema.DeliberationConfig memory config) public protected(pid) returns (bool) {
-        Schema.Deliberation storage $ = Storage.Deliberation();
-        $.config.expiryDuration = config.expiryDuration;
-        $.config.repsNum = config.repsNum;
-        $.config.quorumScore = config.quorumScore;
+    function setDebelirationConfig(uint pid, Schema.DeliberationConfig calldata config) public protected(pid) {
+        Storage.Deliberation().config = config;
+        emit TextDAOEvents.DeliberationConfigUpdatedByProposal(pid, config);
     }
 
     function setVRFConfig(uint pid, Schema.VRFConfig memory config) public protected(pid) returns (bool) {

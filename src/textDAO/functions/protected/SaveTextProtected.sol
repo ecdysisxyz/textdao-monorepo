@@ -27,7 +27,7 @@ contract SaveTextProtected is ISaveText, ProtectionBase {
 
         textId = Storage.Texts().texts.length;
         Storage.Texts().texts.push().metadataCid = metadataCid;
-        emit TextDAOEvents.TextCreated(textId, metadataCid);
+        emit TextDAOEvents.TextCreatedByProposal(pid, textId, metadataCid);
     }
 
     /**
@@ -41,7 +41,7 @@ contract SaveTextProtected is ISaveText, ProtectionBase {
         if (bytes(newMetadataCid).length == 0) revert TextDAOErrors.TextMetadataCidIsRequired();
 
         Storage.Texts().texts[textId].metadataCid = newMetadataCid;
-        emit TextDAOEvents.TextUpdated(textId, newMetadataCid);
+        emit TextDAOEvents.TextUpdatedByProposal(pid, textId, newMetadataCid);
     }
 
     /**
@@ -53,7 +53,7 @@ contract SaveTextProtected is ISaveText, ProtectionBase {
         if (textId >= Storage.Texts().texts.length) revert TextDAOErrors.TextNotFound(textId);
 
         delete Storage.Texts().texts[textId];
-        emit TextDAOEvents.TextDeleted(textId);
+        emit TextDAOEvents.TextDeletedByProposal(pid, textId);
     }
 }
 

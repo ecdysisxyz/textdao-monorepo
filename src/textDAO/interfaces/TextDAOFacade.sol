@@ -20,7 +20,7 @@ contract TextDAOFacade is ITextDAO {
     function createText(uint256 pid, string memory metadataCid) external returns (uint256 textId) {}
     function updateText(uint256 pid, uint256 textId, string memory newMetadataCid) external {}
     function deleteText(uint256 pid, uint256 textId) external {}
-    // function setProposalsConfig(DeliberationConfig calldata _config) external {}
+    function setDebelirationConfig(uint pid, DeliberationConfig calldata config) external {}
     // function overrideProposalsConfig(uint _proposalId, DeliberationConfig calldata _config) external {}
 }
 

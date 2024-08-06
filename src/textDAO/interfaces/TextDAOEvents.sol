@@ -16,6 +16,7 @@ interface TextDAOEvents {
 
     // event
     event DeliberationConfigUpdated(Schema.DeliberationConfig config);
+    event DeliberationConfigUpdatedByProposal(uint pid, Schema.DeliberationConfig config);
 
     // Proposal
     event HeaderCreated(uint pid, uint headerId, string metadataCid);
@@ -34,12 +35,16 @@ interface TextDAOEvents {
     // Execute
     event ProposalExecuted(uint pid, uint approvedCommandId);
     // SaveText
-    event TextCreated(uint textId, string metadataCid);
-    event TextUpdated(uint textId, string newMetadataCid);
-    event TextDeleted(uint textId);
+    event TextCreatedByProposal(uint pid, uint textId, string metadataCid);
+    event TextUpdatedByProposal(uint pid, uint textId, string newMetadataCid);
+    event TextDeletedByProposal(uint pid, uint textId);
     /// @dev From Initializable @ openzeppelin-contracts~5.0.0
     event Initialized(uint64 version);
     // Member
     event MemberAdded(uint memberId, address addr, string metadataCid);
     event MemberUpdated(uint memberId, address addr, string metadataCid);
+    event MemberAddedByProposal(uint pid, uint memberId, address addr, string metadataCid);
+    event MemberUpdatedByProposal(uint pid, uint memberId, address addr, string metadataCid);
+    // Set Config
+    // event
 }

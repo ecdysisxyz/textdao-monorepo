@@ -2,13 +2,12 @@
 pragma solidity ^0.8.24;
 
 import {MCDevKit, Dictionary_1 as Dictionary, ForgeHelper, vm, console2} from "@devkit/Flattened.sol";
-import {TextDAODeployer} from "script/TextDAODeployer.sol";
-import {Schema} from "bundle/textDAO/storages/Schema.sol";
 import {OnlyAdminCheats} from "bundle/textDAO/functions/_cheat/OnlyAdminCheats.sol";
 import {Tally} from "bundle/textDAO/functions/Tally.sol";
-import {Initialize} from "bundle/textDAO/functions/initializer/Initialize.sol";
-import {ITextDAO} from "bundle/textDAO/interfaces/ITextDAO.sol";
-import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
+// protected functions
+import {SaveTextProtected} from "bundle/textDAO/functions/protected/SaveTextProtected.sol";
+import {MemberJoinProtected} from "bundle/textDAO/functions/protected/MemberJoinProtected.sol";
+import {SetConfigsProtected} from "bundle/textDAO/functions/protected/SetConfigsProtected.sol";
 
 import {TextDAOWithCheatsFacade} from "bundle/textDAO/interfaces/TextDAOFacade.sol";
 
@@ -43,5 +42,23 @@ library TextDAOUpgrader {
 
         // Upgrade facade
         _dictionary.upgradeFacade(address(new TextDAOWithCheatsFacade())); // for Etherscan proxy read/write
+    }
+
+    function upgradeProtectedFunctions(MCDevKit storage mc, address textDAO) internal {
+        Dictionary memory _dictionary = mc.loadDictionary("TextDAODictionary", mc.getDictionaryAddress(textDAO));
+
+        address newSaveText = address(new SaveTextProtected());
+        _dictionary.set(SaveTextProtected.createText.selector, newSaveText);
+        _dictionary.set(SaveTextProtected.updateText.selector, newSaveText);
+        _dictionary.set(SaveTextProtected.deleteText.selector, newSaveText);
+
+        address newMemberJoin = address(new MemberJoinProtected());
+        _dictionary.set(MemberJoinProtected.memberJoin.selector, newMemberJoin);
+
+        address newSetConfig = address(new SetConfigsProtected());
+        _dictionary.set(SetConfigsProtected.setDebelirationConfig.selector, newSetConfig);
+
+        // Upgrade facade
+        _dictionary.upgradeFacade(address(new TextDAOWithCheatsFacade()));
     }
 }

@@ -45,6 +45,10 @@ interface IMemberJoin {
     function memberJoin(uint pid, Schema.Member[] memory candidates) external;
 }
 
+interface ISetConfigs {
+    function setDebelirationConfig(uint pid, Schema.DeliberationConfig calldata config) external;
+}
+
 interface TextDAOMainFunctions is
     IClone,
     IInitialize,

@@ -49,7 +49,7 @@ contract TextDAOBehaviorTest is MCTest {
         vm.prank(MEMBER2);
         string memory _forkCid = "forkedProposalCid";
         Schema.Action[] memory _actions = new Schema.Action[](1);
-        _actions[0] = Schema.Action({
+        _actions[0] = Schema.Action({ // Action to be approved
             funcSig: "memberJoin(uint256,(address,string)[])",
             abiParams: abi.encode(_pid, new Schema.Member[](1))
         });
@@ -92,6 +92,7 @@ contract TextDAOBehaviorTest is MCTest {
         // Tally votes and then executed
         vm.expectEmit(true, true, true, true);
         emit TextDAOEvents.ProposalTallied(_pid, 2, 1);
+        emit TextDAOEvents.MemberAddedByProposal(_pid, 3, address(0), ""); // memberId: 3
         emit TextDAOEvents.ProposalExecuted(_pid, 1);
         textDAO.tallyAndExecute(_pid);
     }
@@ -175,6 +176,8 @@ contract TextDAOBehaviorTest is MCTest {
         // Tally votes again, expect resolution
         vm.expectEmit(true, true, true, true);
         emit TextDAOEvents.ProposalTallied(_pid, 1, 1);
+        emit TextDAOEvents.MemberAddedByProposal(_pid, 3, address(0), "");
+        emit TextDAOEvents.ProposalExecuted(_pid, 1);
         textDAO.tallyAndExecute(_pid);
     }
 
