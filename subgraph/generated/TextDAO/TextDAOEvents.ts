@@ -84,6 +84,48 @@ export class DeliberationConfigUpdatedConfigStruct extends ethereum.Tuple {
   }
 }
 
+export class DeliberationConfigUpdatedByProposal extends ethereum.Event {
+  get params(): DeliberationConfigUpdatedByProposal__Params {
+    return new DeliberationConfigUpdatedByProposal__Params(this);
+  }
+}
+
+export class DeliberationConfigUpdatedByProposal__Params {
+  _event: DeliberationConfigUpdatedByProposal;
+
+  constructor(event: DeliberationConfigUpdatedByProposal) {
+    this._event = event;
+  }
+
+  get pid(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get config(): DeliberationConfigUpdatedByProposalConfigStruct {
+    return changetype<DeliberationConfigUpdatedByProposalConfigStruct>(
+      this._event.parameters[1].value.toTuple(),
+    );
+  }
+}
+
+export class DeliberationConfigUpdatedByProposalConfigStruct extends ethereum.Tuple {
+  get expiryDuration(): BigInt {
+    return this[0].toBigInt();
+  }
+
+  get snapInterval(): BigInt {
+    return this[1].toBigInt();
+  }
+
+  get repsNum(): BigInt {
+    return this[2].toBigInt();
+  }
+
+  get quorumScore(): BigInt {
+    return this[3].toBigInt();
+  }
+}
+
 export class HeaderCreated extends ethereum.Event {
   get params(): HeaderCreated__Params {
     return new HeaderCreated__Params(this);
@@ -154,6 +196,36 @@ export class MemberAdded__Params {
   }
 }
 
+export class MemberAddedByProposal extends ethereum.Event {
+  get params(): MemberAddedByProposal__Params {
+    return new MemberAddedByProposal__Params(this);
+  }
+}
+
+export class MemberAddedByProposal__Params {
+  _event: MemberAddedByProposal;
+
+  constructor(event: MemberAddedByProposal) {
+    this._event = event;
+  }
+
+  get pid(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get memberId(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+
+  get addr(): Address {
+    return this._event.parameters[2].value.toAddress();
+  }
+
+  get metadataCid(): string {
+    return this._event.parameters[3].value.toString();
+  }
+}
+
 export class MemberUpdated extends ethereum.Event {
   get params(): MemberUpdated__Params {
     return new MemberUpdated__Params(this);
@@ -177,6 +249,36 @@ export class MemberUpdated__Params {
 
   get metadataCid(): string {
     return this._event.parameters[2].value.toString();
+  }
+}
+
+export class MemberUpdatedByProposal extends ethereum.Event {
+  get params(): MemberUpdatedByProposal__Params {
+    return new MemberUpdatedByProposal__Params(this);
+  }
+}
+
+export class MemberUpdatedByProposal__Params {
+  _event: MemberUpdatedByProposal;
+
+  constructor(event: MemberUpdatedByProposal) {
+    this._event = event;
+  }
+
+  get pid(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get memberId(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+
+  get addr(): Address {
+    return this._event.parameters[2].value.toAddress();
+  }
+
+  get metadataCid(): string {
+    return this._event.parameters[3].value.toString();
   }
 }
 
@@ -362,6 +464,32 @@ export class TextCreated__Params {
   }
 }
 
+export class TextCreatedByProposal extends ethereum.Event {
+  get params(): TextCreatedByProposal__Params {
+    return new TextCreatedByProposal__Params(this);
+  }
+}
+
+export class TextCreatedByProposal__Params {
+  _event: TextCreatedByProposal;
+
+  constructor(event: TextCreatedByProposal) {
+    this._event = event;
+  }
+
+  get pid(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get textId(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+
+  get metadataCid(): string {
+    return this._event.parameters[2].value.toString();
+  }
+}
+
 export class TextDeleted extends ethereum.Event {
   get params(): TextDeleted__Params {
     return new TextDeleted__Params(this);
@@ -377,6 +505,28 @@ export class TextDeleted__Params {
 
   get textId(): BigInt {
     return this._event.parameters[0].value.toBigInt();
+  }
+}
+
+export class TextDeletedByProposal extends ethereum.Event {
+  get params(): TextDeletedByProposal__Params {
+    return new TextDeletedByProposal__Params(this);
+  }
+}
+
+export class TextDeletedByProposal__Params {
+  _event: TextDeletedByProposal;
+
+  constructor(event: TextDeletedByProposal) {
+    this._event = event;
+  }
+
+  get pid(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get textId(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
   }
 }
 
@@ -399,6 +549,32 @@ export class TextUpdated__Params {
 
   get newMetadataCid(): string {
     return this._event.parameters[1].value.toString();
+  }
+}
+
+export class TextUpdatedByProposal extends ethereum.Event {
+  get params(): TextUpdatedByProposal__Params {
+    return new TextUpdatedByProposal__Params(this);
+  }
+}
+
+export class TextUpdatedByProposal__Params {
+  _event: TextUpdatedByProposal;
+
+  constructor(event: TextUpdatedByProposal) {
+    this._event = event;
+  }
+
+  get pid(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get textId(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+
+  get newMetadataCid(): string {
+    return this._event.parameters[2].value.toString();
   }
 }
 

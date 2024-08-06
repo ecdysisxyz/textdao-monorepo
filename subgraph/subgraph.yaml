@@ -32,6 +32,8 @@ dataSources:
       eventHandlers:
         - event: DeliberationConfigUpdated((uint256,uint256,uint256,uint256))
           handler: handleDeliberationConfigUpdated
+        - event: DeliberationConfigUpdatedByProposal(uint256,(uint256,uint256,uint256,uint256))
+          handler: handleDeliberationConfigUpdatedByProposal
         - event: CommandCreated(uint256,uint256,(string,bytes)[])
           handler: handleCommandCreated
         - event: HeaderCreated(uint256,uint256,string)
@@ -54,6 +56,12 @@ dataSources:
           handler: handleTextUpdated
         - event: TextDeleted(uint256)
           handler: handleTextDeleted
+        - event: TextCreatedByProposal(uint256,uint256,string)
+          handler: handleTextCreatedByProposal
+        - event: TextUpdatedByProposal(uint256,uint256,string)
+          handler: handleTextUpdatedByProposal
+        - event: TextDeletedByProposal(uint256,uint256)
+          handler: handleTextDeletedByProposal
         - event: Voted(uint256,address,(uint256[3],uint256[3]))
           handler: handleVoted
         - event: VRFRequested(uint256,uint256)
@@ -62,3 +70,7 @@ dataSources:
           handler: handleMemberAdded
         - event: MemberUpdated(uint256,address,string)
           handler: handleMemberUpdated
+        - event: MemberAddedByProposal(uint256,uint256,address,string)
+          handler: handleMemberAddedByProposal
+        - event: MemberUpdatedByProposal(uint256,uint256,address,string)
+          handler: handleMemberUpdatedByProposal

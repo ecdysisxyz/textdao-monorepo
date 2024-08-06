@@ -1,22 +1,28 @@
+import { Address, BigInt, ethereum } from "@graphprotocol/graph-ts";
 import { newMockEvent } from "matchstick-as";
-import { ethereum, BigInt, Address } from "@graphprotocol/graph-ts";
 import {
-    DeliberationConfigUpdated,
-    HeaderCreated,
-    CommandCreated,
-    Proposed,
-    RepresentativesAssigned,
-    VRFRequested,
-    Voted,
-    ProposalTalliedWithTie,
-    ProposalTallied,
-    ProposalSnapped,
-    ProposalExecuted,
-    TextCreated,
-    TextUpdated,
-    TextDeleted,
-    MemberAdded,
-    MemberUpdated,
+	CommandCreated,
+	DeliberationConfigUpdated,
+	DeliberationConfigUpdatedByProposal,
+	HeaderCreated,
+	MemberAdded,
+	MemberAddedByProposal,
+	MemberUpdated,
+	MemberUpdatedByProposal,
+	ProposalExecuted,
+	ProposalSnapped,
+	ProposalTallied,
+	ProposalTalliedWithTie,
+	Proposed,
+	RepresentativesAssigned,
+	TextCreated,
+	TextCreatedByProposal,
+	TextDeleted,
+	TextDeletedByProposal,
+	TextUpdated,
+	TextUpdatedByProposal,
+	VRFRequested,
+	Voted,
 } from "../../generated/TextDAO/TextDAOEvents";
 import { Action, Vote } from "../../src/utils/schema-types";
 
@@ -28,28 +34,28 @@ import { Action, Vote } from "../../src/utils/schema-types";
  * @returns MockEvent of type HeaderCreated
  */
 export function createMockHeaderCreatedEvent(
-    pid: BigInt,
-    headerId: BigInt,
-    metadataCid: string
+	pid: BigInt,
+	headerId: BigInt,
+	metadataCid: string,
 ): HeaderCreated {
-    let event = changetype<HeaderCreated>(newMockEvent());
-    event.parameters = new Array();
-    event.parameters.push(
-        new ethereum.EventParam("pid", ethereum.Value.fromUnsignedBigInt(pid))
-    );
-    event.parameters.push(
-        new ethereum.EventParam(
-            "headerId",
-            ethereum.Value.fromUnsignedBigInt(headerId)
-        )
-    );
-    event.parameters.push(
-        new ethereum.EventParam(
-            "metadataCid",
-            ethereum.Value.fromString(metadataCid)
-        )
-    );
-    return event;
+	let event = changetype<HeaderCreated>(newMockEvent());
+	event.parameters = new Array();
+	event.parameters.push(
+		new ethereum.EventParam("pid", ethereum.Value.fromUnsignedBigInt(pid)),
+	);
+	event.parameters.push(
+		new ethereum.EventParam(
+			"headerId",
+			ethereum.Value.fromUnsignedBigInt(headerId),
+		),
+	);
+	event.parameters.push(
+		new ethereum.EventParam(
+			"metadataCid",
+			ethereum.Value.fromString(metadataCid),
+		),
+	);
+	return event;
 }
 
 /**
@@ -60,37 +66,37 @@ export function createMockHeaderCreatedEvent(
  * @returns MockEvent of type CommandCreated
  */
 export function createMockCommandCreatedEvent(
-    pid: BigInt,
-    commandId: BigInt,
-    actions: Array<Action>
+	pid: BigInt,
+	commandId: BigInt,
+	actions: Array<Action>,
 ): CommandCreated {
-    let event = changetype<CommandCreated>(newMockEvent());
-    event.parameters = new Array();
-    event.parameters.push(
-        new ethereum.EventParam("pid", ethereum.Value.fromUnsignedBigInt(pid))
-    );
-    event.parameters.push(
-        new ethereum.EventParam(
-            "commandId",
-            ethereum.Value.fromUnsignedBigInt(commandId)
-        )
-    );
+	let event = changetype<CommandCreated>(newMockEvent());
+	event.parameters = new Array();
+	event.parameters.push(
+		new ethereum.EventParam("pid", ethereum.Value.fromUnsignedBigInt(pid)),
+	);
+	event.parameters.push(
+		new ethereum.EventParam(
+			"commandId",
+			ethereum.Value.fromUnsignedBigInt(commandId),
+		),
+	);
 
-    let actionsArray = new Array<ethereum.Tuple>();
-    for (let i = 0; i < actions.length; i++) {
-        let actionTuple = new ethereum.Tuple();
-        actionTuple.push(ethereum.Value.fromString(actions[i].funcSig));
-        actionTuple.push(ethereum.Value.fromBytes(actions[i].abiParams));
-        actionsArray.push(actionTuple);
-    }
-    event.parameters.push(
-        new ethereum.EventParam(
-            "actions",
-            ethereum.Value.fromTupleArray(actionsArray)
-        )
-    );
+	let actionsArray = new Array<ethereum.Tuple>();
+	for (let i = 0; i < actions.length; i++) {
+		let actionTuple = new ethereum.Tuple();
+		actionTuple.push(ethereum.Value.fromString(actions[i].funcSig));
+		actionTuple.push(ethereum.Value.fromBytes(actions[i].abiParams));
+		actionsArray.push(actionTuple);
+	}
+	event.parameters.push(
+		new ethereum.EventParam(
+			"actions",
+			ethereum.Value.fromTupleArray(actionsArray),
+		),
+	);
 
-    return event;
+	return event;
 }
 
 /**
@@ -102,35 +108,32 @@ export function createMockCommandCreatedEvent(
  * @returns MockEvent of type Proposed
  */
 export function createMockProposedEvent(
-    pid: BigInt,
-    proposer: Address,
-    createdAt: BigInt,
-    expirationTime: BigInt
+	pid: BigInt,
+	proposer: Address,
+	createdAt: BigInt,
+	expirationTime: BigInt,
 ): Proposed {
-    let event = changetype<Proposed>(newMockEvent());
-    event.parameters = new Array();
-    event.parameters.push(
-        new ethereum.EventParam("pid", ethereum.Value.fromUnsignedBigInt(pid))
-    );
-    event.parameters.push(
-        new ethereum.EventParam(
-            "proposer",
-            ethereum.Value.fromAddress(proposer)
-        )
-    );
-    event.parameters.push(
-        new ethereum.EventParam(
-            "createdAt",
-            ethereum.Value.fromUnsignedBigInt(createdAt)
-        )
-    );
-    event.parameters.push(
-        new ethereum.EventParam(
-            "expirationTime",
-            ethereum.Value.fromUnsignedBigInt(expirationTime)
-        )
-    );
-    return event;
+	let event = changetype<Proposed>(newMockEvent());
+	event.parameters = new Array();
+	event.parameters.push(
+		new ethereum.EventParam("pid", ethereum.Value.fromUnsignedBigInt(pid)),
+	);
+	event.parameters.push(
+		new ethereum.EventParam("proposer", ethereum.Value.fromAddress(proposer)),
+	);
+	event.parameters.push(
+		new ethereum.EventParam(
+			"createdAt",
+			ethereum.Value.fromUnsignedBigInt(createdAt),
+		),
+	);
+	event.parameters.push(
+		new ethereum.EventParam(
+			"expirationTime",
+			ethereum.Value.fromUnsignedBigInt(expirationTime),
+		),
+	);
+	return event;
 }
 
 /**
@@ -140,18 +143,18 @@ export function createMockProposedEvent(
  * @returns MockEvent of type RepresentativesAssigned
  */
 export function createMockRepresentativesAssignedEvent(
-    pid: BigInt,
-    reps: Address[]
+	pid: BigInt,
+	reps: Address[],
 ): RepresentativesAssigned {
-    let event = changetype<RepresentativesAssigned>(newMockEvent());
-    event.parameters = new Array();
-    event.parameters.push(
-        new ethereum.EventParam("pid", ethereum.Value.fromUnsignedBigInt(pid))
-    );
-    event.parameters.push(
-        new ethereum.EventParam("reps", ethereum.Value.fromAddressArray(reps))
-    );
-    return event;
+	let event = changetype<RepresentativesAssigned>(newMockEvent());
+	event.parameters = new Array();
+	event.parameters.push(
+		new ethereum.EventParam("pid", ethereum.Value.fromUnsignedBigInt(pid)),
+	);
+	event.parameters.push(
+		new ethereum.EventParam("reps", ethereum.Value.fromAddressArray(reps)),
+	);
+	return event;
 }
 
 /**
@@ -161,21 +164,21 @@ export function createMockRepresentativesAssignedEvent(
  * @returns MockEvent of type VRFRequested
  */
 export function createMockVRFRequestedEvent(
-    pid: BigInt,
-    requestId: BigInt
+	pid: BigInt,
+	requestId: BigInt,
 ): VRFRequested {
-    let event = changetype<VRFRequested>(newMockEvent());
-    event.parameters = new Array();
-    event.parameters.push(
-        new ethereum.EventParam("pid", ethereum.Value.fromUnsignedBigInt(pid))
-    );
-    event.parameters.push(
-        new ethereum.EventParam(
-            "requestId",
-            ethereum.Value.fromUnsignedBigInt(requestId)
-        )
-    );
-    return event;
+	let event = changetype<VRFRequested>(newMockEvent());
+	event.parameters = new Array();
+	event.parameters.push(
+		new ethereum.EventParam("pid", ethereum.Value.fromUnsignedBigInt(pid)),
+	);
+	event.parameters.push(
+		new ethereum.EventParam(
+			"requestId",
+			ethereum.Value.fromUnsignedBigInt(requestId),
+		),
+	);
+	return event;
 }
 
 /**
@@ -186,31 +189,27 @@ export function createMockVRFRequestedEvent(
  * @returns MockEvent of type Voted
  */
 export function createMockVotedEvent(
-    pid: BigInt,
-    rep: Address,
-    vote: Vote
+	pid: BigInt,
+	rep: Address,
+	vote: Vote,
 ): Voted {
-    let event = changetype<Voted>(newMockEvent());
-    event.parameters = new Array();
-    event.parameters.push(
-        new ethereum.EventParam("pid", ethereum.Value.fromUnsignedBigInt(pid))
-    );
-    event.parameters.push(
-        new ethereum.EventParam("rep", ethereum.Value.fromAddress(rep))
-    );
+	let event = changetype<Voted>(newMockEvent());
+	event.parameters = new Array();
+	event.parameters.push(
+		new ethereum.EventParam("pid", ethereum.Value.fromUnsignedBigInt(pid)),
+	);
+	event.parameters.push(
+		new ethereum.EventParam("rep", ethereum.Value.fromAddress(rep)),
+	);
 
-    let voteTuple = new ethereum.Tuple();
-    voteTuple.push(
-        ethereum.Value.fromUnsignedBigIntArray(vote.rankedHeaderIds)
-    );
-    voteTuple.push(
-        ethereum.Value.fromUnsignedBigIntArray(vote.rankedCommandIds)
-    );
-    event.parameters.push(
-        new ethereum.EventParam("vote", ethereum.Value.fromTuple(voteTuple))
-    );
+	let voteTuple = new ethereum.Tuple();
+	voteTuple.push(ethereum.Value.fromUnsignedBigIntArray(vote.rankedHeaderIds));
+	voteTuple.push(ethereum.Value.fromUnsignedBigIntArray(vote.rankedCommandIds));
+	event.parameters.push(
+		new ethereum.EventParam("vote", ethereum.Value.fromTuple(voteTuple)),
+	);
 
-    return event;
+	return event;
 }
 
 /**
@@ -222,39 +221,35 @@ export function createMockVotedEvent(
  * @returns MockEvent of type ProposalTalliedWithTie
  */
 export function createMockProposalTalliedWithTieEvent(
-    pid: BigInt,
-    topHeaderIds: BigInt[],
-    topCommandIds: BigInt[],
-    extendedExpirationTime: BigInt
+	pid: BigInt,
+	topHeaderIds: BigInt[],
+	topCommandIds: BigInt[],
+	extendedExpirationTime: BigInt,
 ): ProposalTalliedWithTie {
-    let event = changetype<ProposalTalliedWithTie>(newMockEvent());
-    event.parameters = new Array();
-    event.parameters.push(
-        new ethereum.EventParam("pid", ethereum.Value.fromUnsignedBigInt(pid))
-    );
-    event.parameters.push(
-        new ethereum.EventParam(
-            "topHeaderIds",
-            ethereum.Value.fromI32Array(
-                topHeaderIds.map<i32>((id) => id.toI32())
-            )
-        )
-    );
-    event.parameters.push(
-        new ethereum.EventParam(
-            "topCommandIds",
-            ethereum.Value.fromI32Array(
-                topCommandIds.map<i32>((id) => id.toI32())
-            )
-        )
-    );
-    event.parameters.push(
-        new ethereum.EventParam(
-            "extendedExpirationTime",
-            ethereum.Value.fromUnsignedBigInt(extendedExpirationTime)
-        )
-    );
-    return event;
+	let event = changetype<ProposalTalliedWithTie>(newMockEvent());
+	event.parameters = new Array();
+	event.parameters.push(
+		new ethereum.EventParam("pid", ethereum.Value.fromUnsignedBigInt(pid)),
+	);
+	event.parameters.push(
+		new ethereum.EventParam(
+			"topHeaderIds",
+			ethereum.Value.fromI32Array(topHeaderIds.map<i32>((id) => id.toI32())),
+		),
+	);
+	event.parameters.push(
+		new ethereum.EventParam(
+			"topCommandIds",
+			ethereum.Value.fromI32Array(topCommandIds.map<i32>((id) => id.toI32())),
+		),
+	);
+	event.parameters.push(
+		new ethereum.EventParam(
+			"extendedExpirationTime",
+			ethereum.Value.fromUnsignedBigInt(extendedExpirationTime),
+		),
+	);
+	return event;
 }
 
 /**
@@ -265,28 +260,28 @@ export function createMockProposalTalliedWithTieEvent(
  * @returns MockEvent of type ProposalTallied
  */
 export function createMockProposalTalliedEvent(
-    pid: BigInt,
-    approvedHeaderId: BigInt,
-    approvedCommandId: BigInt
+	pid: BigInt,
+	approvedHeaderId: BigInt,
+	approvedCommandId: BigInt,
 ): ProposalTallied {
-    let event = changetype<ProposalTallied>(newMockEvent());
-    event.parameters = new Array();
-    event.parameters.push(
-        new ethereum.EventParam("pid", ethereum.Value.fromUnsignedBigInt(pid))
-    );
-    event.parameters.push(
-        new ethereum.EventParam(
-            "approvedHeaderId",
-            ethereum.Value.fromUnsignedBigInt(approvedHeaderId)
-        )
-    );
-    event.parameters.push(
-        new ethereum.EventParam(
-            "approvedCommandId",
-            ethereum.Value.fromUnsignedBigInt(approvedCommandId)
-        )
-    );
-    return event;
+	let event = changetype<ProposalTallied>(newMockEvent());
+	event.parameters = new Array();
+	event.parameters.push(
+		new ethereum.EventParam("pid", ethereum.Value.fromUnsignedBigInt(pid)),
+	);
+	event.parameters.push(
+		new ethereum.EventParam(
+			"approvedHeaderId",
+			ethereum.Value.fromUnsignedBigInt(approvedHeaderId),
+		),
+	);
+	event.parameters.push(
+		new ethereum.EventParam(
+			"approvedCommandId",
+			ethereum.Value.fromUnsignedBigInt(approvedCommandId),
+		),
+	);
+	return event;
 }
 
 /**
@@ -298,39 +293,32 @@ export function createMockProposalTalliedEvent(
  * @returns MockEvent of type ProposalSnapped
  */
 export function createMockProposalSnappedEvent(
-    pid: BigInt,
-    epoch: BigInt,
-    top3HeaderIds: BigInt[],
-    top3CommandIds: BigInt[]
+	pid: BigInt,
+	epoch: BigInt,
+	top3HeaderIds: BigInt[],
+	top3CommandIds: BigInt[],
 ): ProposalSnapped {
-    let event = changetype<ProposalSnapped>(newMockEvent());
-    event.parameters = new Array();
-    event.parameters.push(
-        new ethereum.EventParam("pid", ethereum.Value.fromUnsignedBigInt(pid))
-    );
-    event.parameters.push(
-        new ethereum.EventParam(
-            "epoch",
-            ethereum.Value.fromUnsignedBigInt(epoch)
-        )
-    );
-    event.parameters.push(
-        new ethereum.EventParam(
-            "top3HeaderIds",
-            ethereum.Value.fromI32Array(
-                top3HeaderIds.map<i32>((id) => id.toI32())
-            )
-        )
-    );
-    event.parameters.push(
-        new ethereum.EventParam(
-            "top3CommandIds",
-            ethereum.Value.fromI32Array(
-                top3CommandIds.map<i32>((id) => id.toI32())
-            )
-        )
-    );
-    return event;
+	let event = changetype<ProposalSnapped>(newMockEvent());
+	event.parameters = new Array();
+	event.parameters.push(
+		new ethereum.EventParam("pid", ethereum.Value.fromUnsignedBigInt(pid)),
+	);
+	event.parameters.push(
+		new ethereum.EventParam("epoch", ethereum.Value.fromUnsignedBigInt(epoch)),
+	);
+	event.parameters.push(
+		new ethereum.EventParam(
+			"top3HeaderIds",
+			ethereum.Value.fromI32Array(top3HeaderIds.map<i32>((id) => id.toI32())),
+		),
+	);
+	event.parameters.push(
+		new ethereum.EventParam(
+			"top3CommandIds",
+			ethereum.Value.fromI32Array(top3CommandIds.map<i32>((id) => id.toI32())),
+		),
+	);
+	return event;
 }
 
 /**
@@ -340,21 +328,21 @@ export function createMockProposalSnappedEvent(
  * @returns MockEvent of type ProposalExecuted
  */
 export function createMockProposalExecutedEvent(
-    pid: BigInt,
-    approvedCommandId: BigInt
+	pid: BigInt,
+	approvedCommandId: BigInt,
 ): ProposalExecuted {
-    let event = changetype<ProposalExecuted>(newMockEvent());
-    event.parameters = new Array();
-    event.parameters.push(
-        new ethereum.EventParam("pid", ethereum.Value.fromUnsignedBigInt(pid))
-    );
-    event.parameters.push(
-        new ethereum.EventParam(
-            "approvedCommandId",
-            ethereum.Value.fromUnsignedBigInt(approvedCommandId)
-        )
-    );
-    return event;
+	let event = changetype<ProposalExecuted>(newMockEvent());
+	event.parameters = new Array();
+	event.parameters.push(
+		new ethereum.EventParam("pid", ethereum.Value.fromUnsignedBigInt(pid)),
+	);
+	event.parameters.push(
+		new ethereum.EventParam(
+			"approvedCommandId",
+			ethereum.Value.fromUnsignedBigInt(approvedCommandId),
+		),
+	);
+	return event;
 }
 
 /**
@@ -364,24 +352,54 @@ export function createMockProposalExecutedEvent(
  * @returns MockEvent of type TextCreated
  */
 export function createMockTextCreatedEvent(
-    textId: BigInt,
-    metadataCid: string
+	textId: BigInt,
+	metadataCid: string,
 ): TextCreated {
-    let event = changetype<TextCreated>(newMockEvent());
-    event.parameters = new Array();
-    event.parameters.push(
-        new ethereum.EventParam(
-            "textId",
-            ethereum.Value.fromUnsignedBigInt(textId)
-        )
-    );
-    event.parameters.push(
-        new ethereum.EventParam(
-            "metadataCid",
-            ethereum.Value.fromString(metadataCid)
-        )
-    );
-    return event;
+	let event = changetype<TextCreated>(newMockEvent());
+	event.parameters = new Array();
+	event.parameters.push(
+		new ethereum.EventParam(
+			"textId",
+			ethereum.Value.fromUnsignedBigInt(textId),
+		),
+	);
+	event.parameters.push(
+		new ethereum.EventParam(
+			"metadataCid",
+			ethereum.Value.fromString(metadataCid),
+		),
+	);
+	return event;
+}
+
+/**
+ * Creates a mock TextCreatedByProposal event
+ * @param textId - Text ID
+ * @param metadataCid - Metadata Cid for the text
+ * @returns MockEvent of type TextCreatedByProposal
+ */
+export function createMockTextCreatedByProposalEvent(
+	textId: BigInt,
+	metadataCid: string,
+): TextCreatedByProposal {
+	let event = changetype<TextCreatedByProposal>(newMockEvent());
+	event.parameters = new Array();
+	event.parameters.push(
+		new ethereum.EventParam("pid", ethereum.Value.fromI32(0)),
+	);
+	event.parameters.push(
+		new ethereum.EventParam(
+			"textId",
+			ethereum.Value.fromUnsignedBigInt(textId),
+		),
+	);
+	event.parameters.push(
+		new ethereum.EventParam(
+			"metadataCid",
+			ethereum.Value.fromString(metadataCid),
+		),
+	);
+	return event;
 }
 
 /**
@@ -391,24 +409,54 @@ export function createMockTextCreatedEvent(
  * @returns MockEvent of type TextUpdated
  */
 export function createMockTextUpdatedEvent(
-    textId: BigInt,
-    newMetadataCid: string
+	textId: BigInt,
+	newMetadataCid: string,
 ): TextUpdated {
-    let event = changetype<TextUpdated>(newMockEvent());
-    event.parameters = new Array();
-    event.parameters.push(
-        new ethereum.EventParam(
-            "textId",
-            ethereum.Value.fromUnsignedBigInt(textId)
-        )
-    );
-    event.parameters.push(
-        new ethereum.EventParam(
-            "newMetadataCid",
-            ethereum.Value.fromString(newMetadataCid)
-        )
-    );
-    return event;
+	let event = changetype<TextUpdated>(newMockEvent());
+	event.parameters = new Array();
+	event.parameters.push(
+		new ethereum.EventParam(
+			"textId",
+			ethereum.Value.fromUnsignedBigInt(textId),
+		),
+	);
+	event.parameters.push(
+		new ethereum.EventParam(
+			"newMetadataCid",
+			ethereum.Value.fromString(newMetadataCid),
+		),
+	);
+	return event;
+}
+
+/**
+ * Creates a mock TextUpdatedByProposal event
+ * @param textId - Text ID
+ * @param newMetadataCid - New metadata Cid for the text
+ * @returns MockEvent of type TextUpdatedByProposal
+ */
+export function createMockTextUpdatedByProposalEvent(
+	textId: BigInt,
+	newMetadataCid: string,
+): TextUpdatedByProposal {
+	let event = changetype<TextUpdatedByProposal>(newMockEvent());
+	event.parameters = new Array();
+	event.parameters.push(
+		new ethereum.EventParam("pid", ethereum.Value.fromI32(0)),
+	);
+	event.parameters.push(
+		new ethereum.EventParam(
+			"textId",
+			ethereum.Value.fromUnsignedBigInt(textId),
+		),
+	);
+	event.parameters.push(
+		new ethereum.EventParam(
+			"newMetadataCid",
+			ethereum.Value.fromString(newMetadataCid),
+		),
+	);
+	return event;
 }
 
 /**
@@ -417,15 +465,37 @@ export function createMockTextUpdatedEvent(
  * @returns MockEvent of type TextDeleted
  */
 export function createMockTextDeletedEvent(textId: BigInt): TextDeleted {
-    let event = changetype<TextDeleted>(newMockEvent());
-    event.parameters = new Array();
-    event.parameters.push(
-        new ethereum.EventParam(
-            "textId",
-            ethereum.Value.fromUnsignedBigInt(textId)
-        )
-    );
-    return event;
+	let event = changetype<TextDeleted>(newMockEvent());
+	event.parameters = new Array();
+	event.parameters.push(
+		new ethereum.EventParam(
+			"textId",
+			ethereum.Value.fromUnsignedBigInt(textId),
+		),
+	);
+	return event;
+}
+
+/**
+ * Creates a mock TextDeletedByProposal event
+ * @param textId - Text ID
+ * @returns MockEvent of type TextDeletedByProposal
+ */
+export function createMockTextDeletedByProposalEvent(
+	textId: BigInt,
+): TextDeletedByProposal {
+	let event = changetype<TextDeletedByProposal>(newMockEvent());
+	event.parameters = new Array();
+	event.parameters.push(
+		new ethereum.EventParam("pid", ethereum.Value.fromI32(0)),
+	);
+	event.parameters.push(
+		new ethereum.EventParam(
+			"textId",
+			ethereum.Value.fromUnsignedBigInt(textId),
+		),
+	);
+	return event;
 }
 
 /**
@@ -436,28 +506,63 @@ export function createMockTextDeletedEvent(textId: BigInt): TextDeleted {
  * @returns MockEvent of type MemberAdded
  */
 export function createMockMemberAddedEvent(
-    memberId: BigInt,
-    addr: Address,
-    metadataCid: string
+	memberId: BigInt,
+	addr: Address,
+	metadataCid: string,
 ): MemberAdded {
-    let event = changetype<MemberAdded>(newMockEvent());
-    event.parameters = new Array();
-    event.parameters.push(
-        new ethereum.EventParam(
-            "memberId",
-            ethereum.Value.fromUnsignedBigInt(memberId)
-        )
-    );
-    event.parameters.push(
-        new ethereum.EventParam("addr", ethereum.Value.fromAddress(addr))
-    );
-    event.parameters.push(
-        new ethereum.EventParam(
-            "metadataCid",
-            ethereum.Value.fromString(metadataCid)
-        )
-    );
-    return event;
+	let event = changetype<MemberAdded>(newMockEvent());
+	event.parameters = new Array();
+	event.parameters.push(
+		new ethereum.EventParam(
+			"memberId",
+			ethereum.Value.fromUnsignedBigInt(memberId),
+		),
+	);
+	event.parameters.push(
+		new ethereum.EventParam("addr", ethereum.Value.fromAddress(addr)),
+	);
+	event.parameters.push(
+		new ethereum.EventParam(
+			"metadataCid",
+			ethereum.Value.fromString(metadataCid),
+		),
+	);
+	return event;
+}
+
+/**
+ * Creates a mock MemberAddedByProposal event
+ * @param memberId - Member ID
+ * @param addr - Member address
+ * @param metadataCid - Member profile metadata's content id
+ * @returns MockEvent of type MemberAddedByProposal
+ */
+export function createMockMemberAddedByProposalEvent(
+	memberId: BigInt,
+	addr: Address,
+	metadataCid: string,
+): MemberAddedByProposal {
+	let event = changetype<MemberAddedByProposal>(newMockEvent());
+	event.parameters = new Array();
+	event.parameters.push(
+		new ethereum.EventParam("pid", ethereum.Value.fromI32(0)),
+	);
+	event.parameters.push(
+		new ethereum.EventParam(
+			"memberId",
+			ethereum.Value.fromUnsignedBigInt(memberId),
+		),
+	);
+	event.parameters.push(
+		new ethereum.EventParam("addr", ethereum.Value.fromAddress(addr)),
+	);
+	event.parameters.push(
+		new ethereum.EventParam(
+			"metadataCid",
+			ethereum.Value.fromString(metadataCid),
+		),
+	);
+	return event;
 }
 
 /**
@@ -468,28 +573,63 @@ export function createMockMemberAddedEvent(
  * @returns MockEvent of type MemberUpdated
  */
 export function createMockMemberUpdatedEvent(
-    memberId: BigInt,
-    addr: Address,
-    metadataCid: string
+	memberId: BigInt,
+	addr: Address,
+	metadataCid: string,
 ): MemberUpdated {
-    let event = changetype<MemberUpdated>(newMockEvent());
-    event.parameters = new Array();
-    event.parameters.push(
-        new ethereum.EventParam(
-            "memberId",
-            ethereum.Value.fromUnsignedBigInt(memberId)
-        )
-    );
-    event.parameters.push(
-        new ethereum.EventParam("addr", ethereum.Value.fromAddress(addr))
-    );
-    event.parameters.push(
-        new ethereum.EventParam(
-            "metadataCid",
-            ethereum.Value.fromString(metadataCid)
-        )
-    );
-    return event;
+	let event = changetype<MemberUpdated>(newMockEvent());
+	event.parameters = new Array();
+	event.parameters.push(
+		new ethereum.EventParam(
+			"memberId",
+			ethereum.Value.fromUnsignedBigInt(memberId),
+		),
+	);
+	event.parameters.push(
+		new ethereum.EventParam("addr", ethereum.Value.fromAddress(addr)),
+	);
+	event.parameters.push(
+		new ethereum.EventParam(
+			"metadataCid",
+			ethereum.Value.fromString(metadataCid),
+		),
+	);
+	return event;
+}
+
+/**
+ * Creates a mock MemberUpdatedByProposal event
+ * @param memberId - Member ID
+ * @param addr - Member address
+ * @param metadataCid - Member profile metadata's content id
+ * @returns MockEvent of type MemberUpdatedByProposal
+ */
+export function createMockMemberUpdatedByProposalEvent(
+	memberId: BigInt,
+	addr: Address,
+	metadataCid: string,
+): MemberUpdatedByProposal {
+	let event = changetype<MemberUpdatedByProposal>(newMockEvent());
+	event.parameters = new Array();
+	event.parameters.push(
+		new ethereum.EventParam("pid", ethereum.Value.fromI32(0)),
+	);
+	event.parameters.push(
+		new ethereum.EventParam(
+			"memberId",
+			ethereum.Value.fromUnsignedBigInt(memberId),
+		),
+	);
+	event.parameters.push(
+		new ethereum.EventParam("addr", ethereum.Value.fromAddress(addr)),
+	);
+	event.parameters.push(
+		new ethereum.EventParam(
+			"metadataCid",
+			ethereum.Value.fromString(metadataCid),
+		),
+	);
+	return event;
 }
 
 /**
@@ -501,23 +641,56 @@ export function createMockMemberUpdatedEvent(
  * @returns MockEvent of type DeliberationConfigUpdated
  */
 export function createMockDeliberationConfigUpdatedEvent(
-    expiryDuration: BigInt,
-    snapInterval: BigInt,
-    repsNum: BigInt,
-    quorumScore: BigInt
+	expiryDuration: BigInt,
+	snapInterval: BigInt,
+	repsNum: BigInt,
+	quorumScore: BigInt,
 ): DeliberationConfigUpdated {
-    let event = changetype<DeliberationConfigUpdated>(newMockEvent());
-    event.parameters = new Array();
+	let event = changetype<DeliberationConfigUpdated>(newMockEvent());
+	event.parameters = new Array();
 
-    let configTuple = new ethereum.Tuple(4);
-    configTuple[0] = ethereum.Value.fromUnsignedBigInt(expiryDuration);
-    configTuple[1] = ethereum.Value.fromUnsignedBigInt(snapInterval);
-    configTuple[2] = ethereum.Value.fromUnsignedBigInt(repsNum);
-    configTuple[3] = ethereum.Value.fromUnsignedBigInt(quorumScore);
+	let configTuple = new ethereum.Tuple(4);
+	configTuple[0] = ethereum.Value.fromUnsignedBigInt(expiryDuration);
+	configTuple[1] = ethereum.Value.fromUnsignedBigInt(snapInterval);
+	configTuple[2] = ethereum.Value.fromUnsignedBigInt(repsNum);
+	configTuple[3] = ethereum.Value.fromUnsignedBigInt(quorumScore);
 
-    event.parameters.push(
-        new ethereum.EventParam("config", ethereum.Value.fromTuple(configTuple))
-    );
+	event.parameters.push(
+		new ethereum.EventParam("config", ethereum.Value.fromTuple(configTuple)),
+	);
 
-    return event;
+	return event;
+}
+
+/**
+ * Creates a mock DeliberationConfigUpdatedByProposal event
+ * @param expiryDuration - Expiry duration for proposals
+ * @param snapInterval - Interval for proposal snapshots
+ * @param repsNum - Number of representatives
+ * @param quorumScore - Quorum score required
+ * @returns MockEvent of type DeliberationConfigUpdatedByProposal
+ */
+export function createMockDeliberationConfigUpdatedByProposalEvent(
+	expiryDuration: BigInt,
+	snapInterval: BigInt,
+	repsNum: BigInt,
+	quorumScore: BigInt,
+): DeliberationConfigUpdatedByProposal {
+	let event = changetype<DeliberationConfigUpdatedByProposal>(newMockEvent());
+	event.parameters = new Array();
+
+	let configTuple = new ethereum.Tuple(4);
+	configTuple[0] = ethereum.Value.fromUnsignedBigInt(expiryDuration);
+	configTuple[1] = ethereum.Value.fromUnsignedBigInt(snapInterval);
+	configTuple[2] = ethereum.Value.fromUnsignedBigInt(repsNum);
+	configTuple[3] = ethereum.Value.fromUnsignedBigInt(quorumScore);
+
+	event.parameters.push(
+		new ethereum.EventParam("pid", ethereum.Value.fromI32(0)),
+	);
+	event.parameters.push(
+		new ethereum.EventParam("config", ethereum.Value.fromTuple(configTuple)),
+	);
+
+	return event;
 }

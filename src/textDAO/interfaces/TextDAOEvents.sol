@@ -38,6 +38,9 @@ interface TextDAOEvents {
     event TextCreatedByProposal(uint pid, uint textId, string metadataCid);
     event TextUpdatedByProposal(uint pid, uint textId, string newMetadataCid);
     event TextDeletedByProposal(uint pid, uint textId);
+    event TextCreated(uint textId, string metadataCid);
+    event TextUpdated(uint textId, string newMetadataCid);
+    event TextDeleted(uint textId);
     /// @dev From Initializable @ openzeppelin-contracts~5.0.0
     event Initialized(uint64 version);
     // Member
