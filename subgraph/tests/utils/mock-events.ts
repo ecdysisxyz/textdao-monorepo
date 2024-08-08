@@ -7,6 +7,8 @@ import {
 	HeaderCreated,
 	MemberAdded,
 	MemberAddedByProposal,
+	MemberRemoved,
+	MemberRemovedByProposal,
 	MemberUpdated,
 	MemberUpdatedByProposal,
 	ProposalExecuted,
@@ -627,6 +629,45 @@ export function createMockMemberUpdatedByProposalEvent(
 		new ethereum.EventParam(
 			"metadataCid",
 			ethereum.Value.fromString(metadataCid),
+		),
+	);
+	return event;
+}
+
+/**
+ * Creates a mock MemberRemoved event
+ * @param memberId - Member ID
+ * @returns MockEvent of type MemberRemoved
+ */
+export function createMockMemberRemovedEvent(memberId: BigInt): MemberRemoved {
+	let event = changetype<MemberRemoved>(newMockEvent());
+	event.parameters = new Array();
+	event.parameters.push(
+		new ethereum.EventParam(
+			"memberId",
+			ethereum.Value.fromUnsignedBigInt(memberId),
+		),
+	);
+	return event;
+}
+
+/**
+ * Creates a mock MemberRemovedByProposal event
+ * @param memberId - Member ID
+ * @returns MockEvent of type MemberRemovedByProposal
+ */
+export function createMockMemberRemovedByProposalEvent(
+	memberId: BigInt,
+): MemberRemovedByProposal {
+	let event = changetype<MemberRemovedByProposal>(newMockEvent());
+	event.parameters = new Array();
+	event.parameters.push(
+		new ethereum.EventParam("pid", ethereum.Value.fromI32(0)),
+	);
+	event.parameters.push(
+		new ethereum.EventParam(
+			"memberId",
+			ethereum.Value.fromUnsignedBigInt(memberId),
 		),
 	);
 	return event;

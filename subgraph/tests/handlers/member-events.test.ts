@@ -11,6 +11,8 @@ import {
 import {
 	handleMemberAdded,
 	handleMemberAddedByProposal,
+	handleMemberRemoved,
+	handleMemberRemovedByProposal,
 	handleMemberUpdated,
 	handleMemberUpdatedByProposal,
 } from "../../src/event-handlers/member-events";
@@ -18,6 +20,8 @@ import { genMemberId } from "../../src/utils/entity-id-provider";
 import {
 	createMockMemberAddedByProposalEvent,
 	createMockMemberAddedEvent,
+	createMockMemberRemovedByProposalEvent,
+	createMockMemberRemovedEvent,
 	createMockMemberUpdatedByProposalEvent,
 	createMockMemberUpdatedEvent,
 } from "../utils/mock-events";
@@ -160,5 +164,33 @@ describe("Member Event Handlers", () => {
 
 		assert.entityCount("Member", 1);
 		assert.fieldEquals("Member", memberEntityId, "addr", addr.toHexString());
+	});
+
+	test("Should mark Member as inactive on MemberRemoved event", () => {
+		const memberId = BigInt.fromI32(0);
+		const memberEntityId = genMemberId(memberId);
+		const addr = Address.fromString(
+			"0x1234567890123456789012345678901234567890",
+		);
+
+		handleMemberAdded(createMockMemberAddedEvent(memberId, addr, metadataCid1));
+		handleMemberRemoved(createMockMemberRemovedEvent(memberId));
+
+		assert.entityCount("Member", 0);
+	});
+
+	test("Should mark Member as inactive on MemberRemovedByProposal event", () => {
+		const memberId = BigInt.fromI32(0);
+		const memberEntityId = genMemberId(memberId);
+		const addr = Address.fromString(
+			"0x1234567890123456789012345678901234567890",
+		);
+
+		handleMemberAdded(createMockMemberAddedEvent(memberId, addr, metadataCid1));
+		handleMemberRemovedByProposal(
+			createMockMemberRemovedByProposalEvent(memberId),
+		);
+
+		assert.entityCount("Member", 0);
 	});
 });

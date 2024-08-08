@@ -226,6 +226,54 @@ export class MemberAddedByProposal__Params {
   }
 }
 
+export class MemberRemoved extends ethereum.Event {
+  get params(): MemberRemoved__Params {
+    return new MemberRemoved__Params(this);
+  }
+}
+
+export class MemberRemoved__Params {
+  _event: MemberRemoved;
+
+  constructor(event: MemberRemoved) {
+    this._event = event;
+  }
+
+  get memberId(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get addr(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+}
+
+export class MemberRemovedByProposal extends ethereum.Event {
+  get params(): MemberRemovedByProposal__Params {
+    return new MemberRemovedByProposal__Params(this);
+  }
+}
+
+export class MemberRemovedByProposal__Params {
+  _event: MemberRemovedByProposal;
+
+  constructor(event: MemberRemovedByProposal) {
+    this._event = event;
+  }
+
+  get pid(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get memberId(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+
+  get addr(): Address {
+    return this._event.parameters[2].value.toAddress();
+  }
+}
+
 export class MemberUpdated extends ethereum.Event {
   get params(): MemberUpdated__Params {
     return new MemberUpdated__Params(this);

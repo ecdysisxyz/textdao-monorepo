@@ -1,11 +1,17 @@
 import {
 	MemberAdded,
 	MemberAddedByProposal,
+	MemberRemoved,
+	MemberRemovedByProposal,
 	MemberUpdated,
 	MemberUpdatedByProposal,
 } from "../../generated/TextDAO/TextDAOEvents";
 import { saveMemberMetadata } from "../file-data-handlers/member-metadata";
-import { createNewMember, loadMember } from "../utils/entity-provider";
+import {
+	createNewMember,
+	loadMember,
+	removeMemberEntity,
+} from "../utils/entity-provider";
 
 /**
  * Handles the MemberAdded event by creating a new Member entity.
@@ -57,4 +63,24 @@ export function handleMemberUpdatedByProposal(
 	member.addr = event.params.addr;
 	member.save();
 	saveMemberMetadata(event.params.metadataCid, member);
+}
+
+/**
+ * Handles the MemberRemoved event by removing the corresponding Member entity if it exists.
+ * This event is triggered when a member is removed directly.
+ * @param event The MemberRemoved event containing the event data
+ */
+export function handleMemberRemoved(event: MemberRemoved): void {
+	removeMemberEntity(event.params.memberId);
+}
+
+/**
+ * Handles the MemberRemovedByProposal event by removing the corresponding Member entity if it exists.
+ * This event is triggered when a member is removed through a proposal.
+ * @param event The MemberRemovedByProposal event containing the event data
+ */
+export function handleMemberRemovedByProposal(
+	event: MemberRemovedByProposal,
+): void {
+	removeMemberEntity(event.params.memberId);
 }
