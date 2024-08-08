@@ -40,12 +40,27 @@ interface ISaveText {
     function updateText(uint256 pid, uint256 textId, string memory newMetadataCid) external;
     function deleteText(uint256 pid, uint256 textId) external;
 }
+interface ITextManagement {
+    function createText(uint256 pid, string memory metadataCid) external returns (uint256 textId);
+    function updateText(uint256 pid, uint256 textId, string memory newMetadataCid) external;
+    function deleteText(uint256 pid, uint256 textId) external;
+}
 
 interface IMemberJoin {
     function memberJoin(uint pid, Schema.Member[] memory candidates) external;
 }
 
+interface IMembershipManagement {
+    function addMembers(uint pid, Schema.Member[] memory candidates) external;
+    function updateMember(uint memberId, string memory newMetadataURI) external;
+    function removeMember(uint pid, uint memberId) external;
+    function leaveDAO(uint memberId) external;
+}
+
 interface ISetConfigs {
+    function setDebelirationConfig(uint pid, Schema.DeliberationConfig calldata config) external;
+}
+interface IConfigManagement {
     function setDebelirationConfig(uint pid, Schema.DeliberationConfig calldata config) external;
 }
 
@@ -56,6 +71,11 @@ interface TextDAOMainFunctions is
     IFork,
     IVote,
     ITally,
-    IExecute,
-    ISaveText
+    IExecute
+{}
+
+interface TextDAOProtectedFunctions is
+    IMembershipManagement,
+    ITextManagement,
+    IConfigManagement
 {}

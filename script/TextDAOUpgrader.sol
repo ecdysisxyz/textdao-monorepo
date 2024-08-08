@@ -9,6 +9,8 @@ import {SaveTextProtected} from "bundle/textDAO/functions/protected/SaveTextProt
 import {MemberJoinProtected} from "bundle/textDAO/functions/protected/MemberJoinProtected.sol";
 import {SetConfigsProtected} from "bundle/textDAO/functions/protected/SetConfigsProtected.sol";
 
+import {MembershipManagementProtected} from "bundle/textDAO/functions/protected/MembershipManagementProtected.sol";
+
 import {TextDAOWithCheatsFacade} from "bundle/textDAO/interfaces/TextDAOFacade.sol";
 
 library TextDAOUpgrader {
@@ -61,4 +63,18 @@ library TextDAOUpgrader {
         // Upgrade facade
         _dictionary.upgradeFacade(address(new TextDAOWithCheatsFacade()));
     }
+
+    function addMembershipManagement(MCDevKit storage mc, address textDAO) internal {
+        Dictionary memory _dictionary = mc.loadDictionary("TextDAODictionary", mc.getDictionaryAddress(textDAO));
+
+        address _membershipManagement = address(new MembershipManagementProtected());
+        _dictionary.set(MembershipManagementProtected.addMembers.selector, _membershipManagement);
+        _dictionary.set(MembershipManagementProtected.updateMember.selector, _membershipManagement);
+        _dictionary.set(MembershipManagementProtected.removeMember.selector, _membershipManagement);
+        _dictionary.set(MembershipManagementProtected.leaveDAO.selector, _membershipManagement);
+
+        // Upgrade facade
+        _dictionary.upgradeFacade(address(new TextDAOWithCheatsFacade()));
+    }
+
 }

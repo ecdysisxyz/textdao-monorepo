@@ -48,6 +48,8 @@ interface TextDAOEvents {
     event MemberUpdated(uint memberId, address addr, string metadataCid);
     event MemberAddedByProposal(uint pid, uint memberId, address addr, string metadataCid);
     event MemberUpdatedByProposal(uint pid, uint memberId, address addr, string metadataCid);
+    event MemberRemovedByProposal(uint pid, uint memberId, address addr);
+    event MemberRemoved(uint memberId, address addr);
     // Set Config
     // event
 }

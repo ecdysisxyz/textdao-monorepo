@@ -57,6 +57,8 @@ interface TextDAOErrors {
     error YouAreNotTheRep();
     /// @dev Thrown when a non-VRF coordinator tries to perform a VRF coordinator-only action
     error YouAreNotTheVrfCoordinator();
+    /// @dev Thrown when a non-member self tries to perform a only-me-in-org action
+    error YouAreNotTheMemberSelf();
 
     // Protection errors
     /// @dev Thrown when trying to execute an unapproved action
@@ -76,7 +78,10 @@ interface TextDAOErrors {
     /// @dev Thrown when an invalid command ID is provided
     error InvalidCommandId(uint commandId);
 
-    // DaveText
+    // SaveText
     error TextMetadataCidIsRequired();
     error TextNotFound(uint textId);
+
+    // Member Management
+    error MemberNotFound(uint memberId);
 }
