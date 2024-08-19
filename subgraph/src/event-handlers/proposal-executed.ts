@@ -13,19 +13,19 @@ import { loadCommand, loadProposal } from "../utils/entity-provider";
  * @param event - The ProposalExecuted event containing the event data
  */
 export function handleProposalExecuted(event: ProposalExecuted): void {
-    const proposal = loadProposal(event.params.pid);
+	const proposal = loadProposal(event.params.pid);
 
-    proposal.fullyExecuted = true;
+	proposal.fullyExecuted = true;
 
-    let actions = loadCommand(
-        event.params.pid,
-        event.params.approvedCommandId
-    ).actions.load();
-    for (let i = 0; i < actions.length; i++) {
-        let action = actions[i];
-        action.status = "Executed";
-        action.save();
-    }
+	const actions = loadCommand(
+		event.params.pid,
+		event.params.approvedCommandId,
+	).actions.load();
+	for (let i = 0; i < actions.length; i++) {
+		const action = actions[i];
+		action.status = "Executed";
+		action.save();
+	}
 
-    proposal.save();
+	proposal.save();
 }
