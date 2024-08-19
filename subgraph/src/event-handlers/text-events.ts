@@ -6,12 +6,10 @@ import {
 	TextUpdated,
 	TextUpdatedByProposal,
 } from "../../generated/TextDAO/TextDAOEvents";
-import { saveTextMetadata } from "../file-data-handlers/text-metadata";
-import {
-	createNewText,
-	loadText,
-	removeTextEntity,
-} from "../utils/entity-provider";
+import { TextContents } from "../../generated/templates";
+import { genTextContentsId } from "../utils/entity-id-provider";
+import { removeTextEntity } from "../utils/entity-provider";
+import { createNewText, loadText } from "../utils/entity-provider";
 
 /**
  * Handles the TextCreated event by creating a new Text entity.
@@ -20,8 +18,9 @@ import {
  */
 export function handleTextCreated(event: TextCreated): void {
 	const text = createNewText(event.params.textId);
+	text.contents = genTextContentsId(event.params.metadataCid);
+	TextContents.create(event.params.metadataCid);
 	text.save();
-	saveTextMetadata(event.params.metadataCid, text);
 }
 
 /**
@@ -33,8 +32,9 @@ export function handleTextCreatedByProposal(
 	event: TextCreatedByProposal,
 ): void {
 	const text = createNewText(event.params.textId);
+	text.contents = genTextContentsId(event.params.metadataCid);
+	TextContents.create(event.params.metadataCid);
 	text.save();
-	saveTextMetadata(event.params.metadataCid, text);
 }
 
 /**
@@ -44,8 +44,9 @@ export function handleTextCreatedByProposal(
  */
 export function handleTextUpdated(event: TextUpdated): void {
 	const text = loadText(event.params.textId);
+	text.contents = genTextContentsId(event.params.newMetadataCid);
+	TextContents.create(event.params.newMetadataCid);
 	text.save();
-	saveTextMetadata(event.params.newMetadataCid, text);
 }
 
 /**
@@ -57,8 +58,9 @@ export function handleTextUpdatedByProposal(
 	event: TextUpdatedByProposal,
 ): void {
 	const text = loadText(event.params.textId);
+	text.contents = genTextContentsId(event.params.newMetadataCid);
+	TextContents.create(event.params.newMetadataCid);
 	text.save();
-	saveTextMetadata(event.params.newMetadataCid, text);
 }
 
 /**

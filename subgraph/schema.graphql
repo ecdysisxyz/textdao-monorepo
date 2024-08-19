@@ -33,8 +33,8 @@ type Header @entity {
 }
 type HeaderContents @entity {
     id: ID! "IPFS CID"
-    title: String "Header Title"
-    body: String "Header Body"
+    title: String
+    body: String
 }
 type Command @entity {
     id: ID!
@@ -72,7 +72,7 @@ type TextContents @entity {
 type Member @entity {
     id: ID!
     addr: Bytes!
-    info: MemberInfo!
+    info: MemberInfo
 }
 type MemberInfo @entity {
     id: ID!

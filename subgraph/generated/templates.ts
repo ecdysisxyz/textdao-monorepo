@@ -11,3 +11,23 @@ export class HeaderContents extends DataSourceTemplate {
     DataSourceTemplate.createWithContext("HeaderContents", [cid], context);
   }
 }
+
+export class TextContents extends DataSourceTemplate {
+  static create(cid: string): void {
+    DataSourceTemplate.create("TextContents", [cid]);
+  }
+
+  static createWithContext(cid: string, context: DataSourceContext): void {
+    DataSourceTemplate.createWithContext("TextContents", [cid], context);
+  }
+}
+
+export class MemberInfo extends DataSourceTemplate {
+  static create(cid: string): void {
+    DataSourceTemplate.create("MemberInfo", [cid]);
+  }
+
+  static createWithContext(cid: string, context: DataSourceContext): void {
+    DataSourceTemplate.createWithContext("MemberInfo", [cid], context);
+  }
+}

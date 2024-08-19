@@ -60,6 +60,14 @@ export function genTextId(textId: BigInt): string {
 	return textId.toString();
 }
 
+export function genTextContentsId(cid: string): string {
+	return cid;
+}
+
 export function genMemberId(memberId: BigInt): string {
 	return memberId.toString();
+}
+
+export function genMemberInfoId(cid: string): string {
+	return cid;
 }

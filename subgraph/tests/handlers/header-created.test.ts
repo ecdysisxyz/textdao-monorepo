@@ -1,19 +1,17 @@
 import { BigInt, log } from "@graphprotocol/graph-ts";
 import {
 	assert,
-	beforeAll,
 	beforeEach,
 	clearStore,
 	dataSourceMock,
 	describe,
 	logDataSources,
-	mockIpfsFile,
 	readFile,
 	test,
 } from "matchstick-as/assembly/index";
 import { HeaderContents } from "../../generated/schema";
 import { handleHeaderCreated } from "../../src/event-handlers/header-created";
-import { handleHeaderContents } from "../../src/file-data-handlers/proposal-header-metadata";
+import { handleHeaderContents } from "../../src/file-data-handlers/header-contents";
 import {
 	genHeaderContentsId,
 	genHeaderId,

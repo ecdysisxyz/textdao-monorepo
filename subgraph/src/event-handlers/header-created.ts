@@ -1,8 +1,6 @@
-import { log } from "matchstick-as";
 import { HeaderCreated } from "../../generated/TextDAO/TextDAOEvents";
 import { HeaderContents } from "../../generated/templates";
 import { genHeaderContentsId } from "../utils/entity-id-provider";
-// import { saveHeaderMetadata } from "../file-data-handlers/proposal-header-metadata";
 import {
 	createNewHeader,
 	loadOrCreateProposal,
@@ -22,10 +20,8 @@ export function handleHeaderCreated(event: HeaderCreated): void {
 	const header = createNewHeader(event.params.pid, event.params.headerId);
 
 	header.proposal = loadOrCreateProposal(event.params.pid).id;
+	header.contents = genHeaderContentsId(event.params.metadataCid);
+	HeaderContents.create(event.params.metadataCid);
 
-	const headerContentsId = genHeaderContentsId(event.params.metadataCid);
-	header.contents = headerContentsId;
-	HeaderContents.create(headerContentsId);
 	header.save();
-	// saveHeaderMetadata(event.params.metadataCid, header);
 }

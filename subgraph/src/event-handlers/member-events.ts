@@ -6,7 +6,8 @@ import {
 	MemberUpdated,
 	MemberUpdatedByProposal,
 } from "../../generated/TextDAO/TextDAOEvents";
-import { saveMemberMetadata } from "../file-data-handlers/member-metadata";
+import { MemberInfo } from "../../generated/templates";
+import { genMemberInfoId } from "../utils/entity-id-provider";
 import {
 	createNewMember,
 	loadMember,
@@ -21,8 +22,9 @@ import {
 export function handleMemberAdded(event: MemberAdded): void {
 	const member = createNewMember(event.params.memberId);
 	member.addr = event.params.addr;
+	member.info = genMemberInfoId(event.params.metadataCid);
+	MemberInfo.create(event.params.metadataCid);
 	member.save();
-	saveMemberMetadata(event.params.metadataCid, member);
 }
 
 /**
@@ -35,8 +37,9 @@ export function handleMemberAddedByProposal(
 ): void {
 	const member = createNewMember(event.params.memberId);
 	member.addr = event.params.addr;
+	member.info = genMemberInfoId(event.params.metadataCid);
+	MemberInfo.create(event.params.metadataCid);
 	member.save();
-	saveMemberMetadata(event.params.metadataCid, member);
 }
 
 /**
@@ -47,8 +50,9 @@ export function handleMemberAddedByProposal(
 export function handleMemberUpdated(event: MemberUpdated): void {
 	const member = loadMember(event.params.memberId);
 	member.addr = event.params.addr;
+	member.info = genMemberInfoId(event.params.metadataCid);
+	MemberInfo.create(event.params.metadataCid);
 	member.save();
-	saveMemberMetadata(event.params.metadataCid, member);
 }
 
 /**
@@ -61,8 +65,9 @@ export function handleMemberUpdatedByProposal(
 ): void {
 	const member = loadMember(event.params.memberId);
 	member.addr = event.params.addr;
+	member.info = genMemberInfoId(event.params.metadataCid);
+	MemberInfo.create(event.params.metadataCid);
 	member.save();
-	saveMemberMetadata(event.params.metadataCid, member);
 }
 
 /**
