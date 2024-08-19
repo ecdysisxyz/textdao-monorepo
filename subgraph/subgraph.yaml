@@ -22,6 +22,7 @@ dataSources:
         - DeliberationConfig
         - Proposal
         - Header
+        - HeaderContents
         - Command
         - Action
         - ProposalMeta
@@ -74,3 +75,16 @@ dataSources:
           handler: handleMemberAddedByProposal
         - event: MemberUpdatedByProposal(uint256,uint256,address,string)
           handler: handleMemberUpdatedByProposal
+templates:
+  - name: HeaderContents
+    kind: file/ipfs
+    mapping:
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      abis:
+        - name: TextDAOEvents
+          file: ../out/TextDAOEvents.sol/TextDAOEvents.json
+      entities:
+        - HeaderContents
+      file: ./src/file-data-handlers/proposal-header-metadata.ts
+      handler: handleHeaderContents

@@ -27,10 +27,14 @@ type Proposal @entity {
     top3Commands: [Command!]
 }
 type Header @entity {
-    id: ID!
+    id: ID! "ProposalId-HeaderId"
     proposal: Proposal!
-    title: String
-    body: String
+    contents: HeaderContents!
+}
+type HeaderContents @entity {
+    id: ID! "IPFS CID"
+    title: String "Header Title"
+    body: String "Header Body"
 }
 type Command @entity {
     id: ID!
@@ -58,12 +62,20 @@ enum ActionStatus {
 }
 type Text @entity {
     id: ID!
+    contents: TextContents!
+}
+type TextContents @entity {
+    id: ID!
     title: String
     body: String
 }
 type Member @entity {
     id: ID!
     addr: Bytes!
+    info: MemberInfo!
+}
+type MemberInfo @entity {
+    id: ID!
     name: String
     image: String
     bio: String

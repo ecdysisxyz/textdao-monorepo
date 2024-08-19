@@ -40,7 +40,7 @@ export function createMockHeaderCreatedEvent(
 	headerId: BigInt,
 	metadataCid: string,
 ): HeaderCreated {
-	let event = changetype<HeaderCreated>(newMockEvent());
+	const event = changetype<HeaderCreated>(newMockEvent());
 	event.parameters = new Array();
 	event.parameters.push(
 		new ethereum.EventParam("pid", ethereum.Value.fromUnsignedBigInt(pid)),
