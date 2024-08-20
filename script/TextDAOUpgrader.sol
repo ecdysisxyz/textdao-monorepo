@@ -85,6 +85,7 @@ library TextDAOUpgrader {
         Dictionary memory _dictionary = mc.loadDictionary("TextDAODictionary", mc.getDictionaryAddress(textDAO));
         address newPropose = address(new Propose());
         _dictionary.set(Propose.propose.selector, newPropose);
+        _dictionary.upgradeFacade(address(new TextDAOWithCheatsFacade()));
     }
 
 }

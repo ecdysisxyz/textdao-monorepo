@@ -86,7 +86,7 @@ library TextDAOOps {
         vm.expectEmit();
         emit TextDAOEvents.HeaderCreated(0, 1, __.headerMetadataCid1);
         emit TextDAOEvents.RepresentativesAssigned(0, _reps);
-        emit TextDAOEvents.Proposed(0, __.sender, block.timestamp, _expirationTime);
+        emit TextDAOEvents.Proposed(0, __.sender, block.timestamp, _expirationTime, TextDAODeployer.initialConfig().snapInterval);
         uint256 _pid = textDAO.propose(__.headerMetadataCid1, new Schema.Action[](0));
 
         // Fork proposal

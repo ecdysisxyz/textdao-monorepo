@@ -42,7 +42,7 @@ contract TextDAOBehaviorTest is MCTest {
         vm.expectEmit(true, true, true, true);
         emit TextDAOEvents.HeaderCreated(0, 1, _metadataCid);
         emit TextDAOEvents.RepresentativesAssigned(0, _reps);
-        emit TextDAOEvents.Proposed(0, MEMBER1, block.timestamp, _expirationTime);
+        emit TextDAOEvents.Proposed(0, MEMBER1, block.timestamp, _expirationTime, TextDAODeployer.initialConfig().snapInterval);
         uint256 _pid = textDAO.propose(_metadataCid, new Schema.Action[](0));
 
         // Fork proposal
@@ -112,7 +112,7 @@ contract TextDAOBehaviorTest is MCTest {
         vm.expectEmit(true, true, true, true);
         emit TextDAOEvents.HeaderCreated(0, 1, _metadataCid);
         emit TextDAOEvents.RepresentativesAssigned(0, _reps);
-        emit TextDAOEvents.Proposed(0, MEMBER1, block.timestamp, _expirationTime);
+        emit TextDAOEvents.Proposed(0, MEMBER1, block.timestamp, _expirationTime, TextDAODeployer.initialConfig().snapInterval);
         uint256 _pid = textDAO.propose(_metadataCid, new Schema.Action[](0));
 
         // Fork proposal
@@ -185,6 +185,8 @@ contract TextDAOBehaviorTest is MCTest {
      * @dev Tests error cases from an end-user perspective
      */
     function test_scenario_errorCases() public {
+        vm.warp(1724116970);
+
         // Test non-member proposal attempt
         uint256 _expirationTime = block.timestamp + TextDAODeployer.initialConfig().expiryDuration;
         vm.prank(NON_MEMBER);
@@ -197,16 +199,16 @@ contract TextDAOBehaviorTest is MCTest {
         _reps[1] = MEMBER2;
         _reps[2] = MEMBER3;
         string memory _metadataCid = "proposalCid";
+        uint256 _snapInterval = TextDAODeployer.initialConfig().snapInterval;
         vm.prank(MEMBER1);
         vm.expectEmit(true, true, true, true);
         emit TextDAOEvents.HeaderCreated(0, 1, _metadataCid);
         emit TextDAOEvents.RepresentativesAssigned(0, _reps);
-        emit TextDAOEvents.Proposed(0, MEMBER1, block.timestamp, _expirationTime);
+        emit TextDAOEvents.Proposed(0, MEMBER1, block.timestamp, _expirationTime, _snapInterval);
         uint256 proposalId = textDAO.propose(_metadataCid, new Schema.Action[](0));
 
-        // uint256 _snapInterval = TextDAODeployer.initialConfig().snapInterval;
-        // uint256 _epoch = block.timestamp / _snapInterval * _snapInterval;
-        uint256 _epoch = 1; // snapInterval == 0
+        uint256 _epoch = block.timestamp / _snapInterval * _snapInterval;
+        // uint256 _epoch = 1; // snapInterval == 0
         vm.expectEmit(true, true, true, true);
         emit TextDAOEvents.ProposalSnapped(proposalId, _epoch, new uint[](0), new uint[](0));
         textDAO.tallyAndExecute(proposalId);

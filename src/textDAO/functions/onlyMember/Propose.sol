@@ -46,7 +46,7 @@ contract Propose is IPropose, OnlyMemberBase {
         _setupRepresentatives($proposal, pid);
         _setupTimes($proposal);
 
-        emit TextDAOEvents.Proposed(pid, msg.sender, $proposal.meta.createdAt, $proposal.meta.expirationTime);
+        emit TextDAOEvents.Proposed(pid, msg.sender, $proposal.meta.createdAt, $proposal.meta.expirationTime, $proposal.meta.snapInterval);
     }
 
     /**
@@ -422,7 +422,7 @@ contract ProposeTest is MCTest {
         emit TextDAOEvents.RepresentativesAssigned(0, _reps);
 
         vm.expectEmit(true, true, true, true);
-        emit TextDAOEvents.Proposed(0, address(this), block.timestamp, block.timestamp + Storage.Deliberation().config.expiryDuration);
+        emit TextDAOEvents.Proposed(0, address(this), block.timestamp, block.timestamp + Storage.Deliberation().config.expiryDuration, Storage.Deliberation().config.snapInterval);
 
         // Act
         Propose(target).propose(_headerMetadataCid, _actions);

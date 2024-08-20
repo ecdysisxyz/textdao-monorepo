@@ -23,7 +23,7 @@ interface TextDAOEvents {
     event CommandCreated(uint pid, uint commandId, Schema.Action[] actions);
 
     // Propose
-    event Proposed(uint pid, address proposer, uint256 createdAt, uint256 expirationTime);
+    event Proposed(uint pid, address proposer, uint256 createdAt, uint256 expirationTime, uint256 snapInterval);
     event RepresentativesAssigned(uint pid, address[] reps);
     event VRFRequested(uint pid, uint256 requestId);
     // Vote
