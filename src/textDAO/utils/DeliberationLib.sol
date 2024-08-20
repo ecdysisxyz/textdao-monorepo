@@ -17,6 +17,7 @@ library DeliberationLib {
 
         $proposal.meta.createdAt = block.timestamp;
         $proposal.meta.expirationTime = block.timestamp + Storage.Deliberation().config.expiryDuration;
+        $proposal.meta.snapInterval = Storage.Deliberation().config.snapInterval;
     }
 
     function getProposal(Schema.Deliberation storage $deliberation, uint pid) internal view returns(Schema.Proposal storage) {
@@ -33,6 +34,9 @@ contract DeliberationLibTest is MCTest {
     using DeliberationLib for Schema.Deliberation;
 
     function test_createProposal() public {
+        vm.warp(1724116970);
+        Storage.Deliberation().config.snapInterval = 1234567890;
+
         vm.record();
         Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
         (, bytes32[] memory writes) = vm.accesses(
@@ -40,6 +44,9 @@ contract DeliberationLibTest is MCTest {
         );
         assertEq($proposal.headers.length, 1, "Headers array should be initialized with one element");
         assertEq($proposal.cmds.length, 1, "Commands array should be initialized with one element");
+        assertEq($proposal.meta.createdAt, block.timestamp);
+        assertEq($proposal.meta.expirationTime, block.timestamp + Storage.Deliberation().config.expiryDuration);
+        assertEq($proposal.meta.snapInterval, Storage.Deliberation().config.snapInterval);
     }
 
     function test_createProposal_withoutLib() public {
