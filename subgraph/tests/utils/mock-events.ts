@@ -114,8 +114,9 @@ export function createMockProposedEvent(
 	proposer: Address,
 	createdAt: BigInt,
 	expirationTime: BigInt,
+	snapInterval: BigInt,
 ): Proposed {
-	let event = changetype<Proposed>(newMockEvent());
+	const event = changetype<Proposed>(newMockEvent());
 	event.parameters = new Array();
 	event.parameters.push(
 		new ethereum.EventParam("pid", ethereum.Value.fromUnsignedBigInt(pid)),
@@ -133,6 +134,12 @@ export function createMockProposedEvent(
 		new ethereum.EventParam(
 			"expirationTime",
 			ethereum.Value.fromUnsignedBigInt(expirationTime),
+		),
+	);
+	event.parameters.push(
+		new ethereum.EventParam(
+			"snapInterval",
+			ethereum.Value.fromUnsignedBigInt(snapInterval),
 		),
 	);
 	return event;

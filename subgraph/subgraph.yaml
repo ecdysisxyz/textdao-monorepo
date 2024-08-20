@@ -46,7 +46,7 @@ dataSources:
           handler: handleProposalTallied
         - event: ProposalTalliedWithTie(uint256,uint256[],uint256[],uint256)
           handler: handleProposalTalliedWithTie
-        - event: Proposed(uint256,address,uint256,uint256)
+        - event: Proposed(uint256,address,uint256,uint256,uint256)
           handler: handleProposed
         - event: RepresentativesAssigned(uint256,address[])
           handler: handleRepresentativesAssigned

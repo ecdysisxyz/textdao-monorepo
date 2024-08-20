@@ -466,6 +466,10 @@ export class Proposed__Params {
   get expirationTime(): BigInt {
     return this._event.parameters[3].value.toBigInt();
   }
+
+  get snapInterval(): BigInt {
+    return this._event.parameters[4].value.toBigInt();
+  }
 }
 
 export class RepresentativesAssigned extends ethereum.Event {

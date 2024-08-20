@@ -21,7 +21,7 @@ type Proposal @entity {
     approvedCommandId: BigInt
     fullyExecuted: Boolean
     vrfRequestId: BigInt
-    # snapInterval: BigInt
+    snapInterval: BigInt
     snappedEpoch: [BigInt!]
     top3Headers: [Header!]
     top3Commands: [Command!]

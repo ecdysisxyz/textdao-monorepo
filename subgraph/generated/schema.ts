@@ -303,6 +303,23 @@ export class Proposal extends Entity {
     }
   }
 
+  get snapInterval(): BigInt | null {
+    let value = this.get("snapInterval");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set snapInterval(value: BigInt | null) {
+    if (!value) {
+      this.unset("snapInterval");
+    } else {
+      this.set("snapInterval", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
   get snappedEpoch(): Array<BigInt> | null {
     let value = this.get("snappedEpoch");
     if (!value || value.kind == ValueKind.NULL) {

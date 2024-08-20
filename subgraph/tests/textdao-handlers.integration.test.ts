@@ -73,6 +73,7 @@ describe("TextDAO Subgraph Integration Tests", () => {
 		const headerId1 = BigInt.fromI32(1);
 		const createdAt = BigInt.fromI32(100000);
 		const expirationTime = BigInt.fromI32(1100000);
+		const snapInterval = BigInt.fromI32(72000);
 		const reps = [
 			Address.fromString("0x1234000000000000000000000000000000000000"),
 			Address.fromString("0x2345000000000000000000000000000000000000"),
@@ -92,7 +93,13 @@ describe("TextDAO Subgraph Integration Tests", () => {
 			createMockRepresentativesAssignedEvent(pid, reps),
 		);
 		handleProposed(
-			createMockProposedEvent(pid, proposer, createdAt, expirationTime),
+			createMockProposedEvent(
+				pid,
+				proposer,
+				createdAt,
+				expirationTime,
+				snapInterval,
+			),
 		);
 
 		const proposalEntityId = genProposalId(pid);
@@ -324,6 +331,7 @@ describe("TextDAO Subgraph Integration Tests", () => {
 		);
 		const expirationTime = BigInt.fromI32(2100000);
 		const extendedExpirationTime = BigInt.fromI32(2200000);
+		const snapInterval = BigInt.fromI32(72000);
 		const reps = [
 			Address.fromString("0x1234000000000000000000000000000000000000"),
 			Address.fromString("0x2345000000000000000000000000000000000000"),
@@ -343,6 +351,7 @@ describe("TextDAO Subgraph Integration Tests", () => {
 				proposer,
 				BigInt.fromI32(2000000),
 				expirationTime,
+				snapInterval,
 			),
 		);
 
@@ -441,6 +450,7 @@ describe("TextDAO Subgraph Integration Tests", () => {
 			);
 			const createdAt = BigInt.fromI32(17200000);
 			const expirationTime = BigInt.fromI32(3100000);
+			const snapInterval = BigInt.fromI32(72000);
 			const reps = [MEMBER1, MEMBER2, MEMBER3];
 
 			// Create proposal
@@ -451,7 +461,13 @@ describe("TextDAO Subgraph Integration Tests", () => {
 				createMockRepresentativesAssignedEvent(pid, reps),
 			);
 			handleProposed(
-				createMockProposedEvent(pid, proposer, createdAt, expirationTime),
+				createMockProposedEvent(
+					pid,
+					proposer,
+					createdAt,
+					expirationTime,
+					snapInterval,
+				),
 			);
 
 			// Test premature tally attempt (ProposalSnapped event)
