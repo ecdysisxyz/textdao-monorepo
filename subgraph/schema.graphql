@@ -29,7 +29,7 @@ type Proposal @entity {
 type Header @entity {
     id: ID! "ProposalId-HeaderId"
     proposal: Proposal!
-    contents: HeaderContents!
+    contents: HeaderContents
 }
 type HeaderContents @entity {
     id: ID! "IPFS CID"
@@ -62,7 +62,7 @@ enum ActionStatus {
 }
 type Text @entity {
     id: ID!
-    contents: TextContents!
+    contents: TextContents
 }
 type TextContents @entity {
     id: ID!

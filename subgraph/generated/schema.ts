@@ -424,17 +424,21 @@ export class Header extends Entity {
     this.set("proposal", Value.fromString(value));
   }
 
-  get contents(): string {
+  get contents(): string | null {
     let value = this.get("contents");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return null;
     } else {
       return value.toString();
     }
   }
 
-  set contents(value: string) {
-    this.set("contents", Value.fromString(value));
+  set contents(value: string | null) {
+    if (!value) {
+      this.unset("contents");
+    } else {
+      this.set("contents", Value.fromString(<string>value));
+    }
   }
 }
 
@@ -802,17 +806,21 @@ export class Text extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get contents(): string {
+  get contents(): string | null {
     let value = this.get("contents");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return null;
     } else {
       return value.toString();
     }
   }
 
-  set contents(value: string) {
-    this.set("contents", Value.fromString(value));
+  set contents(value: string | null) {
+    if (!value) {
+      this.unset("contents");
+    } else {
+      this.set("contents", Value.fromString(<string>value));
+    }
   }
 }
 

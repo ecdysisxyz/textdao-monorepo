@@ -114,7 +114,11 @@ describe("TextDAO Subgraph Integration Tests", () => {
 		assert.i32Equals(headers.length, 1);
 		let foundMatchingHeader = false;
 		for (let i = 0; i < headers.length; i++) {
-			const headerContents = HeaderContents.load(headers[i].contents);
+			const headerCid = headers[i].contents;
+			let headerContents: HeaderContents | null = null;
+			if (headerCid != null) {
+				headerContents = HeaderContents.load(headerCid as string);
+			}
 			// log.info(headers[i].contents, []);
 			// if (headerContents != null && headerContents.title != null) {
 			// 	log.info(headerContents.title!, []);
@@ -191,7 +195,11 @@ describe("TextDAO Subgraph Integration Tests", () => {
 		assert.i32Equals(headers.length, 2);
 		let foundForkHeader = false;
 		for (let i = 0; i < headers.length; i++) {
-			const headerContents = HeaderContents.load(headers[i].contents);
+			const headerCid = headers[i].contents;
+			let headerContents: HeaderContents | null = null;
+			if (headerCid != null) {
+				headerContents = HeaderContents.load(headerCid as string);
+			}
 			if (
 				headers[i].id == genHeaderId(pid, headerId2) &&
 				headers[i].proposal == proposalEntityId &&
