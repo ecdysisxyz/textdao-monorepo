@@ -23,6 +23,7 @@ export function handleMemberAdded(event: MemberAdded): void {
 	const member = createNewMember(event.params.memberId);
 	member.addr = event.params.addr;
 	member.info = genMemberInfoId(event.params.metadataCid);
+	member.cid = event.params.metadataCid;
 	MemberInfo.create(event.params.metadataCid);
 	member.save();
 }
@@ -38,6 +39,7 @@ export function handleMemberAddedByProposal(
 	const member = createNewMember(event.params.memberId);
 	member.addr = event.params.addr;
 	member.info = genMemberInfoId(event.params.metadataCid);
+	member.cid = event.params.metadataCid;
 	MemberInfo.create(event.params.metadataCid);
 	member.save();
 }
@@ -51,6 +53,7 @@ export function handleMemberUpdated(event: MemberUpdated): void {
 	const member = loadMember(event.params.memberId);
 	member.addr = event.params.addr;
 	member.info = genMemberInfoId(event.params.metadataCid);
+	member.cid = event.params.metadataCid;
 	MemberInfo.create(event.params.metadataCid);
 	member.save();
 }
@@ -66,6 +69,7 @@ export function handleMemberUpdatedByProposal(
 	const member = loadMember(event.params.memberId);
 	member.addr = event.params.addr;
 	member.info = genMemberInfoId(event.params.metadataCid);
+	member.cid = event.params.metadataCid;
 	MemberInfo.create(event.params.metadataCid);
 	member.save();
 }

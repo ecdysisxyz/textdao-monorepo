@@ -21,6 +21,7 @@ export function handleHeaderCreated(event: HeaderCreated): void {
 
 	header.proposal = loadOrCreateProposal(event.params.pid).id;
 	header.contents = genHeaderContentsId(event.params.metadataCid);
+	header.cid = event.params.metadataCid;
 	HeaderContents.create(event.params.metadataCid);
 
 	header.save();

@@ -440,6 +440,19 @@ export class Header extends Entity {
       this.set("contents", Value.fromString(<string>value));
     }
   }
+
+  get cid(): string {
+    let value = this.get("cid");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set cid(value: string) {
+    this.set("cid", Value.fromString(value));
+  }
 }
 
 export class HeaderContents extends Entity {
@@ -822,6 +835,19 @@ export class Text extends Entity {
       this.set("contents", Value.fromString(<string>value));
     }
   }
+
+  get cid(): string {
+    let value = this.get("cid");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set cid(value: string) {
+    this.set("cid", Value.fromString(value));
+  }
 }
 
 export class TextContents extends Entity {
@@ -966,6 +992,23 @@ export class Member extends Entity {
       this.unset("info");
     } else {
       this.set("info", Value.fromString(<string>value));
+    }
+  }
+
+  get cid(): string | null {
+    let value = this.get("cid");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set cid(value: string | null) {
+    if (!value) {
+      this.unset("cid");
+    } else {
+      this.set("cid", Value.fromString(<string>value));
     }
   }
 }

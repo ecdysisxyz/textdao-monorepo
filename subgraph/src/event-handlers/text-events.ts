@@ -19,6 +19,7 @@ import { createNewText, loadText } from "../utils/entity-provider";
 export function handleTextCreated(event: TextCreated): void {
 	const text = createNewText(event.params.textId);
 	text.contents = genTextContentsId(event.params.metadataCid);
+	text.cid = event.params.metadataCid;
 	TextContents.create(event.params.metadataCid);
 	text.save();
 }
@@ -33,6 +34,7 @@ export function handleTextCreatedByProposal(
 ): void {
 	const text = createNewText(event.params.textId);
 	text.contents = genTextContentsId(event.params.metadataCid);
+	text.cid = event.params.metadataCid;
 	TextContents.create(event.params.metadataCid);
 	text.save();
 }
@@ -45,6 +47,7 @@ export function handleTextCreatedByProposal(
 export function handleTextUpdated(event: TextUpdated): void {
 	const text = loadText(event.params.textId);
 	text.contents = genTextContentsId(event.params.newMetadataCid);
+	text.cid = event.params.newMetadataCid;
 	TextContents.create(event.params.newMetadataCid);
 	text.save();
 }
@@ -59,6 +62,7 @@ export function handleTextUpdatedByProposal(
 ): void {
 	const text = loadText(event.params.textId);
 	text.contents = genTextContentsId(event.params.newMetadataCid);
+	text.cid = event.params.newMetadataCid;
 	TextContents.create(event.params.newMetadataCid);
 	text.save();
 }
