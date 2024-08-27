@@ -1,0 +1,3 @@
+# TextDAO Monorepo
+- `contracts`
+- `subgraph`
