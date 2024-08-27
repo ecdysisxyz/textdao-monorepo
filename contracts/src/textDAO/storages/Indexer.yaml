@@ -1,0 +1,81 @@
+
+vars:
+  $p: ProposeStorage.proposals[i]
+  $h: $p.headers[i]
+  $c: $p.cmds[i]
+
+
+# Mapping Scan Setting
+# [format]
+# EDFS:
+#   from: uint
+#   to: uint
+constraints:
+  $p.tallied:
+    from: updatedAt($p.tallied[i]) / ProposeStorage.config.tallyInterval  # Although Schema.sol doesn't have updateAt member, the indexer backend automatically maintain updated time of each the most primitive EDFS.
+    to: block.timestamp / ProposeStorage.config.tallyInterval # current time. This member is immutable and so no full-scan of the mapping.
+  TextSaveProtectedStorage.texts:
+    from: 0
+    to: TextSaveProtectedStorage.nextTextId
+  MemberJoinProtectedStorage.members:
+    from: 0
+    to: MemberJoinProtectedStorage.nextMemberId
+  VRFStorage.requests:
+    from: 0
+    to: VRFStorage.nextId
+  ConfigOverrideStorage.overrides:
+    from: head(mc.functions)
+    to: tail(mc.functions) # overrides is mapping(bytes4=>any) and mc.functions is bytes4[] which is reserved by metacontract/mc
+  TagStorage.tags:
+    from: 0
+    to: TagStorage.nextId
+  TagRelationStorage.relations:
+    from: 0
+    to: TagRelationStorage.nextId
+
+relations:
+  - from: $p.meta.reps
+    to: MemberJoinProtectedStorage.members # primary key has index
+    type: one-to-many
+
+  - from: $p.meta.headerRank
+    to: $p.headers # unlike normal RDB relation, nested graph has relation to other
+    type: one-to-many
+
+  - from: $p.meta.cmdRank
+    to: $p.cmds
+    type: one-to-many
+
+  - from: TagStorage.tags
+    to: $p.headers
+    type: many-to-many
+    through: TagRelation.relations # TagRelation will have index
+
+ipfs:
+  - ref: TextSaveProtectedStorage.texts[i].metadataCids[i]
+    as: TextMetadata
+  - ref: MemberJoinProtectedStorage.members[i].metadataCid
+    as: MemberMetadata
+  - ref: TagStorage.tags[i].metadataCid
+    as: TagMetadata
+
+fulltext:
+  TextMetadata:
+    title:
+      lang:
+        - en
+        - ja
+    description:
+      lang:
+        - en
+        - ja
+  MemberMetadata:
+    name:
+      lang:
+        - en
+        - ja
+  TagMetadata:
+    name:
+      lang:
+        - en
+        - ja

@@ -1,0 +1,85 @@
+type DeliberationConfig @entity {
+    id: ID!
+    expiryDuration: BigInt!
+    snapInterval: BigInt!
+    repsNum: BigInt!
+    quorumScore: BigInt!
+    lastUpdated: BigInt!
+}
+type Proposal @entity {
+    id: ID!
+    headers: [Header!] @derivedFrom(field: "proposal")
+    cmds: [Command!] @derivedFrom(field: "proposal")
+    # meta
+    proposer: Bytes
+    createdAt: BigInt
+    expirationTime: BigInt
+    # voting status
+    reps: [Bytes!]
+    votes: [Vote!] @derivedFrom(field: "proposal")
+    approvedHeaderId: BigInt
+    approvedCommandId: BigInt
+    fullyExecuted: Boolean
+    vrfRequestId: BigInt
+    snapInterval: BigInt
+    snappedEpoch: [BigInt!]
+    top3Headers: [Header!]
+    top3Commands: [Command!]
+}
+type Header @entity {
+    id: ID! "ProposalId-HeaderId"
+    proposal: Proposal!
+    contents: HeaderContents
+    cid: String!
+}
+type HeaderContents @entity {
+    id: ID! "IPFS CID"
+    title: String
+    body: String
+}
+type Command @entity {
+    id: ID!
+    proposal: Proposal!
+    actions: [Action!]! @derivedFrom(field: "command")
+}
+type Action @entity {
+    id: ID! # fill from thegraph
+    command: Command! # parent
+    func: String!
+    abiParams: Bytes!
+    status: ActionStatus!
+}
+type Vote @entity {
+    id: ID!
+    proposal: Proposal! # parent
+    rep: Bytes! # mapping-key
+    rankedHeaderIds: [BigInt!]
+    rankedCommandIds: [BigInt!]
+}
+enum ActionStatus {
+    Proposed
+    Approved
+    Executed
+}
+type Text @entity {
+    id: ID!
+    contents: TextContents
+    cid: String!
+}
+type TextContents @entity {
+    id: ID!
+    title: String
+    body: String
+}
+type Member @entity {
+    id: ID!
+    addr: Bytes!
+    info: MemberInfo
+    cid: String
+}
+type MemberInfo @entity {
+    id: ID!
+    name: String
+    image: String
+    bio: String
+}
