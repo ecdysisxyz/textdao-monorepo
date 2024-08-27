@@ -88,4 +88,12 @@ library TextDAOUpgrader {
         _dictionary.upgradeFacade(address(new TextDAOWithCheatsFacade()));
     }
 
+    function upgradeCheatsForceApprove(MCDevKit storage mc, address textDAO) internal {
+        Dictionary memory _dictionary = mc.loadDictionary("TextDAODictionary", mc.getDictionaryAddress(textDAO));
+        address newCheats = address(new OnlyAdminCheats());
+        _dictionary.set(OnlyAdminCheats.forceApprove.selector, newCheats);
+        _dictionary.set(OnlyAdminCheats.forceApproveAndExecute.selector, newCheats);
+        _dictionary.upgradeFacade(address(new TextDAOWithCheatsFacade()));
+    }
+
 }

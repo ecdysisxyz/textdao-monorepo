@@ -30,8 +30,10 @@ contract TextDAOWithCheatsFacade is TextDAOFacade {
     function updateConfig(DeliberationConfig calldata newConfig) external {}
     function transferAdmin(address newAdmin) external {}
     function forceTally(uint pid) external {}
-    function forceApprove(uint pid, uint headerId, uint commandId) external {}
-    function forceApproveAndExecute(uint pid, uint headerId, uint commandId) external {}
+    function forceApprove(uint pid, uint commandId) external {}
+    function forceApproveAndExecute(uint pid, uint commandId) external {}
+    // function forceApprove(uint pid, uint headerId, uint commandId) external {}
+    // function forceApproveAndExecute(uint pid, uint headerId, uint commandId) external {}
 }
 
 contract TextDAOWithGetterFacade is TextDAOFacade {

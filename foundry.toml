@@ -7,11 +7,13 @@ fs_permissions = [
     { access = "read", path = "./mc.toml" },
     { access = "read", path = "./lib/mc/mc.toml" }
 ]
+# assertions_revert = true
+# legacy_assertions = false
 
 [profile.dev]
-no_match_path = 'simulation'
+no_match_path = 'test/*.network.t.sol'
 
-[profile.simulations]
-test = 'test/simulations'
+[profile.network]
+match_path = 'test/*.network.t.sol'
 
 # See more config options https://github.com/foundry-rs/foundry/tree/master/config

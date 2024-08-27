@@ -83,16 +83,41 @@ contract OnlyAdminCheats {
         }
     }
 
-    function forceApprove(uint pid, uint headerId, uint commandId) public onlyAdmin {
-        Schema.Proposal storage $proposal = Storage.Deliberation().getProposal(pid);
-        $proposal.approveHeader(headerId);
-        $proposal.approveCommand(commandId);
-        emit TextDAOEvents.ProposalTallied(pid, headerId, commandId);
+    function forceApprove(uint pid, uint commandId) public onlyAdmin {
+        Storage.Deliberation().getProposal(pid).approveCommand(commandId);
+        emit TextDAOEvents.ProposalTallied(pid, 0, commandId);
     }
 
-    function forceApproveAndExecute(uint pid, uint headerId, uint commandId) external onlyAdmin {
-        forceApprove(pid, headerId, commandId);
+    function forceApproveAndExecute(uint pid, uint commandId) external onlyAdmin {
+        forceApprove(pid, commandId);
         // Execute the approved command
         IExecute(address(this)).execute(pid);
     }
+
+    // function forceApprove(uint pid, uint headerId, uint commandId) public onlyAdmin {
+    //     Schema.Proposal storage $proposal = Storage.Deliberation().getProposal(pid);
+    //     $proposal.approveHeader(headerId);
+    //     $proposal.approveCommand(commandId);
+    //     emit TextDAOEvents.ProposalTallied(pid, headerId, commandId);
+    // }
+
+    // function forceApproveAndExecute(uint pid, uint headerId, uint commandId) external onlyAdmin {
+    //     forceApprove(pid, headerId, commandId);
+    //     // Execute the approved command
+    //     IExecute(address(this)).execute(pid);
+    // }
 }
+
+
+// if no top header
+//   if no top command = tie
+//   else if more than two top command = tie
+//   else if one top command = approve only top command
+// else if one top header
+//   if no top command = approve only top header
+//   else if more than two top command = tie
+//   else if one top command = approve both
+// else if more than two top header = totally tie
+//   if no top command = totally tie
+//   else if more than two top command = tie
+//   else if one top command = tie
