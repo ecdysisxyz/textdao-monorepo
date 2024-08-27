@@ -1,0 +1,55 @@
+# Global hooks
+pre-commit:
+  parallel: false
+  piped: true
+  commands:
+    1_build:
+      run: LEFTHOOK_QUIET=meta lefthook run build
+    2_lint:
+      run: LEFTHOOK_QUIET=meta lefthook run lint
+
+build:
+  parallel: true
+  piped: false
+  commands:
+    contracts:
+      root: packages/contracts
+      files: git diff --name-only HEAD | grep "packages/contracts" || true
+      glob: "**/*.sol"
+      run: forge build
+    subgraph:
+      root: packages/subgraph
+      files: git diff --name-only HEAD | grep "packages/subgraph" || true
+      glob: "**/*.ts", "**/subgraph.yaml", "**/schema.graphql"
+      run: graph codegen && graph build
+    # frontend:
+    #   root: packages/frontend
+    #   files: git diff --name-only HEAD | grep "packages/frontend" || true
+    #   glob: "**/*.{ts,tsx}"
+    #   run: tsc && vite build
+
+lint:
+  parallel: true
+  piped: false
+  commands:
+    # contracts:
+    #   root: packages/contracts
+    #   files: git diff --name-only HEAD | grep "packages/contracts" || true
+    #   glob: "**/*.sol"
+    #   run: forge fmt && solhint
+    # subgraph:
+    #   root: packages/subgraph
+    #   files: git diff --name-only HEAD | grep "packages/subgraph" || true
+    #   glob: "**/*.ts", "**/subgraph.yaml", "**/schema.graphql"
+    #   run: bunx biome check --write \"$@\"
+    # frontend:
+    #   root: packages/frontend
+    #   files: git diff --name-only HEAD | grep "packages/frontend" || true
+    #   glob: "**/*.{ts,tsx}"
+    #   run: bunx biome check --write \"$@\"
+
+commit-msg:
+  parallel: true
+  commands:
+    commitlint:
+      run: bunx commitlint --edit {1}
