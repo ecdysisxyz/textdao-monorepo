@@ -2,17 +2,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import { Storage } from "bundle/textDAO/storages/Storage.sol";
-import { Schema } from "bundle/textDAO/storages/Schema.sol";
-import { ProtectionBase } from "bundle/_utils/ProtectionBase.sol";
+// Access Control
+import {ProtectionBase} from "bundle/textDAO/functions/protected/ProtectionBase.sol";
+// Storage
+import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
+// Interfaces
+import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
 import "@chainlink/vrf/interfaces/VRFCoordinatorV2Interface.sol";
 
 contract SetConfigsProtected is ProtectionBase {
-    function setProposalsConfig(uint pid, Schema.ProposalsConfig memory config) public protected(pid) returns (bool) {
-        Schema.ProposeStorage storage $ = Storage.$Proposals();
-        $.config.expiryDuration = config.expiryDuration;
-        $.config.repsNum = config.repsNum;
-        $.config.quorumScore = config.quorumScore;
+    function setDebelirationConfig(uint pid, Schema.DeliberationConfig calldata config) public protected(pid) {
+        Storage.Deliberation().config = config;
+        emit TextDAOEvents.DeliberationConfigUpdatedByProposal(pid, config);
     }
 
     function setVRFConfig(uint pid, Schema.VRFConfig memory config) public protected(pid) returns (bool) {

@@ -1,33 +1,37 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import "@chainlink/vrf/VRFConsumerBaseV2.sol";
-import "@chainlink/vrf/interfaces/VRFCoordinatorV2Interface.sol";
-import { Schema } from "bundle/textDAO/storages/Schema.sol";
-import { BaseSlots } from "bundle/textDAO/storages/BaseSlots.sol";
+import {Schema} from "bundle/textDAO/storages/Schema.sol";
+import {BaseSlots} from "bundle/textDAO/storages/BaseSlots.sol";
 
 /**
- * StorageLib v0.1.0
+ * @title StorageLib v0.1.0
  */
 library Storage {
-    bytes32 internal constant baseslot_ProposeStorage = BaseSlots.baseslot_ProposeStorage;
-    bytes32 internal constant baseslot_TextSaveProtectedStorage = BaseSlots.baseslot_TextSaveProtectedStorage;
-    bytes32 internal constant baseslot_MemberJoinProtectedStorage = BaseSlots.baseslot_MemberJoinProtectedStorage;
+    bytes32 internal constant baseslot_Deliberation = BaseSlots.baseslot_Deliberation;
+    bytes32 internal constant baseslot_Texts = BaseSlots.baseslot_Texts;
+    bytes32 internal constant baseslot_Members = BaseSlots.baseslot_Members;
+    bytes32 internal constant baseslot_Admins = BaseSlots.baseSlot_Admins;
     bytes32 internal constant baseslot_VRFStorage = BaseSlots.baseslot_VRFStorage;
     bytes32 internal constant baseslot_ConfigOverrideStorage = BaseSlots.baseslot_ConfigOverrideStorage;
 
-    function $Proposals() internal pure returns (Schema.ProposeStorage storage $) {
-        bytes32 slot = baseslot_ProposeStorage;
+    function Deliberation() internal pure returns (Schema.Deliberation storage $) {
+        bytes32 slot = baseslot_Deliberation;
         assembly { $.slot := slot }
     }
 
-    function $Texts() internal pure returns (Schema.TextSaveProtectedStorage storage $) {
-        bytes32 slot = baseslot_TextSaveProtectedStorage;
+    function Texts() internal pure returns (Schema.Texts storage $) {
+        bytes32 slot = baseslot_Texts;
         assembly { $.slot := slot }
     }
 
-    function $Members() internal pure returns (Schema.MemberJoinProtectedStorage storage $) {
-        bytes32 slot = baseslot_MemberJoinProtectedStorage;
+    function Members() internal pure returns (Schema.Members storage $) {
+        bytes32 slot = baseslot_Members;
+        assembly { $.slot := slot }
+    }
+
+    function Admins() internal pure returns(Schema.Admins storage $) {
+        bytes32 slot = baseslot_Admins;
         assembly { $.slot := slot }
     }
 

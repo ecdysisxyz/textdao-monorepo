@@ -6,12 +6,11 @@ import {ForgeHelper} from "@devkit/Flattened.sol";
 
 library TestUtils {
     function setMsgSenderAsMember() internal {
-        Storage.$Members().members[0].addr = ForgeHelper.msgSender();
-        Storage.$Members().nextMemberId = 1;
+        Storage.Members().members.push().addr = ForgeHelper.msgSender();
     }
 
     function setMsgSenderAsRep(uint256 pid) internal {
-        Storage.$Proposals().proposals[pid].proposalMeta.reps.push(ForgeHelper.msgSender());
+        Storage.Deliberation().proposals[pid].meta.reps.push(ForgeHelper.msgSender());
     }
 
     function setMsgSenderAsVrfCoordinator() internal {

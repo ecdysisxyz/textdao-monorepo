@@ -1,36 +1,52 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import { Schema } from "bundle/textDAO/storages/Schema.sol";
-import { Types } from "bundle/textDAO/storages/Types.sol";
-import {Getter} from "bundle/textDAO/functions/Getter.sol";
+// import {Getter} from "bundle/textDAO/functions/Getter.sol";
 
-contract TextDAOFacade {
-    function clone(address _target) public {}
-    function initialize(address[] calldata initialMembers, Schema.ProposalsConfig calldata pConfig) public {}
-    function propose(Types.ProposalArg calldata _p) public returns (uint) {}
-    function fork(uint pid, Types.ProposalArg calldata _p) external {}
-    function voteHeaders(uint _proposalId, uint[3] calldata _headerIds) public {}
-    function voteCmds(uint _proposalId, uint[3] calldata _cmdIds) public {}
-    function tally(uint _proposalId) public {}
-    function execute(uint _proposalId) public {}
-    function memberJoin(uint _proposalId, Schema.Member[] calldata _candidates) public {}
-    function setProposalsConfig(Schema.ProposalsConfig calldata _config) public {}
-    function overrideProposalsConfig(uint _proposalId, Schema.ProposalsConfig calldata _config) public {}
-    function saveText(uint _proposalId, string calldata _text) public {}
+import {ITextDAO} from "bundle/textDAO/interfaces/ITextDAO.sol";
+
+contract TextDAOFacade is ITextDAO {
+    // TextDAO core functions
+    function clone(bytes calldata initData) external returns(address proxy) {}
+    function initialize(Member[] calldata initialMembers, DeliberationConfig calldata pConfig) external {}
+    function propose(string calldata headerMetadataCid, Action[] calldata actions) external returns (uint) {}
+    function fork(uint pid, string calldata headerMetadataCid, Action[] calldata actions) external {}
+    function vote(uint pid, Vote calldata repVote) external {}
+    function tally(uint _proposalId) external {}
+    function tallyAndExecute(uint _proposalId) external {}
+    function execute(uint _proposalId) external {}
+    // TextDAO protected functions
+    function memberJoin(uint _proposalId, Member[] calldata _candidates) external {}
+    function createText(uint256 pid, string memory metadataCid) external returns (uint256 textId) {}
+    function updateText(uint256 pid, uint256 textId, string memory newMetadataCid) external {}
+    function deleteText(uint256 pid, uint256 textId) external {}
+    function setDebelirationConfig(uint pid, DeliberationConfig calldata config) external {}
+    // function overrideProposalsConfig(uint _proposalId, DeliberationConfig calldata _config) external {}
+}
+
+contract TextDAOWithCheatsFacade is TextDAOFacade {
+    function addAdmin(address[] memory newAdmins) external {}
+    function addMembers(address[] memory newMembers) external {}
+    function updateConfig(DeliberationConfig calldata newConfig) external {}
+    function transferAdmin(address newAdmin) external {}
+    function forceTally(uint pid) external {}
+    function forceApprove(uint pid, uint commandId) external {}
+    function forceApproveAndExecute(uint pid, uint commandId) external {}
+    // function forceApprove(uint pid, uint headerId, uint commandId) external {}
+    // function forceApproveAndExecute(uint pid, uint headerId, uint commandId) external {}
+}
+
+contract TextDAOWithGetterFacade is TextDAOFacade {
     // Getters
-    function getProposal(uint id) external view returns (Getter.ProposalInfo memory) {}
-    function getProposalHeaders(uint id) external view returns (Schema.Header[] memory) {}
-    function getProposalCommand(uint pid, uint cid) external view returns (Schema.Command memory) {}
-    function getNextProposalId() external view returns (uint) {}
-    function getProposalsConfig() external view returns (Schema.ProposalsConfig memory) {}
-    function getText(uint id) external view returns (Schema.Text memory) {}
-    function getNextTextId() external view returns (uint) {}
-    function getMember(uint id) external view returns (Schema.Member memory) {}
-    function getNextMemberId() external view returns (uint) {}
-    function getVRFRequest(uint id) external view returns (Schema.Request memory) {}
-    function getNextVRFId() external view returns (uint) {}
-    function getSubscriptionId() external view returns (uint64) {}
-    function getVRFConfig() external view returns (Schema.VRFConfig memory) {}
-    function getConfigOverride(bytes4 sig) external view returns (Schema.ConfigOverride memory) {}
+    // function getProposal(uint id) external view returns (Getter.ProposalInfo memory) {}
+    // function getProposalHeaders(uint id) external view returns (Header[] memory) {}
+    // // function getProposalCommand(uint pid, uint cid) external view returns (Command memory) {}
+    // function getProposalsConfig() external view returns (DeliberationConfig memory) {}
+    // function getText(uint id) external view returns (Text memory) {}
+    // function getTexts() external view returns (Text[] memory) {}
+    // function getMember(uint id) external view returns (Member memory) {}
+    // function getMembers() external view returns (Member[] memory) {}
+    // function getSubscriptionId() external view returns (uint64) {}
+    // function getVRFConfig() external view returns (VRFConfig memory) {}
+    // function getConfigOverride(bytes4 sig) external view returns (ConfigOverride memory) {}
 }

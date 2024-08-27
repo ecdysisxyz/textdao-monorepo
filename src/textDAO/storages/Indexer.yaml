@@ -5,7 +5,7 @@ vars:
   $c: $p.cmds[i]
 
 
-# Mapping Scan Setting 
+# Mapping Scan Setting
 # [format]
 # EDFS:
 #   from: uint
@@ -34,15 +34,15 @@ constraints:
     to: TagRelationStorage.nextId
 
 relations:
-  - from: $p.proposalMeta.reps
+  - from: $p.meta.reps
     to: MemberJoinProtectedStorage.members # primary key has index
     type: one-to-many
 
-  - from: $p.proposalMeta.headerRank
+  - from: $p.meta.headerRank
     to: $p.headers # unlike normal RDB relation, nested graph has relation to other
     type: one-to-many
 
-  - from: $p.proposalMeta.cmdRank
+  - from: $p.meta.cmdRank
     to: $p.cmds
     type: one-to-many
 
@@ -52,11 +52,11 @@ relations:
     through: TagRelation.relations # TagRelation will have index
 
 ipfs:
-  - ref: TextSaveProtectedStorage.texts[i].metadataURIs[i]
+  - ref: TextSaveProtectedStorage.texts[i].metadataCids[i]
     as: TextMetadata
-  - ref: MemberJoinProtectedStorage.members[i].metadataURI
+  - ref: MemberJoinProtectedStorage.members[i].metadataCid
     as: MemberMetadata
-  - ref: TagStorage.tags[i].metadataURI
+  - ref: TagStorage.tags[i].metadataCid
     as: TagMetadata
 
 fulltext:

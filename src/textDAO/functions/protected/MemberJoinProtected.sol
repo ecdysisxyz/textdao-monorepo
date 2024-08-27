@@ -1,19 +1,87 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import { Storage } from "bundle/textDAO/storages/Storage.sol";
-import { Schema } from "bundle/textDAO/storages/Schema.sol";
-import { ProtectionBase } from "bundle/_utils/ProtectionBase.sol";
+// Access Control
+import {ProtectionBase} from "bundle/textDAO/functions/protected/ProtectionBase.sol";
+// Storage
+import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
+// Interface
+import {IMemberJoin} from "bundle/textDAO/interfaces/TextDAOFunctions.sol";
+import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
 
-contract MemberJoinProtected is ProtectionBase {
-    function memberJoin(uint pid, Schema.Member[] memory candidates) public protected(pid) returns (bool) {
-        Schema.MemberJoinProtectedStorage storage $ = Storage.$Members();
+contract MemberJoinProtected is IMemberJoin, ProtectionBase {
+    function memberJoin(uint pid, Schema.Member[] memory candidates) external protected(pid) {
+        Schema.Member[] storage $members = Storage.Members().members;
 
-        for (uint i; i < candidates.length; i++) {
-            $.members[$.nextMemberId+i].id = candidates[i].id;
-            $.members[$.nextMemberId+i].addr = candidates[i].addr;
-            $.members[$.nextMemberId+i].metadataURI = candidates[i].metadataURI;
+        for (uint i; i < candidates.length; ++i) {
+            uint _memberId = $members.length;
+            Schema.Member memory _candidate = candidates[i];
+            $members.push(_candidate);
+            emit TextDAOEvents.MemberAddedByProposal(pid, _memberId, _candidate.addr, _candidate.metadataCid);
         }
-        $.nextMemberId = $.nextMemberId + candidates.length;
     }
+}
+
+
+// Testing
+import {MCTest} from "@devkit/Flattened.sol";
+import {DeliberationLib} from "bundle/textDAO/utils/DeliberationLib.sol";
+import {CommandLib} from "bundle/textDAO/utils/CommandLib.sol";
+import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
+
+contract MemberJoinProtectedTest is MCTest {
+    using DeliberationLib for Schema.Deliberation;
+    using CommandLib for Schema.Command;
+
+    function setUp() public {
+        _use(MemberJoinProtected.memberJoin.selector, address(new MemberJoinProtected()));
+    }
+
+    function test_memberJoin_success(Schema.Member[] memory candidates) public {
+        Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
+
+        $proposal.meta.approvedCommandId = 1;
+        Schema.Command storage $cmd = $proposal.cmds.push();
+        $cmd.createMemberJoinAction(0, candidates);
+        $proposal.meta.actionStatuses[0] = Schema.ActionStatus.Approved;
+
+        MemberJoinProtected(target).memberJoin({
+            pid: 0,
+            candidates: candidates
+        });
+
+        for (uint i; i < candidates.length; ++i) {
+            assertEq(
+                keccak256(abi.encode(candidates[i])),
+                keccak256(abi.encode(Storage.Members().members[i]))
+            );
+        }
+        assertEq(candidates.length, Storage.Members().members.length);
+    }
+
+    function test_memberJoin_revert_notApprovedYet() public {
+        Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
+        $proposal.meta.approvedCommandId = 1;
+        $proposal.cmds.push().createMemberJoinAction(0, new Schema.Member[](1));
+
+        vm.expectRevert(TextDAOErrors.ActionNotApprovedYet.selector);
+        MemberJoinProtected(target).memberJoin({
+            pid: 0,
+            candidates: new Schema.Member[](1)
+        });
+    }
+
+    function test_memberJoin_revert_notFound() public {
+        Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
+        $proposal.meta.approvedCommandId = 1;
+        $proposal.cmds.push().createMemberJoinAction(0, new Schema.Member[](1));
+        $proposal.meta.actionStatuses[0] = Schema.ActionStatus.Executed;
+
+        vm.expectRevert(TextDAOErrors.ActionNotFound.selector);
+        MemberJoinProtected(target).memberJoin({
+            pid: 0,
+            candidates: new Schema.Member[](1)
+        });
+    }
+
 }
