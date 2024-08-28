@@ -2,6 +2,9 @@
   "name": "textdao-monorepo",
   "private": true,
   "workspaces": ["packages/contracts/*", "packages/subgraph/*"],
+  "scripts": {
+    "prepare": "bun lefthook install"
+  },
   "devDependencies": {
     "@biomejs/biome": "npm:@biomejs/wasm-nodejs",
     "@commitlint/cli": "^19.4.0",

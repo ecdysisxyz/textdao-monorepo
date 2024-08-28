@@ -4,9 +4,9 @@ pre-commit:
   piped: true
   commands:
     1_build:
-      run: LEFTHOOK_QUIET=meta lefthook run build
-    2_lint:
-      run: LEFTHOOK_QUIET=meta lefthook run lint
+      run: LEFTHOOK_QUIET=meta bun lefthook run build
+    # 2_lint:
+    #   run: LEFTHOOK_QUIET=meta lefthook run lint
 
 build:
   parallel: true
@@ -20,7 +20,7 @@ build:
     subgraph:
       root: packages/subgraph
       files: git diff --name-only HEAD | grep "packages/subgraph" || true
-      glob: "**/*.ts", "**/subgraph.yaml", "**/schema.graphql"
+      glob: "**/*.{ts,yaml,graphql}"
       run: graph codegen && graph build
     # frontend:
     #   root: packages/frontend
@@ -28,10 +28,10 @@ build:
     #   glob: "**/*.{ts,tsx}"
     #   run: tsc && vite build
 
-lint:
-  parallel: true
-  piped: false
-  commands:
+# lint:
+#   parallel: true
+#   piped: false
+#   commands:
     # contracts:
     #   root: packages/contracts
     #   files: git diff --name-only HEAD | grep "packages/contracts" || true
