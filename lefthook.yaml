@@ -21,7 +21,7 @@ build:
       root: packages/subgraph
       files: git diff --name-only HEAD | grep "packages/subgraph" || true
       glob: "**/*.{ts,yaml,graphql}"
-      run: graph codegen && graph build
+      run: bunx graph build
     # frontend:
     #   root: packages/frontend
     #   files: git diff --name-only HEAD | grep "packages/frontend" || true

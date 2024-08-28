@@ -4,12 +4,16 @@
   "scripts": {
     "precodegen": "bun ./scripts/build-abi.ts",
     "codegen": "graph clean && graph codegen",
+    "prebuild": "bun codegen && bun format",
     "build": "graph build",
     "deploy": "graph deploy --studio",
     "create-local": "graph create textdao --node http://localhost:8020/",
     "remove-local": "graph remove textdao --node http://localhost:8020/",
     "deploy-local": "graph deploy textdao --node http://localhost:8020/ --ipfs http://localhost:5001",
-    "test": "graph test"
+    "test": "graph test",
+    "format": "bunx biome check --write .",
+    "lint": "bunx biome lint .",
+    "check": "bunx biome check ."
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.72.2",
