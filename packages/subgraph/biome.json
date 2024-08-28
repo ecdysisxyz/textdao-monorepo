@@ -1,0 +1,7 @@
+{
+  "extends": ["../../biome.json"],
+  "files": {
+    "ignore": ["node_modules/**", "generated/**"],
+    "include": ["src/**/*.ts", "test/**/*.ts"]
+  }
+}

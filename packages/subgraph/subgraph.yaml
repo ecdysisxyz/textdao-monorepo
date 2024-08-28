@@ -17,7 +17,7 @@ dataSources:
       language: wasm/assemblyscript
       abis:
         - name: TextDAOEvents
-          file: ../out/TextDAOEvents.sol/TextDAOEvents.json
+          file: ../contracts/out/TextDAOEvents.sol/TextDAOEvents.json
       entities:
         - DeliberationConfig
         - Proposal
@@ -82,7 +82,7 @@ templates:
       language: wasm/assemblyscript
       abis:
         - name: TextDAOEvents
-          file: ../out/TextDAOEvents.sol/TextDAOEvents.json
+          file: ../contracts/out/TextDAOEvents.sol/TextDAOEvents.json
       entities:
         - HeaderContents
       file: ./src/file-data-handlers/header-contents.ts
@@ -94,7 +94,7 @@ templates:
       language: wasm/assemblyscript
       abis:
         - name: TextDAOEvents
-          file: ../out/TextDAOEvents.sol/TextDAOEvents.json
+          file: ../contracts/out/TextDAOEvents.sol/TextDAOEvents.json
       entities:
         - TextContents
       file: ./src/file-data-handlers/text-contents.ts
@@ -106,7 +106,7 @@ templates:
       language: wasm/assemblyscript
       abis:
         - name: TextDAOEvents
-          file: ../out/TextDAOEvents.sol/TextDAOEvents.json
+          file: ../contracts/out/TextDAOEvents.sol/TextDAOEvents.json
       entities:
         - MemberInfo
       file: ./src/file-data-handlers/member-info.ts
