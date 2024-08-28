@@ -4,6 +4,7 @@ pragma solidity ^0.8.24;
 import {MCDevKit, Dictionary_1 as Dictionary, ForgeHelper, vm, console2} from "@devkit/Flattened.sol";
 import {OnlyAdminCheats} from "bundle/textDAO/functions/_cheat/OnlyAdminCheats.sol";
 import {Tally} from "bundle/textDAO/functions/Tally.sol";
+import {Fork} from "bundle/textDAO/functions/onlyReps/Fork.sol";
 import {Propose} from "bundle/textDAO/functions/onlyMember/Propose.sol";
 // protected functions
 import {SaveTextProtected} from "bundle/textDAO/functions/protected/SaveTextProtected.sol";
@@ -93,6 +94,14 @@ library TextDAOUpgrader {
         address newCheats = address(new OnlyAdminCheats());
         _dictionary.set(OnlyAdminCheats.forceApprove.selector, newCheats);
         _dictionary.set(OnlyAdminCheats.forceApproveAndExecute.selector, newCheats);
+        _dictionary.upgradeFacade(address(new TextDAOWithCheatsFacade()));
+    }
+
+    function upgradeFork(MCDevKit storage mc, address textDAO) internal {
+        Dictionary memory _dictionary = mc.loadDictionary("TextDAODictionary", mc.getDictionaryAddress(textDAO));
+        address newFork = address(new Fork());
+        _dictionary.set(Fork.forkHeader.selector, newFork);
+        _dictionary.set(Fork.forkCommand.selector, newFork);
         _dictionary.upgradeFacade(address(new TextDAOWithCheatsFacade()));
     }
 

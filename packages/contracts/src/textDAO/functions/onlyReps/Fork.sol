@@ -25,19 +25,34 @@ contract Fork is IFork, OnlyRepsBase {
      * @param actions The array of actions for the new command (can be empty)
      */
     function fork(uint pid, string calldata headerMetadataCid, Schema.Action[] calldata actions) external onlyReps(pid) {
-        Schema.Proposal storage $proposal = Storage.Deliberation().proposals[pid];
+        _forkHeader(pid, headerMetadataCid);
+        _forkCommand(pid, actions);
+    }
 
+    function forkHeader(uint pid, string calldata headerMetadataCid) external onlyReps(pid) {
+        _forkHeader(pid, headerMetadataCid);
+    }
+
+    function forkCommand(uint pid, Schema.Action[] calldata actions) external onlyReps(pid) {
+        _forkCommand(pid, actions);
+    }
+
+    function _forkHeader(uint pid, string calldata headerMetadataCid) internal {
+        Schema.Proposal storage $proposal = Storage.Deliberation().proposals[pid];
         if (bytes(headerMetadataCid).length > 0) {
             uint _headerId = $proposal.createHeader(headerMetadataCid);
             emit TextDAOEvents.HeaderCreated(pid, _headerId, headerMetadataCid);
         }
+    }
+
+    function _forkCommand(uint pid, Schema.Action[] calldata actions) internal {
+        Schema.Proposal storage $proposal = Storage.Deliberation().proposals[pid];
         if (actions.length > 0) {
             uint _cmdId = $proposal.createCommand(actions);
             emit TextDAOEvents.CommandCreated(pid, _cmdId, actions);
         }
-
-        // Note: Shadow(sender, timestamp)
     }
+
 }
 
 

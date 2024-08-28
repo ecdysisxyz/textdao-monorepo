@@ -20,6 +20,8 @@ interface IFork {
      * @param pid proposalId
      */
     function fork(uint pid, string calldata headerMetadataCid, Schema.Action[] calldata actions) external;
+    function forkHeader(uint pid, string calldata headerMetadataCid) external;
+    function forkCommand(uint pid, Schema.Action[] calldata actions) external;
 }
 
 interface IVote {

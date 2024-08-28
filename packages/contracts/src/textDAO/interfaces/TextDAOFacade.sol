@@ -11,6 +11,8 @@ contract TextDAOFacade is ITextDAO {
     function initialize(Member[] calldata initialMembers, DeliberationConfig calldata pConfig) external {}
     function propose(string calldata headerMetadataCid, Action[] calldata actions) external returns (uint) {}
     function fork(uint pid, string calldata headerMetadataCid, Action[] calldata actions) external {}
+    function forkHeader(uint pid, string calldata headerMetadataCid) external {}
+    function forkCommand(uint pid, Action[] calldata actions) external {}
     function vote(uint pid, Vote calldata repVote) external {}
     function tally(uint _proposalId) external {}
     function tallyAndExecute(uint _proposalId) external {}
