@@ -1,5 +1,9 @@
 {
-	"solidity.packageDefaultDependenciesContractsDirectory": "src",
-	"solidity.packageDefaultDependenciesDirectory": "lib",
-	"solidity.monoRepoSupport": true
+  "solidity.packageDefaultDependenciesContractsDirectory": "src",
+  "solidity.packageDefaultDependenciesDirectory": "lib",
+  "solidity.monoRepoSupport": true,
+  "[json]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "editor.formatOnSave": true
 }

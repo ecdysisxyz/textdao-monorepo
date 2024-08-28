@@ -1,0 +1,7 @@
+{
+  "extends": ["../../biome.json"],
+  "files": {
+    "ignore": ["lib/**", "cache/**", "out/**", "broadcast/**"],
+    "include": ["**/*.json"]
+  }
+}
