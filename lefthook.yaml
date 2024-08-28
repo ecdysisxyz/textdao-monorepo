@@ -49,7 +49,10 @@ lint:
     #   run: bunx biome check --write \"$@\"
 
 commit-msg:
-  parallel: true
   commands:
+    debug:
+      run: echo "Commit-msg hook is running" >> debug.log
     commitlint:
-      run: bunx commitlint --edit {1}
+      run: |
+        echo "Running commitlint" >> debug.log
+        bunx commitlint --edit $LEFTHOOK_COMMIT_MESSAGE_PATH

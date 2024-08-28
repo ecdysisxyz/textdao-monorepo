@@ -1,10 +1,11 @@
 {
-	"name": "textdao-monorepo",
-	"private": true,
-	"workspaces": ["packages/contracts/*", "packages/subgraph/*"],
-	"devDependencies": {
-		"@commitlint/cli": "^19.4.0",
-		"@commitlint/config-conventional": "^19.2.2",
-		"lefthook": "^1.7.14"
-	}
+  "name": "textdao-monorepo",
+  "private": true,
+  "workspaces": ["packages/contracts/*", "packages/subgraph/*"],
+  "devDependencies": {
+    "@biomejs/biome": "npm:@biomejs/wasm-nodejs",
+    "@commitlint/cli": "^19.4.0",
+    "@commitlint/config-conventional": "^19.2.2",
+    "lefthook": "^1.7.14"
+  }
 }
