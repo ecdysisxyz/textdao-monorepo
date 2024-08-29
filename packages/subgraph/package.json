@@ -16,8 +16,10 @@
     "check": "bunx biome check ."
   },
   "dependencies": {
-    "@graphprotocol/graph-cli": "0.72.2",
-    "@graphprotocol/graph-ts": "0.32.0"
+    "@graphprotocol/graph-ts": "latest"
   },
-  "devDependencies": { "matchstick-as": "0.6.0" }
+  "devDependencies": {
+    "@graphprotocol/graph-cli": "latest",
+    "matchstick-as": "latest"
+  }
 }

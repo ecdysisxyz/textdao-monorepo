@@ -1,1 +1,4 @@
 build/
+
+tests/.latest.json
+tests/.bin

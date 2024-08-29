@@ -30,18 +30,5 @@
     "parser": {
       "allowComments": true
     }
-  },
-  "overrides": [
-    {
-      "include": ["packages/subgraph/*"],
-      "linter": {
-        "rules": {
-          "style": {
-            "useImportType": "off",
-            "useNodejsImportProtocol": "off"
-          }
-        }
-      }
-    }
-  ]
+  }
 }

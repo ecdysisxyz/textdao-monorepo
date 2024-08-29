@@ -1,7 +1,22 @@
 {
   "extends": ["../../biome.json"],
   "files": {
-    "ignore": ["node_modules/**", "generated/**"],
-    "include": ["src/**/*.ts", "test/**/*.ts"]
+    "ignore": ["node_modules/**", "generated/**", "build/**"],
+    "include": ["src/**/*.ts", "tests/**/*.ts", "scripts/**/*.ts"]
+  },
+  "linter": {
+    "rules": {
+      "style": {
+        "useImportType": "off",
+        "useNodejsImportProtocol": "off",
+        "useTemplate": "off",
+        "noUselessElse": "off",
+        "noInferrableTypes": "off"
+      },
+      "suspicious": {
+        "noShadowRestrictedNames": "off",
+        "noDoubleEquals": "off"
+      }
+    }
   }
 }
