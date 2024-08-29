@@ -11,7 +11,8 @@
         "useNodejsImportProtocol": "off",
         "useTemplate": "off",
         "noUselessElse": "off",
-        "noInferrableTypes": "off"
+        "noInferrableTypes": "off",
+        "noNonNullAssertion": "off"
       },
       "suspicious": {
         "noShadowRestrictedNames": "off",

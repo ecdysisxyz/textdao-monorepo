@@ -1,0 +1,2 @@
+testsfolder: ./tests
+manifestPath: ./subgraph.yaml
