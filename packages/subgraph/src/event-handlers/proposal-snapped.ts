@@ -9,6 +9,7 @@ import { pushToBigIntArray } from "../utils/type-formatter";
  * 1. The corresponding Proposal entity exists before updating.
  * 2. The top3Headers and top3Commands fields of the Proposal are updated.
  * 3. The snappedEpoch field is appended with the new epoch.
+ * 4. The snappedTimes field is appended with the block timestamp of the event.
  *
  * @param event - The ProposalSnapped event containing the event data
  */
@@ -16,6 +17,7 @@ export function handleProposalSnapped(event: ProposalSnapped): void {
   const proposal = loadProposal(event.params.pid);
 
   proposal.snappedEpoch = pushToBigIntArray(proposal.snappedEpoch, event.params.epoch);
+  proposal.snappedTimes = pushToBigIntArray(proposal.snappedTimes, event.block.timestamp);
   proposal.top3Headers = genHeaderIds(event.params.pid, event.params.top3HeaderIds);
   proposal.top3Commands = genCommandIds(event.params.pid, event.params.top3CommandIds);
 

@@ -10,16 +10,19 @@ describe("ProposalSnapped Event Handler", () => {
     clearStore();
   });
 
-  test("Should update existing Proposal entity with top3 headers, commands, and snapped epoch", () => {
+  test("Should update existing Proposal entity with top3 headers, commands, snapped epoch, and snapped times", () => {
     const pid = BigInt.fromI32(100);
     const epoch = BigInt.fromI32(1721900000);
+    const timestamp = BigInt.fromI32(1621900000);
     const top3HeaderIds = [BigInt.fromI32(1), BigInt.fromI32(2), BigInt.fromI32(3)];
     const top3CommandIds = [BigInt.fromI32(1), BigInt.fromI32(2), BigInt.fromI32(3)];
 
     // Create a proposal first
     createMockProposalEntity(pid);
 
-    handleProposalSnapped(createMockProposalSnappedEvent(pid, epoch, top3HeaderIds, top3CommandIds));
+    const event = createMockProposalSnappedEvent(pid, epoch, top3HeaderIds, top3CommandIds);
+    event.block.timestamp = timestamp;
+    handleProposalSnapped(event);
 
     const proposalEntityId = genProposalId(pid);
 
@@ -38,6 +41,7 @@ describe("ProposalSnapped Event Handler", () => {
     assert.fieldEquals("Proposal", proposalEntityId, "top3Headers", expectedTop3Headers);
     assert.fieldEquals("Proposal", proposalEntityId, "top3Commands", expectedTop3Commands);
     assert.fieldEquals("Proposal", proposalEntityId, "snappedEpoch", `[${epoch.toString()}]`);
+    assert.fieldEquals("Proposal", proposalEntityId, "snappedTimes", `[${timestamp.toString()}]`);
   });
 
   test(
@@ -157,6 +161,7 @@ describe("ProposalSnapped Event Handler", () => {
   test("Should handle multiple snaps and append all epochs", () => {
     const pid = BigInt.fromI32(100);
     const epochs = [BigInt.fromI32(1721900000), BigInt.fromI32(1721900100), BigInt.fromI32(1721900200)];
+    const timestamps = [BigInt.fromI32(1621900000), BigInt.fromI32(1621900100), BigInt.fromI32(1621900200)];
     const top3HeaderIds = [BigInt.fromI32(1), BigInt.fromI32(2)];
     const top3CommandIds = [BigInt.fromI32(1)];
 
@@ -164,13 +169,17 @@ describe("ProposalSnapped Event Handler", () => {
     createMockProposalEntity(pid);
 
     for (let i = 0; i < epochs.length; i++) {
-      handleProposalSnapped(createMockProposalSnappedEvent(pid, epochs[i], top3HeaderIds, top3CommandIds));
+      const event = createMockProposalSnappedEvent(pid, epochs[i], top3HeaderIds, top3CommandIds);
+      event.block.timestamp = timestamps[i];
+      handleProposalSnapped(event);
     }
 
     const proposalEntityId = genProposalId(pid);
 
     const expectedSnappedEpochs = `[${epochs[0].toString()}, ${epochs[1].toString()}, ${epochs[2].toString()}]`;
+    const expectedSnappedTimes = `[${timestamps[0].toString()}, ${timestamps[1].toString()}, ${timestamps[2].toString()}]`;
 
     assert.fieldEquals("Proposal", proposalEntityId, "snappedEpoch", expectedSnappedEpochs);
+    assert.fieldEquals("Proposal", proposalEntityId, "snappedTimes", expectedSnappedTimes);
   });
 });

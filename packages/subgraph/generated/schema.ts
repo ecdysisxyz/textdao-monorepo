@@ -337,6 +337,23 @@ export class Proposal extends Entity {
     }
   }
 
+  get snappedTimes(): Array<BigInt> | null {
+    let value = this.get("snappedTimes");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigIntArray();
+    }
+  }
+
+  set snappedTimes(value: Array<BigInt> | null) {
+    if (!value) {
+      this.unset("snappedTimes");
+    } else {
+      this.set("snappedTimes", Value.fromBigIntArray(<Array<BigInt>>value));
+    }
+  }
+
   get top3Headers(): Array<string> | null {
     let value = this.get("top3Headers");
     if (!value || value.kind == ValueKind.NULL) {

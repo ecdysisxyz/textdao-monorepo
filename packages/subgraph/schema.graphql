@@ -23,6 +23,7 @@ type Proposal @entity {
     vrfRequestId: BigInt
     snapInterval: BigInt
     snappedEpoch: [BigInt!]
+    snappedTimes: [BigInt!]
     top3Headers: [Header!]
     top3Commands: [Command!]
 }
