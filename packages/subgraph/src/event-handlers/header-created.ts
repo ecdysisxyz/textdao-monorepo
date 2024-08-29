@@ -1,10 +1,7 @@
 import { HeaderCreated } from "../../generated/TextDAO/TextDAOEvents";
 import { HeaderContents } from "../../generated/templates";
 import { genHeaderContentsId } from "../utils/entity-id-provider";
-import {
-	createNewHeader,
-	loadOrCreateProposal,
-} from "../utils/entity-provider";
+import { createNewHeader, loadOrCreateProposal } from "../utils/entity-provider";
 
 /**
  * Handles the HeaderCreated event by creating Header and Proposal entities.
@@ -17,12 +14,12 @@ import {
  * @param event The HeaderCreated event containing the event data
  */
 export function handleHeaderCreated(event: HeaderCreated): void {
-	const header = createNewHeader(event.params.pid, event.params.headerId);
+  const header = createNewHeader(event.params.pid, event.params.headerId);
 
-	header.proposal = loadOrCreateProposal(event.params.pid).id;
-	header.contents = genHeaderContentsId(event.params.metadataCid);
-	header.cid = event.params.metadataCid;
-	HeaderContents.create(event.params.metadataCid);
+  header.proposal = loadOrCreateProposal(event.params.pid).id;
+  header.contents = genHeaderContentsId(event.params.metadataCid);
+  header.cid = event.params.metadataCid;
+  HeaderContents.create(event.params.metadataCid);
 
-	header.save();
+  header.save();
 }

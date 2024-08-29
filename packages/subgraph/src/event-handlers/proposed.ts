@@ -11,15 +11,15 @@ import { loadProposal } from "../utils/entity-provider";
  * @param event The Proposed event containing the event data
  */
 export function handleProposed(event: Proposed): void {
-	const proposal = loadProposal(event.params.pid);
+  const proposal = loadProposal(event.params.pid);
 
-	proposal.proposer = event.params.proposer;
-	proposal.createdAt = event.params.createdAt;
-	proposal.expirationTime = event.params.expirationTime;
-	proposal.snapInterval = event.params.snapInterval;
-	proposal.save();
+  proposal.proposer = event.params.proposer;
+  proposal.createdAt = event.params.createdAt;
+  proposal.expirationTime = event.params.expirationTime;
+  proposal.snapInterval = event.params.snapInterval;
+  proposal.save();
 
-	// log.info("Proposal updated with Proposed event data. Proposal ID: {}", [
-	//     proposalEntityId,
-	// ]);
+  // log.info("Proposal updated with Proposed event data. Proposal ID: {}", [
+  //     proposalEntityId,
+  // ]);
 }

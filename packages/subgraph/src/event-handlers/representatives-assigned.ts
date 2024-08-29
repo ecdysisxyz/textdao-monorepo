@@ -11,16 +11,14 @@ import { formatAddressArrayToBytesArray } from "../utils/type-formatter";
  *
  * @param event The RepresentativesAssigned event containing the event data
  */
-export function handleRepresentativesAssigned(
-    event: RepresentativesAssigned
-): void {
-    const proposal = loadOrCreateProposal(event.params.pid);
+export function handleRepresentativesAssigned(event: RepresentativesAssigned): void {
+  const proposal = loadOrCreateProposal(event.params.pid);
 
-    proposal.reps = formatAddressArrayToBytesArray(event.params.reps);
+  proposal.reps = formatAddressArrayToBytesArray(event.params.reps);
 
-    proposal.save();
+  proposal.save();
 
-    // log.info("Representatives assigned to Proposal with ID: {}", [
-    //     proposalEntityId,
-    // ]);
+  // log.info("Representatives assigned to Proposal with ID: {}", [
+  //     proposalEntityId,
+  // ]);
 }

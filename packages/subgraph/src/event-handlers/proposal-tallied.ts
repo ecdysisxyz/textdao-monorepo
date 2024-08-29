@@ -1,8 +1,5 @@
-import {
-    ProposalTallied,
-    ProposalTalliedWithTie,
-} from "../../generated/TextDAO/TextDAOEvents";
-import { genHeaderIds, genCommandIds } from "../utils/entity-id-provider";
+import { ProposalTallied, ProposalTalliedWithTie } from "../../generated/TextDAO/TextDAOEvents";
+import { genCommandIds, genHeaderIds } from "../utils/entity-id-provider";
 import { loadProposal } from "../utils/entity-provider";
 
 /**
@@ -14,10 +11,10 @@ import { loadProposal } from "../utils/entity-provider";
  * @param event The ProposalTallied event containing the event data
  */
 export function handleProposalTallied(event: ProposalTallied): void {
-    const proposal = loadProposal(event.params.pid);
-    proposal.approvedHeaderId = event.params.approvedHeaderId;
-    proposal.approvedCommandId = event.params.approvedCommandId;
-    proposal.save();
+  const proposal = loadProposal(event.params.pid);
+  proposal.approvedHeaderId = event.params.approvedHeaderId;
+  proposal.approvedCommandId = event.params.approvedCommandId;
+  proposal.save();
 }
 
 /**
@@ -28,18 +25,10 @@ export function handleProposalTallied(event: ProposalTallied): void {
  *
  * @param event The ProposalTalliedWithTie event containing the event data
  */
-export function handleProposalTalliedWithTie(
-    event: ProposalTalliedWithTie
-): void {
-    const proposal = loadProposal(event.params.pid);
-    proposal.top3Headers = genHeaderIds(
-        event.params.pid,
-        event.params.topHeaderIds
-    );
-    proposal.top3Commands = genCommandIds(
-        event.params.pid,
-        event.params.topCommandIds
-    );
-    proposal.expirationTime = event.params.extendedExpirationTime;
-    proposal.save();
+export function handleProposalTalliedWithTie(event: ProposalTalliedWithTie): void {
+  const proposal = loadProposal(event.params.pid);
+  proposal.top3Headers = genHeaderIds(event.params.pid, event.params.topHeaderIds);
+  proposal.top3Commands = genCommandIds(event.params.pid, event.params.topCommandIds);
+  proposal.expirationTime = event.params.extendedExpirationTime;
+  proposal.save();
 }

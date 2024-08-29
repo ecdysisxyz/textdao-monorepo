@@ -1,7 +1,4 @@
-import {
-	DeliberationConfigUpdated,
-	DeliberationConfigUpdatedByProposal,
-} from "../../generated/TextDAO/TextDAOEvents";
+import { DeliberationConfigUpdated, DeliberationConfigUpdatedByProposal } from "../../generated/TextDAO/TextDAOEvents";
 import { loadOrCreateDeliberationConfig } from "../utils/entity-provider";
 
 /**
@@ -15,20 +12,18 @@ import { loadOrCreateDeliberationConfig } from "../utils/entity-provider";
  *
  * @param event The DeliberationConfigUpdated event containing the updated configuration data
  */
-export function handleDeliberationConfigUpdated(
-	event: DeliberationConfigUpdated,
-): void {
-	const config = loadOrCreateDeliberationConfig();
+export function handleDeliberationConfigUpdated(event: DeliberationConfigUpdated): void {
+  const config = loadOrCreateDeliberationConfig();
 
-	config.expiryDuration = event.params.config.expiryDuration;
-	config.snapInterval = event.params.config.snapInterval;
-	config.repsNum = event.params.config.repsNum;
-	config.quorumScore = event.params.config.quorumScore;
+  config.expiryDuration = event.params.config.expiryDuration;
+  config.snapInterval = event.params.config.snapInterval;
+  config.repsNum = event.params.config.repsNum;
+  config.quorumScore = event.params.config.quorumScore;
 
-	// Add a timestamp for when the config was last updated
-	config.lastUpdated = event.block.timestamp;
+  // Add a timestamp for when the config was last updated
+  config.lastUpdated = event.block.timestamp;
 
-	config.save();
+  config.save();
 }
 
 /**
@@ -42,18 +37,16 @@ export function handleDeliberationConfigUpdated(
  *
  * @param event The DeliberationConfigUpdatedByProposal event containing the updated configuration data
  */
-export function handleDeliberationConfigUpdatedByProposal(
-	event: DeliberationConfigUpdatedByProposal,
-): void {
-	const config = loadOrCreateDeliberationConfig();
+export function handleDeliberationConfigUpdatedByProposal(event: DeliberationConfigUpdatedByProposal): void {
+  const config = loadOrCreateDeliberationConfig();
 
-	config.expiryDuration = event.params.config.expiryDuration;
-	config.snapInterval = event.params.config.snapInterval;
-	config.repsNum = event.params.config.repsNum;
-	config.quorumScore = event.params.config.quorumScore;
+  config.expiryDuration = event.params.config.expiryDuration;
+  config.snapInterval = event.params.config.snapInterval;
+  config.repsNum = event.params.config.repsNum;
+  config.quorumScore = event.params.config.quorumScore;
 
-	// Add a timestamp for when the config was last updated
-	config.lastUpdated = event.block.timestamp;
+  // Add a timestamp for when the config was last updated
+  config.lastUpdated = event.block.timestamp;
 
-	config.save();
+  config.save();
 }

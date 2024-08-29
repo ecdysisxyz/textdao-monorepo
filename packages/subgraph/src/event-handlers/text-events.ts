@@ -1,10 +1,10 @@
 import {
-	TextCreated,
-	TextCreatedByProposal,
-	TextDeleted,
-	TextDeletedByProposal,
-	TextUpdated,
-	TextUpdatedByProposal,
+  TextCreated,
+  TextCreatedByProposal,
+  TextDeleted,
+  TextDeletedByProposal,
+  TextUpdated,
+  TextUpdatedByProposal,
 } from "../../generated/TextDAO/TextDAOEvents";
 import { TextContents } from "../../generated/templates";
 import { genTextContentsId } from "../utils/entity-id-provider";
@@ -17,11 +17,11 @@ import { createNewText, loadText } from "../utils/entity-provider";
  * @param event The TextCreated event containing the event data
  */
 export function handleTextCreated(event: TextCreated): void {
-	const text = createNewText(event.params.textId);
-	text.contents = genTextContentsId(event.params.metadataCid);
-	text.cid = event.params.metadataCid;
-	TextContents.create(event.params.metadataCid);
-	text.save();
+  const text = createNewText(event.params.textId);
+  text.contents = genTextContentsId(event.params.metadataCid);
+  text.cid = event.params.metadataCid;
+  TextContents.create(event.params.metadataCid);
+  text.save();
 }
 
 /**
@@ -29,14 +29,12 @@ export function handleTextCreated(event: TextCreated): void {
  * This event is triggered when a text is created through a proposal.
  * @param event The TextCreatedByProposal event containing the event data
  */
-export function handleTextCreatedByProposal(
-	event: TextCreatedByProposal,
-): void {
-	const text = createNewText(event.params.textId);
-	text.contents = genTextContentsId(event.params.metadataCid);
-	text.cid = event.params.metadataCid;
-	TextContents.create(event.params.metadataCid);
-	text.save();
+export function handleTextCreatedByProposal(event: TextCreatedByProposal): void {
+  const text = createNewText(event.params.textId);
+  text.contents = genTextContentsId(event.params.metadataCid);
+  text.cid = event.params.metadataCid;
+  TextContents.create(event.params.metadataCid);
+  text.save();
 }
 
 /**
@@ -45,11 +43,11 @@ export function handleTextCreatedByProposal(
  * @param event The TextUpdated event containing the event data
  */
 export function handleTextUpdated(event: TextUpdated): void {
-	const text = loadText(event.params.textId);
-	text.contents = genTextContentsId(event.params.newMetadataCid);
-	text.cid = event.params.newMetadataCid;
-	TextContents.create(event.params.newMetadataCid);
-	text.save();
+  const text = loadText(event.params.textId);
+  text.contents = genTextContentsId(event.params.newMetadataCid);
+  text.cid = event.params.newMetadataCid;
+  TextContents.create(event.params.newMetadataCid);
+  text.save();
 }
 
 /**
@@ -57,14 +55,12 @@ export function handleTextUpdated(event: TextUpdated): void {
  * This event is triggered when a text is updated through a proposal.
  * @param event The TextUpdatedByProposal event containing the event data
  */
-export function handleTextUpdatedByProposal(
-	event: TextUpdatedByProposal,
-): void {
-	const text = loadText(event.params.textId);
-	text.contents = genTextContentsId(event.params.newMetadataCid);
-	text.cid = event.params.newMetadataCid;
-	TextContents.create(event.params.newMetadataCid);
-	text.save();
+export function handleTextUpdatedByProposal(event: TextUpdatedByProposal): void {
+  const text = loadText(event.params.textId);
+  text.contents = genTextContentsId(event.params.newMetadataCid);
+  text.cid = event.params.newMetadataCid;
+  TextContents.create(event.params.newMetadataCid);
+  text.save();
 }
 
 /**
@@ -73,7 +69,7 @@ export function handleTextUpdatedByProposal(
  * @param event The TextDeleted event containing the event data
  */
 export function handleTextDeleted(event: TextDeleted): void {
-	removeTextEntity(event.params.textId);
+  removeTextEntity(event.params.textId);
 }
 
 /**
@@ -81,8 +77,6 @@ export function handleTextDeleted(event: TextDeleted): void {
  * This event is triggered when a text is deleted through a proposal.
  * @param event The TextDeletedByProposal event containing the event data
  */
-export function handleTextDeletedByProposal(
-	event: TextDeletedByProposal,
-): void {
-	removeTextEntity(event.params.textId);
+export function handleTextDeletedByProposal(event: TextDeletedByProposal): void {
+  removeTextEntity(event.params.textId);
 }
