@@ -20,9 +20,14 @@ export function createMockProposalEntity(
   return proposal;
 }
 
-export function createMockCommandEntity(pid: BigInt, commandId: BigInt): void {
+export function createMockCommandEntity(
+  pid: BigInt,
+  commandId: BigInt,
+  createdAt: BigInt = BigInt.fromI32(1721900001),
+): void {
   const command = new Command(genCommandId(pid, commandId));
   command.proposal = genProposalId(pid);
+  command.createdAt = createdAt;
   command.save();
 }
 
