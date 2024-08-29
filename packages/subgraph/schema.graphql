@@ -31,6 +31,7 @@ type Header @entity {
     proposal: Proposal!
     contents: HeaderContents
     cid: String!
+    createdAt: BigInt!
 }
 type HeaderContents @entity {
     id: ID! "IPFS CID"
@@ -41,6 +42,7 @@ type Command @entity {
     id: ID!
     proposal: Proposal!
     actions: [Action!]! @derivedFrom(field: "command")
+    createdAt: BigInt!
 }
 type Action @entity {
     id: ID! # fill from thegraph

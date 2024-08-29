@@ -453,6 +453,19 @@ export class Header extends Entity {
   set cid(value: string) {
     this.set("cid", Value.fromString(value));
   }
+
+  get createdAt(): BigInt {
+    let value = this.get("createdAt");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set createdAt(value: BigInt) {
+    this.set("createdAt", Value.fromBigInt(value));
+  }
 }
 
 export class HeaderContents extends Entity {
@@ -585,6 +598,19 @@ export class Command extends Entity {
 
   get actions(): ActionLoader {
     return new ActionLoader("Command", this.get("id")!.toString(), "actions");
+  }
+
+  get createdAt(): BigInt {
+    let value = this.get("createdAt");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set createdAt(value: BigInt) {
+    this.set("createdAt", Value.fromBigInt(value));
   }
 }
 

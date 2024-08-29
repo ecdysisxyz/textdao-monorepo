@@ -10,6 +10,7 @@ import { createNewHeader, loadOrCreateProposal } from "../utils/entity-provider"
  * 2. A corresponding Proposal entity is created if it doesn't exist.
  * 3. The Header entity is properly linked to its Proposal.
  * 4. The metadata from IPFS is fetched and stored.
+ * 5. The creation timestamp is recorded.
  *
  * @param event The HeaderCreated event containing the event data
  */
@@ -19,6 +20,7 @@ export function handleHeaderCreated(event: HeaderCreated): void {
   header.proposal = loadOrCreateProposal(event.params.pid).id;
   header.contents = genHeaderContentsId(event.params.metadataCid);
   header.cid = event.params.metadataCid;
+  header.createdAt = event.block.timestamp;
   HeaderContents.create(event.params.metadataCid);
 
   header.save();

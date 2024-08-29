@@ -10,7 +10,7 @@ describe("CommandCreated Event Handler", () => {
     clearStore();
   });
 
-  test("Should create and store a single Command entity with its Actions", () => {
+  test("Should create and store a single Command entity with its Actions and createdAt timestamp", () => {
     assert.entityCount("Command", 0);
     assert.entityCount("Action", 0);
 
@@ -20,8 +20,12 @@ describe("CommandCreated Event Handler", () => {
       new Action("function1()", Bytes.fromHexString("0x1234")),
       new Action("function2()", Bytes.fromHexString("0x5678")),
     ];
+    const timestamp = BigInt.fromI32(1234567890);
 
-    handleCommandCreated(createMockCommandCreatedEvent(pid, commandId, actions));
+    const event = createMockCommandCreatedEvent(pid, commandId, actions);
+    event.block.timestamp = timestamp;
+
+    handleCommandCreated(event);
 
     assert.entityCount("Command", 1);
     assert.entityCount("Action", 2);
@@ -31,6 +35,7 @@ describe("CommandCreated Event Handler", () => {
 
     assert.fieldEquals("Command", commandEntityId, "id", commandEntityId);
     assert.fieldEquals("Command", commandEntityId, "proposal", proposalEntityId);
+    assert.fieldEquals("Command", commandEntityId, "createdAt", timestamp.toString());
 
     for (let i = 0; i < actions.length; i++) {
       const actionEntityId = genActionId(pid, commandId, i);

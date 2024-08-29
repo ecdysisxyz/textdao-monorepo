@@ -8,6 +8,7 @@ import { createNewAction, createNewCommand, loadOrCreateProposal } from "../util
  * 2. Action entities are created for each action within the command.
  * 3. A corresponding Proposal entity is created if it doesn't exist.
  * 4. The Command entity is properly linked to its Proposal.
+ * 5. The creation timestamp is recorded for the Command entity.
  *
  * @param event - The CommandCreated event containing the event data
  */
@@ -25,6 +26,8 @@ export function handleCommandCreated(event: CommandCreated): void {
     action.status = "Proposed";
     action.save();
   }
+
+  command.createdAt = event.block.timestamp;
 
   command.save();
 }

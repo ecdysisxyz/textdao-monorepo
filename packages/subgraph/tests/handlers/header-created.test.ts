@@ -35,15 +35,19 @@ describe("HeaderCreated Event Handler", () => {
     dataSourceMock.resetValues();
   });
 
-  test("Should create and store a single Header entity with HeaderContents", () => {
+  test("Should create and store a single Header entity with HeaderContents and createdAt timestamp", () => {
     assert.entityCount("Header", 0);
     dataSourceMock.setAddress(metadataCid1);
 
     const pid = BigInt.fromI32(100);
     const headerId = BigInt.fromI32(222);
+    const timestamp = BigInt.fromI32(1234567890);
     logDataSources("HeaderContents");
 
-    handleHeaderCreated(createMockHeaderCreatedEvent(pid, headerId, metadataCid1));
+    const event = createMockHeaderCreatedEvent(pid, headerId, metadataCid1);
+    event.block.timestamp = timestamp;
+
+    handleHeaderCreated(event);
 
     const headerEntityId = genHeaderId(pid, headerId);
     const proposalEntityId = genProposalId(pid);
@@ -53,6 +57,7 @@ describe("HeaderCreated Event Handler", () => {
     assert.fieldEquals("Header", headerEntityId, "id", headerEntityId);
     assert.fieldEquals("Header", headerEntityId, "proposal", proposalEntityId);
     assert.fieldEquals("Header", headerEntityId, "contents", headerContentsEntityId);
+    assert.fieldEquals("Header", headerEntityId, "createdAt", timestamp.toString());
 
     assert.dataSourceCount("HeaderContents", 1);
 

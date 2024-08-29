@@ -41,6 +41,8 @@ export function createMockHeaderCreatedEvent(pid: BigInt, headerId: BigInt, meta
   event.parameters.push(new ethereum.EventParam("pid", ethereum.Value.fromUnsignedBigInt(pid)));
   event.parameters.push(new ethereum.EventParam("headerId", ethereum.Value.fromUnsignedBigInt(headerId)));
   event.parameters.push(new ethereum.EventParam("metadataCid", ethereum.Value.fromString(metadataCid)));
+  // Note: block.timestamp is set to 0 by default in newMockEvent()
+  // You can set it manually in your test if needed
   return event;
 }
 
@@ -65,7 +67,8 @@ export function createMockCommandCreatedEvent(pid: BigInt, commandId: BigInt, ac
     actionsArray.push(actionTuple);
   }
   event.parameters.push(new ethereum.EventParam("actions", ethereum.Value.fromTupleArray(actionsArray)));
-
+  // Note: block.timestamp is set to 0 by default in newMockEvent()
+  // You can set it manually in your test if needed
   return event;
 }
 
