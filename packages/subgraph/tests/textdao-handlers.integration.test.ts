@@ -21,10 +21,17 @@ import { handleProposed } from "../src/event-handlers/proposed";
 import { handleRepresentativesAssigned } from "../src/event-handlers/representatives-assigned";
 import { handleVoted } from "../src/event-handlers/voted";
 import { handleHeaderContents } from "../src/file-data-handlers/header-contents";
-import { genCommandId, genHeaderId, genProposalId, genVoteId } from "../src/utils/entity-id-provider";
+import {
+  genCommandId,
+  genHeaderId,
+  genProposalId,
+  genTopCommandId,
+  genTopHeaderId,
+  genVoteId,
+} from "../src/utils/entity-id-provider";
 import { loadProposal } from "../src/utils/entity-provider";
 import { Action, Vote } from "../src/utils/schema-types";
-import { formatAddressArray, formatBigIntArray, formatBigIntIdArray } from "../src/utils/type-formatter";
+import { formatAddressArray, formatBigIntArray } from "../src/utils/type-formatter";
 import {
   createMockCommandCreatedEvent,
   createMockHeaderCreatedEvent,
@@ -284,23 +291,40 @@ describe("TextDAO Subgraph Integration Tests", () => {
     // Tally votes, expect a tie
     const tieHeaderIds = [BigInt.fromI32(1), BigInt.fromI32(2)];
     const tieCommandIds = [BigInt.fromI32(1)];
+    const tieEpoch = BigInt.fromI32(2150000);
     handleProposalTalliedWithTie(
-      createMockProposalTalliedWithTieEvent(pid, tieHeaderIds, tieCommandIds, extendedExpirationTime),
+      createMockProposalTalliedWithTieEvent(pid, tieEpoch, tieHeaderIds, tieCommandIds, extendedExpirationTime),
     );
 
     const proposalEntityId = genProposalId(pid);
     assert.fieldEquals("Proposal", proposalEntityId, "expirationTime", extendedExpirationTime.toString());
+
+    let expectedTopHeaders = "";
+    for (let i = 0; i < tieHeaderIds.length; i++) {
+      if (i > 0) expectedTopHeaders += ", ";
+      expectedTopHeaders += genTopHeaderId(pid, tieEpoch, i);
+    }
+
     assert.fieldEquals(
       "Proposal",
       proposalEntityId,
-      "top3Headers",
-      formatBigIntIdArray(pid, tieHeaderIds, genHeaderId),
+      "topHeaders",
+      `[${expectedTopHeaders}]`,
+      "Proposal topHeaders should match the tie result",
     );
+
+    let expectedTopCommands = "";
+    for (let i = 0; i < tieCommandIds.length; i++) {
+      if (i > 0) expectedTopCommands += ", ";
+      expectedTopCommands += genTopCommandId(pid, tieEpoch, i);
+    }
+
     assert.fieldEquals(
       "Proposal",
       proposalEntityId,
-      "top3Commands",
-      formatBigIntIdArray(pid, tieCommandIds, genCommandId),
+      "topCommands",
+      `[${expectedTopCommands}]`,
+      "Proposal topCommands should match the tie result",
     );
 
     // Third member votes during extended period

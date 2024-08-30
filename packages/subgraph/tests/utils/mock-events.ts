@@ -149,6 +149,7 @@ export function createMockVotedEvent(pid: BigInt, rep: Address, vote: Vote): Vot
 /**
  * Creates a mock ProposalTalliedWithTie event
  * @param pid - Proposal ID
+ * @param epoch - Epoch (rounded tallied time by snapInterval)
  * @param topHeaderIds - Array of top header IDs
  * @param topCommandIds - Array of top command IDs
  * @param extendedExpirationTime The unix timestamp
@@ -156,6 +157,7 @@ export function createMockVotedEvent(pid: BigInt, rep: Address, vote: Vote): Vot
  */
 export function createMockProposalTalliedWithTieEvent(
   pid: BigInt,
+  epoch: BigInt,
   topHeaderIds: BigInt[],
   topCommandIds: BigInt[],
   extendedExpirationTime: BigInt,
@@ -163,6 +165,7 @@ export function createMockProposalTalliedWithTieEvent(
   const event = changetype<ProposalTalliedWithTie>(newMockEvent());
   event.parameters = new Array();
   event.parameters.push(new ethereum.EventParam("pid", ethereum.Value.fromUnsignedBigInt(pid)));
+  event.parameters.push(new ethereum.EventParam("epoch", ethereum.Value.fromUnsignedBigInt(epoch)));
   event.parameters.push(
     new ethereum.EventParam("topHeaderIds", ethereum.Value.fromI32Array(topHeaderIds.map<i32>((id) => id.toI32()))),
   );

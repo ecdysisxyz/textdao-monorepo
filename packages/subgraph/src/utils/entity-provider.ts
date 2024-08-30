@@ -1,5 +1,16 @@
-import { BigInt, Bytes, log, store } from "@graphprotocol/graph-ts";
-import { Action, Command, DeliberationConfig, Header, Member, Proposal, Text, Vote } from "../../generated/schema";
+import { BigInt, Bytes, store } from "@graphprotocol/graph-ts";
+import {
+  Action,
+  Command,
+  DeliberationConfig,
+  Header,
+  Member,
+  Proposal,
+  Text,
+  TopCommand,
+  TopHeader,
+  Vote,
+} from "../../generated/schema";
 import {
   genActionId,
   genCommandId,
@@ -8,6 +19,8 @@ import {
   genMemberId,
   genProposalId,
   genTextId,
+  genTopCommandId,
+  genTopHeaderId,
   genVoteId,
 } from "./entity-id-provider";
 
@@ -118,6 +131,68 @@ export function loadCommand(pid: BigInt, commandId: BigInt): Command {
   return command;
 }
 
+// Action
+
+/**
+ * Creates a new Action entity if it doesn't exist.
+ * @param pid The proposal ID
+ * @param commandId The command ID
+ * @param actionId The action ID
+ * @returns The newly created Action entity
+ * @throws Error if the Action already exists
+ */
+export function createNewAction(pid: BigInt, commandId: BigInt, actionId: number): Action {
+  const id = genActionId(pid, commandId, actionId);
+  if (Action.load(id) !== null) {
+    throw new Error("Action already exists");
+  }
+  return new Action(id);
+}
+
+function createNewTopHeader(pid: BigInt, epoch: BigInt, index: i32, headerId: string): string {
+  const id = genTopHeaderId(pid, epoch, index);
+  if (TopHeader.load(id) !== null) {
+    throw new Error("TopHeader already exists");
+  }
+  const topHeader = new TopHeader(id);
+  topHeader.snappedEpoch = epoch;
+  topHeader.index = BigInt.fromI32(index as i32);
+  topHeader.header = headerId;
+  topHeader.save();
+
+  return id;
+}
+
+export function createNewTopHeaders(pid: BigInt, epoch: BigInt, headerIdsBigInt: Array<BigInt>): Array<string> {
+  const topHeaderIds: Array<string> = [];
+  for (let i = 0; i < headerIdsBigInt.length; i++) {
+    topHeaderIds.push(createNewTopHeader(pid, epoch, i, genHeaderId(pid, headerIdsBigInt[i])));
+  }
+  return topHeaderIds;
+}
+
+function createNewTopCommand(pid: BigInt, epoch: BigInt, index: i32, commandId: string): string {
+  const id = genTopCommandId(pid, epoch, index);
+  if (TopCommand.load(id) !== null) {
+    throw new Error("TopCommand already exists");
+  }
+  const topCommand = new TopCommand(id);
+  topCommand.snappedEpoch = epoch;
+  topCommand.index = BigInt.fromI32(index as i32);
+  topCommand.command = commandId;
+  topCommand.save();
+
+  return id;
+}
+
+export function createNewTopCommands(pid: BigInt, epoch: BigInt, commandIdsBigInt: Array<BigInt>): Array<string> {
+  const topCommandIds: Array<string> = [];
+  for (let i = 0; i < commandIdsBigInt.length; i++) {
+    topCommandIds.push(createNewTopCommand(pid, epoch, i, genCommandId(pid, commandIdsBigInt[i])));
+  }
+  return topCommandIds;
+}
+
 // Vote
 
 /**
@@ -136,24 +211,6 @@ export function loadOrCreateVote(pid: BigInt, rep: Bytes): Vote {
     vote.save();
   }
   return vote;
-}
-
-// Action
-
-/**
- * Creates a new Action entity if it doesn't exist.
- * @param pid The proposal ID
- * @param commandId The command ID
- * @param actionId The action ID
- * @returns The newly created Action entity
- * @throws Error if the Action already exists
- */
-export function createNewAction(pid: BigInt, commandId: BigInt, actionId: number): Action {
-  const id = genActionId(pid, commandId, actionId);
-  if (Action.load(id) !== null) {
-    throw new Error("Action already exists");
-  }
-  return new Action(id);
 }
 
 // Text
@@ -233,28 +290,3 @@ export function removeMemberEntity(memberId: BigInt): void {
     store.remove("Member", id);
   }
 }
-
-// export function loadOrCreateProposalHeaderMetadata(cid: string): void {
-//     const id = genProposalHeaderMetadataId(cid);
-//     let proposalHeaderMetadata = ProposalHeaderMetadata.load(id);
-//     if (proposalHeaderMetadata == null) {
-//         ProposalHeaderMetadataTemplate.create(cid);
-//     }
-// }
-
-// export function loadOrCreateMemberMetadata(cid: string): void {
-//     const id = genMemberMetadataId(cid);
-//     let memebrMetadata = MemberMetadata.load(id);
-//     if (memebrMetadata == null) {
-//         log.warning("member metadata creating: {}", [cid]);
-//         MemberMetadataTemplate.create(cid);
-//     }
-// }
-
-// export function loadOrCreateTextMetadata(cid: string): void {
-//     const id = genTextMetadataId(cid);
-//     let textMetadata = TextMetadata.load(id);
-//     if (textMetadata == null) {
-//         TextMetadataTemplate.create(cid);
-//     }
-// }

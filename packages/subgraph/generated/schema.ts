@@ -354,8 +354,8 @@ export class Proposal extends Entity {
     }
   }
 
-  get top3Headers(): Array<string> | null {
-    let value = this.get("top3Headers");
+  get topHeaders(): Array<string> | null {
+    let value = this.get("topHeaders");
     if (!value || value.kind == ValueKind.NULL) {
       return null;
     } else {
@@ -363,16 +363,16 @@ export class Proposal extends Entity {
     }
   }
 
-  set top3Headers(value: Array<string> | null) {
+  set topHeaders(value: Array<string> | null) {
     if (!value) {
-      this.unset("top3Headers");
+      this.unset("topHeaders");
     } else {
-      this.set("top3Headers", Value.fromStringArray(<Array<string>>value));
+      this.set("topHeaders", Value.fromStringArray(<Array<string>>value));
     }
   }
 
-  get top3Commands(): Array<string> | null {
-    let value = this.get("top3Commands");
+  get topCommands(): Array<string> | null {
+    let value = this.get("topCommands");
     if (!value || value.kind == ValueKind.NULL) {
       return null;
     } else {
@@ -380,11 +380,11 @@ export class Proposal extends Entity {
     }
   }
 
-  set top3Commands(value: Array<string> | null) {
+  set topCommands(value: Array<string> | null) {
     if (!value) {
-      this.unset("top3Commands");
+      this.unset("topCommands");
     } else {
-      this.set("top3Commands", Value.fromStringArray(<Array<string>>value));
+      this.set("topCommands", Value.fromStringArray(<Array<string>>value));
     }
   }
 }
@@ -720,6 +720,164 @@ export class Action extends Entity {
 
   set status(value: string) {
     this.set("status", Value.fromString(value));
+  }
+}
+
+export class TopHeader extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save TopHeader entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type TopHeader must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+      );
+      store.set("TopHeader", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): TopHeader | null {
+    return changetype<TopHeader | null>(store.get_in_block("TopHeader", id));
+  }
+
+  static load(id: string): TopHeader | null {
+    return changetype<TopHeader | null>(store.get("TopHeader", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get snappedEpoch(): BigInt {
+    let value = this.get("snappedEpoch");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set snappedEpoch(value: BigInt) {
+    this.set("snappedEpoch", Value.fromBigInt(value));
+  }
+
+  get index(): BigInt {
+    let value = this.get("index");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set index(value: BigInt) {
+    this.set("index", Value.fromBigInt(value));
+  }
+
+  get header(): string {
+    let value = this.get("header");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set header(value: string) {
+    this.set("header", Value.fromString(value));
+  }
+}
+
+export class TopCommand extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save TopCommand entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type TopCommand must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+      );
+      store.set("TopCommand", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): TopCommand | null {
+    return changetype<TopCommand | null>(store.get_in_block("TopCommand", id));
+  }
+
+  static load(id: string): TopCommand | null {
+    return changetype<TopCommand | null>(store.get("TopCommand", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get snappedEpoch(): BigInt {
+    let value = this.get("snappedEpoch");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set snappedEpoch(value: BigInt) {
+    this.set("snappedEpoch", Value.fromBigInt(value));
+  }
+
+  get index(): BigInt {
+    let value = this.get("index");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set index(value: BigInt) {
+    this.set("index", Value.fromBigInt(value));
+  }
+
+  get command(): string {
+    let value = this.get("command");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set command(value: string) {
+    this.set("command", Value.fromString(value));
   }
 }
 

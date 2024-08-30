@@ -24,7 +24,8 @@ dataSources:
         - Header
         - Command
         - Action
-        - ProposalMeta
+        - TopHeader
+        - TopCommand
         - Vote
         - Text
         - Member
@@ -44,7 +45,7 @@ dataSources:
           handler: handleProposalSnapped
         - event: ProposalTallied(uint256,uint256,uint256)
           handler: handleProposalTallied
-        - event: ProposalTalliedWithTie(uint256,uint256[],uint256[],uint256)
+        - event: ProposalTalliedWithTie(uint256,uint256,uint256[],uint256[],uint256)
           handler: handleProposalTalliedWithTie
         - event: Proposed(uint256,address,uint256,uint256,uint256)
           handler: handleProposed

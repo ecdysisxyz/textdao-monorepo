@@ -1,11 +1,10 @@
 import { ProposalTallied, ProposalTalliedWithTie } from "../../generated/TextDAO/TextDAOEvents";
-import { genCommandIds, genHeaderIds } from "../utils/entity-id-provider";
-import { loadProposal } from "../utils/entity-provider";
+import { createNewTopCommands, createNewTopHeaders, loadProposal } from "../utils/entity-provider";
 
 /**
  * Handles the ProposalTallied event by updating the Proposal entity.
  * This function ensures that:
- * 1. The Proposal entity is created if it doesn't already exist.
+ * 1. The Proposal entity is loaded.
  * 2. The approvedHeaderId and approvedCommandId fields are updated.
  *
  * @param event The ProposalTallied event containing the event data
@@ -20,15 +19,16 @@ export function handleProposalTallied(event: ProposalTallied): void {
 /**
  * Handles the ProposalTalliedWithTie event by updating the Proposal entity.
  * This function ensures that:
- * 1. The Proposal entity is created if it doesn't already exist.
- * 2. The expirationTime, top3Headers, and top3Commands fields are updated.
+ * 1. The Proposal entity is loaded.
+ * 2. The expirationTime is updated.
+ * 3. New TopHeader and TopCommand entities are created and linked to the Proposal.
  *
  * @param event The ProposalTalliedWithTie event containing the event data
  */
 export function handleProposalTalliedWithTie(event: ProposalTalliedWithTie): void {
   const proposal = loadProposal(event.params.pid);
-  proposal.top3Headers = genHeaderIds(event.params.pid, event.params.topHeaderIds);
-  proposal.top3Commands = genCommandIds(event.params.pid, event.params.topCommandIds);
   proposal.expirationTime = event.params.extendedExpirationTime;
+  proposal.topHeaders = createNewTopHeaders(event.params.pid, event.params.epoch, event.params.topHeaderIds);
+  proposal.topCommands = createNewTopCommands(event.params.pid, event.params.epoch, event.params.topCommandIds);
   proposal.save();
 }

@@ -5,16 +5,16 @@ import { genActionId, genCommandId, genProposalId } from "../../src/utils/entity
 export function createMockProposalEntity(
   pid: BigInt,
   fullyExecuted: boolean = false,
-  top3Headers: string[] | null = null,
-  top3Commands: string[] | null = null,
+  topHeaders: string[] | null = null,
+  topCommands: string[] | null = null,
 ): Proposal {
   const proposal = new Proposal(genProposalId(pid));
   proposal.fullyExecuted = fullyExecuted;
-  if (top3Headers !== null) {
-    proposal.top3Headers = top3Headers;
+  if (topHeaders !== null) {
+    proposal.topHeaders = topHeaders;
   }
-  if (top3Commands !== null) {
-    proposal.top3Commands = top3Commands;
+  if (topCommands !== null) {
+    proposal.topCommands = topCommands;
   }
   proposal.save();
   return proposal;

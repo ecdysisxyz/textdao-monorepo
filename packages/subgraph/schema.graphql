@@ -1,13 +1,14 @@
 type DeliberationConfig @entity {
-    id: ID!
+    id: ID! "DeliberationConfigID"
     expiryDuration: BigInt!
     snapInterval: BigInt!
     repsNum: BigInt!
     quorumScore: BigInt!
     lastUpdated: BigInt!
 }
+
 type Proposal @entity {
-    id: ID!
+    id: ID! "{pid}"
     headers: [Header!] @derivedFrom(field: "proposal")
     cmds: [Command!] @derivedFrom(field: "proposal")
     # meta
@@ -24,64 +25,88 @@ type Proposal @entity {
     snapInterval: BigInt
     snappedEpoch: [BigInt!]
     snappedTimes: [BigInt!]
-    top3Headers: [Header!]
-    top3Commands: [Command!]
+    topHeaders: [TopHeader!]
+    topCommands: [TopCommand!]
 }
+
 type Header @entity {
-    id: ID! "ProposalId-HeaderId"
+    id: ID! "header-{pid}-{headerId}"
     proposal: Proposal!
     contents: HeaderContents
     cid: String!
     createdAt: BigInt!
 }
+
 type HeaderContents @entity {
-    id: ID! "IPFS CID"
+    id: ID! "{ipfsCid}"
     title: String
     body: String
 }
+
 type Command @entity {
-    id: ID!
+    id: ID! "command-{pid}-{commandId}"
     proposal: Proposal!
     actions: [Action!]! @derivedFrom(field: "command")
     createdAt: BigInt!
 }
+
 type Action @entity {
-    id: ID! # fill from thegraph
+    id: ID! "{pid}-{commandId}-{actionIndex}"
     command: Command! # parent
     func: String!
     abiParams: Bytes!
     status: ActionStatus!
 }
-type Vote @entity {
-    id: ID!
-    proposal: Proposal! # parent
-    rep: Bytes! # mapping-key
-    rankedHeaderIds: [BigInt!]
-    rankedCommandIds: [BigInt!]
-}
+
 enum ActionStatus {
     Proposed
     Approved
     Executed
 }
+
+type TopHeader @entity {
+    id: ID! "topHeader-{pid}-{epoch}-{index}"
+    snappedEpoch: BigInt!
+    index: BigInt! # rank-like
+    header: Header!
+}
+
+type TopCommand @entity {
+    id: ID! "topCommand-{pid}-{epoch}-{index}"
+    snappedEpoch: BigInt!
+    index: BigInt! # rank-like
+    command: Command!
+}
+
+type Vote @entity {
+    id: ID! "{pid}-{repAddress}"
+    proposal: Proposal! # parent
+    rep: Bytes! # mapping-key
+    rankedHeaderIds: [BigInt!]
+    rankedCommandIds: [BigInt!]
+}
+
 type Text @entity {
-    id: ID!
+    id: ID! "{textId}"
     contents: TextContents
     cid: String!
 }
+
 type TextContents @entity {
-    id: ID!
+    id: ID! "{ipfsCid}"
     title: String
     body: String
 }
+
 type Member @entity {
-    id: ID!
+    id: ID! "{memberId}"
     addr: Bytes!
     info: MemberInfo
     cid: String
 }
+
 type MemberInfo @entity {
-    id: ID!
+    id: ID! "{ipfsCid}"
     name: String
     image: String
     bio: String
