@@ -74,7 +74,7 @@ contract OnlyAdminCheats {
             _topCommandIds.length > 1   // there's a tie command
         ) {
             $proposal.meta.expirationTime += Storage.Deliberation().config.expiryDuration;
-            emit TextDAOEvents.ProposalTalliedWithTie(pid, _topHeaderIds, _topCommandIds, $proposal.meta.expirationTime);
+            emit TextDAOEvents.ProposalTalliedWithTie(pid, $proposal.calcCurrentEpoch(), _topHeaderIds, _topCommandIds, $proposal.meta.expirationTime);
         } else {
             // Approve the winning header and command
             $proposal.approveHeader(_topHeaderIds[0]);

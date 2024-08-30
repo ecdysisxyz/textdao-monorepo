@@ -280,13 +280,14 @@ contract TextDAOStateTest is MCTest {
         vm.warp($proposal.meta.expirationTime + 1);
 
         // Tally the votes, expect a tie
+        uint _epoch = $proposal.calcCurrentEpoch();
         uint256[] memory _tieHeaderIds = new uint256[](2);
         _tieHeaderIds[0] = 1;
         _tieHeaderIds[1] = 2;
         uint256[] memory _tieCommandIds = new uint256[](1);
         _tieCommandIds[0] = 1;
         vm.expectEmit(true, true, true, true);
-        emit TextDAOEvents.ProposalTalliedWithTie(_pid, _tieHeaderIds, _tieCommandIds, $proposal.meta.expirationTime + _config.expiryDuration);
+        emit TextDAOEvents.ProposalTalliedWithTie(_pid, _epoch, _tieHeaderIds, _tieCommandIds, $proposal.meta.expirationTime + _config.expiryDuration);
         textDAO.tallyAndExecute(_pid);
 
         // Verify that the expiration time has been extended

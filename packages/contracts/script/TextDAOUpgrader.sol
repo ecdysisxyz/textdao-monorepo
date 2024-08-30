@@ -105,4 +105,14 @@ library TextDAOUpgrader {
         _dictionary.upgradeFacade(address(new TextDAOWithCheatsFacade()));
     }
 
+    function upgradeTallyAndCheats(MCDevKit storage mc, address textDAO) internal {
+        Dictionary memory _dictionary = mc.loadDictionary("TextDAODictionary", mc.getDictionaryAddress(textDAO));
+        address newTally = address(new Tally());
+        _dictionary.set(Tally.tally.selector, newTally);
+        _dictionary.set(Tally.tallyAndExecute.selector, newTally);
+        address newCheats = address(new OnlyAdminCheats());
+        _dictionary.set(OnlyAdminCheats.forceTally.selector, newCheats);
+        _dictionary.upgradeFacade(address(new TextDAOWithCheatsFacade()));
+    }
+
 }

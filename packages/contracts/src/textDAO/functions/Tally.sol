@@ -62,7 +62,7 @@ contract Tally is ITally {
             _topCommandIds.length > 1   // there's a tie command
         ) {
             $proposal.meta.expirationTime += Storage.Deliberation().config.expiryDuration;
-            emit TextDAOEvents.ProposalTalliedWithTie(pid, _topHeaderIds, _topCommandIds, $proposal.meta.expirationTime);
+            emit TextDAOEvents.ProposalTalliedWithTie(pid, $proposal.calcCurrentEpoch(), _topHeaderIds, _topCommandIds, $proposal.meta.expirationTime);
         } else {
             // Approve the winning header and command
             $proposal.approveHeader(_topHeaderIds[0]);
@@ -162,6 +162,7 @@ contract TallyTest is MCTest {
 
         $proposalMeta.expirationTime = block.timestamp - 1;
 
+        uint _epoch = $proposal.calcCurrentEpoch();
         uint _initialExpirationTime = $proposalMeta.expirationTime;
         uint _extendedExpirationTime = _initialExpirationTime + Storage.Deliberation().config.expiryDuration;
 
@@ -172,7 +173,7 @@ contract TallyTest is MCTest {
         _tieCommandIds[0] = 3;
 
         vm.expectEmit(true, true, true, true);
-        emit TextDAOEvents.ProposalTalliedWithTie(0, _tieHeaderIds, _tieCommandIds, _extendedExpirationTime);
+        emit TextDAOEvents.ProposalTalliedWithTie(0, _epoch, _tieHeaderIds, _tieCommandIds, _extendedExpirationTime);
         Tally(target).tally(0);
 
         assertEq($proposalMeta.expirationTime, _extendedExpirationTime, "Expiration time should be extended");
@@ -193,12 +194,13 @@ contract TallyTest is MCTest {
         }
 
         $proposalMeta.expirationTime = block.timestamp - 1;
+        uint _epoch = $proposal.calcCurrentEpoch();
 
         uint _initialExpirationTime = $proposalMeta.expirationTime;
         uint _extendedExpirationTime = _initialExpirationTime + Storage.Deliberation().config.expiryDuration;
 
         vm.expectEmit(true, true, true, true);
-        emit TextDAOEvents.ProposalTalliedWithTie(0, new uint[](0), new uint[](0), _extendedExpirationTime);
+        emit TextDAOEvents.ProposalTalliedWithTie(0, _epoch, new uint[](0), new uint[](0), _extendedExpirationTime);
         Tally(target).tally(0);
 
         assertEq($proposalMeta.expirationTime, _extendedExpirationTime, "Expiration time should be extended");

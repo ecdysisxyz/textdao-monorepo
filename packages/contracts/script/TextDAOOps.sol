@@ -56,6 +56,15 @@ library TextDAOOps {
         string memberMetadataCid2;
         string textMetadataCid1;
         string textMetadataCid2;
+        uint pid;
+        address[] newMembers;
+        uint256 expirationTime;
+        address[] reps;
+        uint256 snapInterval;
+        uint256 epoch;
+        uint256 extendedExpirationTime;
+        uint[] tieHeaderIds;
+        uint[] tieCommandIds;
     }
     function fillSampleData(MCDevKit storage mc, address _textDAO) internal {
         Vars memory __;
@@ -73,27 +82,28 @@ library TextDAOOps {
         __.textMetadataCid1 = "QmQEJ3TDEwG1PShJu1P2fw5W5Ap2AmPiLma3BJJ2xkTmfW";
         __.textMetadataCid2 = "Qma9J9dqZC6ASDYahGRXsqewNMMe5o3pXne5F9d792pgpQ";
 
-        address[] memory _newMembers = new address[](1);
-        _newMembers[0] = __.sender2;
-        textDAO.addMembers(_newMembers);
+        __.newMembers = new address[](1);
+        __.newMembers[0] = __.sender2;
+        textDAO.addMembers(__.newMembers);
 
         // Create proposal
-        uint256 _expirationTime = block.timestamp + TextDAODeployer.initialConfig().expiryDuration;
-        address[] memory _reps = new address[](3);
-        _reps[0] = __.sender;
-        _reps[1] = __.sender2;
-        // _reps[2] = MEMBER3;
+        __.snapInterval = TextDAODeployer.initialConfig().snapInterval;
+        __.expirationTime = block.timestamp + TextDAODeployer.initialConfig().expiryDuration;
+        __.reps = new address[](3);
+        __.reps[0] = __.sender;
+        __.reps[1] = __.sender2;
+        // __.reps[2] = MEMBER3;
         vm.expectEmit();
         emit TextDAOEvents.HeaderCreated(0, 1, __.headerMetadataCid1);
-        emit TextDAOEvents.RepresentativesAssigned(0, _reps);
-        emit TextDAOEvents.Proposed(0, __.sender, block.timestamp, _expirationTime, TextDAODeployer.initialConfig().snapInterval);
-        uint256 _pid = textDAO.propose(__.headerMetadataCid1, new Schema.Action[](0));
+        emit TextDAOEvents.RepresentativesAssigned(0, __.reps);
+        emit TextDAOEvents.Proposed(0, __.sender, block.timestamp, __.expirationTime, __.snapInterval);
+        __.pid = textDAO.propose(__.headerMetadataCid1, new Schema.Action[](0));
 
         // Fork proposal
         Schema.Action[] memory _actions = new Schema.Action[](2);
         _actions[0] = Schema.Action({
             funcSig: "createText(uint256,string)",
-            abiParams: abi.encode(_pid, __.textMetadataCid1)
+            abiParams: abi.encode(__.pid, __.textMetadataCid1)
         });
         Schema.Member[] memory _memberCandidates = new Schema.Member[](1);
         _memberCandidates[0] = Schema.Member({
@@ -102,12 +112,12 @@ library TextDAOOps {
         });
         _actions[1] = Schema.Action({
             funcSig: "memberJoin(uint256,(address,string)[])",
-            abiParams: abi.encode(_pid, _memberCandidates)
+            abiParams: abi.encode(__.pid, _memberCandidates)
         });
         vm.expectEmit(true, true, true, true);
-        emit TextDAOEvents.HeaderCreated(_pid, 2, __.headerMetadataCid2);
-        emit TextDAOEvents.CommandCreated(_pid, 1, _actions);
-        textDAO.fork(_pid, __.headerMetadataCid2, _actions);
+        emit TextDAOEvents.HeaderCreated(__.pid, 2, __.headerMetadataCid2);
+        emit TextDAOEvents.CommandCreated(__.pid, 1, _actions);
+        textDAO.fork(__.pid, __.headerMetadataCid2, _actions);
 
         // Two members vote differently, causing a tie
         Schema.Vote memory _vote1 = Schema.Vote({
@@ -115,8 +125,8 @@ library TextDAOOps {
             rankedCommandIds: [uint(1), 0, 0]
         });
         vm.expectEmit(true, true, true, true);
-        emit TextDAOEvents.Voted(_pid, __.sender, _vote1);
-        textDAO.vote(_pid, _vote1);
+        emit TextDAOEvents.Voted(__.pid, __.sender, _vote1);
+        textDAO.vote(__.pid, _vote1);
 
         vm.stopBroadcast();
         vm.startBroadcast(__.key2);
@@ -125,23 +135,25 @@ library TextDAOOps {
             rankedCommandIds: [uint(1), 0, 0]
         });
         vm.expectEmit(true, true, true, true);
-        emit TextDAOEvents.Voted(_pid, __.sender2, _vote2);
-        textDAO.vote(_pid, _vote2);
+        emit TextDAOEvents.Voted(__.pid, __.sender2, _vote2);
+        textDAO.vote(__.pid, _vote2);
 
         // Wait for initial expiry
-        // vm.warp(_expirationTime + 1);
+        // vm.warp(__.expirationTime + 1);
         vm.stopBroadcast();
         vm.startBroadcast(__.key1);
 
         // Tally votes, expect a tie
-        uint256[] memory _tieHeaderIds = new uint256[](2);
-        _tieHeaderIds[0] = 1;
-        _tieHeaderIds[1] = 2;
-        uint256[] memory _tieCommandIds = new uint256[](1);
-        _tieCommandIds[0] = 1;
+        __.epoch = block.timestamp / __.snapInterval * __.snapInterval;
+        __.extendedExpirationTime = __.expirationTime + TextDAODeployer.initialConfig().expiryDuration;
+        __.tieHeaderIds = new uint256[](2);
+        __.tieHeaderIds[0] = 1;
+        __.tieHeaderIds[1] = 2;
+        __.tieCommandIds = new uint256[](1);
+        __.tieCommandIds[0] = 1;
         vm.expectEmit(true, true, true, true);
-        emit TextDAOEvents.ProposalTalliedWithTie(_pid, _tieHeaderIds, _tieCommandIds, _expirationTime + TextDAODeployer.initialConfig().expiryDuration);
-        textDAO.forceTally(_pid);
+        emit TextDAOEvents.ProposalTalliedWithTie(__.pid, __.epoch, __.tieHeaderIds, __.tieCommandIds, __.extendedExpirationTime);
+        textDAO.forceTally(__.pid);
 
         // Third member votes during extended period
         // vm.prank(MEMBER3);
@@ -152,18 +164,18 @@ library TextDAOOps {
             rankedCommandIds: [uint(1), 0, 0]
         });
         vm.expectEmit(true, true, true, true);
-        emit TextDAOEvents.Voted(_pid, __.sender2, _vote3);
-        textDAO.vote(_pid, _vote3);
+        emit TextDAOEvents.Voted(__.pid, __.sender2, _vote3);
+        textDAO.vote(__.pid, _vote3);
 
         // Wait for extended expiry
-        // vm.warp(_expirationTime + TextDAODeployer.initialConfig().expiryDuration + 1);
+        // vm.warp(__.expirationTime + TextDAODeployer.initialConfig().expiryDuration + 1);
         vm.stopBroadcast();
         vm.startBroadcast(__.key1);
 
         // Tally votes again, expect resolution
         vm.expectEmit(true, true, true, true);
-        emit TextDAOEvents.ProposalTallied(_pid, 1, 1);
-        textDAO.forceTally(_pid);
+        emit TextDAOEvents.ProposalTallied(__.pid, 1, 1);
+        textDAO.forceTally(__.pid);
     }
 
     function upgradeAdminCheats(MCDevKit storage mc, address textDAO, address deployer) internal {
