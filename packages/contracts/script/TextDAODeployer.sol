@@ -3,31 +3,31 @@ pragma solidity ^0.8.24;
 
 import {MCDevKit} from "@devkit/Flattened.sol";
 
-import {Schema} from "bundle/textDAO/storages/Schema.sol";
+import {Schema} from "bundle/textdao/storages/Schema.sol";
 // Main core functions
 import {Clone} from "@mc-std/functions/Clone.sol";
-import {Initialize} from "bundle/textDAO/functions/initializer/Initialize.sol";
-import {Propose} from "bundle/textDAO/functions/onlyMember/Propose.sol";
-import {RawFulfillRandomWords} from "bundle/textDAO/functions/onlyVrfCoordinator/RawFulfillRandomWords.sol";
-import {Fork} from "bundle/textDAO/functions/onlyReps/Fork.sol";
-import {Vote} from "bundle/textDAO/functions/onlyReps/Vote.sol";
-import {Tally} from "bundle/textDAO/functions/Tally.sol";
-import {Execute} from "bundle/textDAO/functions/Execute.sol";
+import {Initialize} from "bundle/textdao/functions/initializer/Initialize.sol";
+import {Propose} from "bundle/textdao/functions/onlyMember/Propose.sol";
+import {RawFulfillRandomWords} from "bundle/textdao/functions/onlyVrfCoordinator/RawFulfillRandomWords.sol";
+import {Fork} from "bundle/textdao/functions/onlyReps/Fork.sol";
+import {Vote} from "bundle/textdao/functions/onlyReps/Vote.sol";
+import {Tally} from "bundle/textdao/functions/Tally.sol";
+import {Execute} from "bundle/textdao/functions/Execute.sol";
 // Main protected functions
-import {ConfigOverrideProtected} from "bundle/textDAO/functions/protected/ConfigOverrideProtected.sol";
-import {MemberJoinProtected} from "bundle/textDAO/functions/protected/MemberJoinProtected.sol";
-import {SaveTextProtected} from "bundle/textDAO/functions/protected/SaveTextProtected.sol";
-import {SetConfigsProtected} from "bundle/textDAO/functions/protected/SetConfigsProtected.sol";
+import {ConfigOverrideProtected} from "bundle/textdao/functions/protected/ConfigOverrideProtected.sol";
+import {MemberJoinProtected} from "bundle/textdao/functions/protected/MemberJoinProtected.sol";
+import {SaveTextProtected} from "bundle/textdao/functions/protected/SaveTextProtected.sol";
+import {SetConfigsProtected} from "bundle/textdao/functions/protected/SetConfigsProtected.sol";
 // Cheats
-import {OnlyAdminCheats} from "bundle/textDAO/functions/_cheat/OnlyAdminCheats.sol";
+import {OnlyAdminCheats} from "bundle/textdao/functions/_cheat/OnlyAdminCheats.sol";
 // Getter
-// import {Getter} from "bundle/textDAO/functions/Getter.sol";
+// import {Getter} from "bundle/textdao/functions/Getter.sol";
 
 import {
     TextDAOFacade,
     TextDAOWithCheatsFacade,
     TextDAOWithGetterFacade
-} from "bundle/textDAO/interfaces/TextDAOFacade.sol";
+} from "bundle/textdao/interfaces/TextDAOFacade.sol";
 
 /**
  * @title TextDAODeployer

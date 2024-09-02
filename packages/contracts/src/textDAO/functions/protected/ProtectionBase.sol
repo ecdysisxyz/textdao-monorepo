@@ -2,11 +2,11 @@
 pragma solidity ^0.8.24;
 
 // Storage
-import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
-import {DeliberationLib} from "bundle/textDAO/utils/DeliberationLib.sol";
-import {CommandLib} from "bundle/textDAO/utils/CommandLib.sol";
+import {Storage, Schema} from "bundle/textdao/storages/Storage.sol";
+import {DeliberationLib} from "bundle/textdao/utils/DeliberationLib.sol";
+import {CommandLib} from "bundle/textdao/utils/CommandLib.sol";
 // Interface
-import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
+import {TextDAOErrors} from "bundle/textdao/interfaces/TextDAOErrors.sol";
 
 abstract contract ProtectionBase {
     using DeliberationLib for Schema.Deliberation;

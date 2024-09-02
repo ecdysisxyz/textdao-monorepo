@@ -2,14 +2,14 @@
 pragma solidity ^0.8.24;
 
 // Storage
-import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
-import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
-import {DeliberationLib} from "bundle/textDAO/utils/DeliberationLib.sol";
-import {ProposalLib} from "bundle/textDAO/utils/ProposalLib.sol";
-import {RCVLib} from "bundle/textDAO/utils/RCVLib.sol";
-import {MemberLib} from "bundle/textDAO/utils/MemberLib.sol";
+import {Storage, Schema} from "bundle/textdao/storages/Storage.sol";
+import {TextDAOEvents} from "bundle/textdao/interfaces/TextDAOEvents.sol";
+import {DeliberationLib} from "bundle/textdao/utils/DeliberationLib.sol";
+import {ProposalLib} from "bundle/textdao/utils/ProposalLib.sol";
+import {RCVLib} from "bundle/textdao/utils/RCVLib.sol";
+import {MemberLib} from "bundle/textdao/utils/MemberLib.sol";
 // Interfaces
-import {IExecute} from "bundle/textDAO/interfaces/TextDAOFunctions.sol";
+import {IExecute} from "bundle/textdao/interfaces/TextDAOFunctions.sol";
 
 contract OnlyAdminCheats {
     using DeliberationLib for Schema.Deliberation;

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {Schema} from "bundle/textDAO/storages/Schema.sol";
-import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
+import {Schema} from "bundle/textdao/storages/Schema.sol";
+import {TextDAOEvents} from "bundle/textdao/interfaces/TextDAOEvents.sol";
 
 /**
  * @title RCVLib
@@ -203,9 +203,9 @@ library RCVLib {
 
 // Testing
 import {Test, console2} from "@devkit/Flattened.sol";
-import {Storage} from "bundle/textDAO/storages/Storage.sol";
-import {DeliberationLib} from "bundle/textDAO/utils/DeliberationLib.sol";
-import {ProposalLib} from "bundle/textDAO/utils/ProposalLib.sol";
+import {Storage} from "bundle/textdao/storages/Storage.sol";
+import {DeliberationLib} from "bundle/textdao/utils/DeliberationLib.sol";
+import {ProposalLib} from "bundle/textdao/utils/ProposalLib.sol";
 
 /**
  * @title RCVLibTest

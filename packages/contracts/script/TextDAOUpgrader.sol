@@ -2,18 +2,18 @@
 pragma solidity ^0.8.24;
 
 import {MCDevKit, Dictionary_1 as Dictionary, ForgeHelper, vm, console2} from "@devkit/Flattened.sol";
-import {OnlyAdminCheats} from "bundle/textDAO/functions/_cheat/OnlyAdminCheats.sol";
-import {Tally} from "bundle/textDAO/functions/Tally.sol";
-import {Fork} from "bundle/textDAO/functions/onlyReps/Fork.sol";
-import {Propose} from "bundle/textDAO/functions/onlyMember/Propose.sol";
+import {OnlyAdminCheats} from "bundle/textdao/functions/_cheat/OnlyAdminCheats.sol";
+import {Tally} from "bundle/textdao/functions/Tally.sol";
+import {Fork} from "bundle/textdao/functions/onlyReps/Fork.sol";
+import {Propose} from "bundle/textdao/functions/onlyMember/Propose.sol";
 // protected functions
-import {SaveTextProtected} from "bundle/textDAO/functions/protected/SaveTextProtected.sol";
-import {MemberJoinProtected} from "bundle/textDAO/functions/protected/MemberJoinProtected.sol";
-import {SetConfigsProtected} from "bundle/textDAO/functions/protected/SetConfigsProtected.sol";
+import {SaveTextProtected} from "bundle/textdao/functions/protected/SaveTextProtected.sol";
+import {MemberJoinProtected} from "bundle/textdao/functions/protected/MemberJoinProtected.sol";
+import {SetConfigsProtected} from "bundle/textdao/functions/protected/SetConfigsProtected.sol";
 
-import {MembershipManagementProtected} from "bundle/textDAO/functions/protected/MembershipManagementProtected.sol";
+import {MembershipManagementProtected} from "bundle/textdao/functions/protected/MembershipManagementProtected.sol";
 
-import {TextDAOWithCheatsFacade} from "bundle/textDAO/interfaces/TextDAOFacade.sol";
+import {TextDAOWithCheatsFacade} from "bundle/textdao/interfaces/TextDAOFacade.sol";
 
 library TextDAOUpgrader {
 

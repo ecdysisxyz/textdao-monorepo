@@ -6,13 +6,13 @@
 // import {TestUtils} from "test/fixtures/TestUtils.sol";
 
 // import {TextDAODeployer} from "script/deployment/TextDAODeployer.sol";
-// import {ITextDAO, Schema} from "bundle/textDAO/interfaces/ITextDAO.sol";
-// import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
-// import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
-// import {RawFulfillRandomWords} from "bundle/textDAO/functions/onlyVrfCoordinator/RawFulfillRandomWords.sol";
+// import {ITextDAO, Schema} from "bundle/textdao/interfaces/ITextDAO.sol";
+// import {TextDAOErrors} from "bundle/textdao/interfaces/TextDAOErrors.sol";
+// import {TextDAOEvents} from "bundle/textdao/interfaces/TextDAOEvents.sol";
+// import {RawFulfillRandomWords} from "bundle/textdao/functions/onlyVrfCoordinator/RawFulfillRandomWords.sol";
 
-// import {IPropose} from "bundle/textDAO/functions/onlyMember/Propose.sol";
-// import {Types} from "bundle/textDAO/storages/Types.sol";
+// import {IPropose} from "bundle/textdao/functions/onlyMember/Propose.sol";
+// import {Types} from "bundle/textdao/storages/Types.sol";
 // import {VRFCoordinatorV2Interface} from "@chainlink/vrf/interfaces/VRFCoordinatorV2Interface.sol";
 
 // /**

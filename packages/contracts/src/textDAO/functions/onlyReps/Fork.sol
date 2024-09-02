@@ -2,13 +2,13 @@
 pragma solidity ^0.8.24;
 
 // Access Control
-import {OnlyRepsBase} from "bundle/textDAO/functions/onlyReps/OnlyRepsBase.sol";
+import {OnlyRepsBase} from "bundle/textdao/functions/onlyReps/OnlyRepsBase.sol";
 // Storage
-import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
-import {ProposalLib} from "bundle/textDAO/utils/ProposalLib.sol";
+import {Storage, Schema} from "bundle/textdao/storages/Storage.sol";
+import {ProposalLib} from "bundle/textdao/utils/ProposalLib.sol";
 // Interface
-import {IFork} from "bundle/textDAO/interfaces/TextDAOFunctions.sol";
-import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
+import {IFork} from "bundle/textdao/interfaces/TextDAOFunctions.sol";
+import {TextDAOEvents} from "bundle/textdao/interfaces/TextDAOEvents.sol";
 
 /**
  * @title Fork function
@@ -58,9 +58,9 @@ contract Fork is IFork, OnlyRepsBase {
 
 // Testing
 import {MCTest} from "@devkit/Flattened.sol";
-import {DeliberationLib} from "bundle/textDAO/utils/DeliberationLib.sol";
+import {DeliberationLib} from "bundle/textdao/utils/DeliberationLib.sol";
 import {TestUtils} from "test/fixtures/TestUtils.sol";
-import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
+import {TextDAOErrors} from "bundle/textdao/interfaces/TextDAOErrors.sol";
 
 /**
  * @title ForkTest

@@ -3,9 +3,9 @@
 
 // import {MCScript} from "@devkit/Flattened.sol";
 
-// import {TextDAOFacade} from "bundle/textDAO/interfaces/TextDAOFacade.sol";
-// import {Propose} from "bundle/textDAO/functions/onlyMember/Propose.sol";
-// import {Vote} from "bundle/textDAO/functions/onlyReps/Vote.sol";
+// import {TextDAOFacade} from "bundle/textdao/interfaces/TextDAOFacade.sol";
+// import {Propose} from "bundle/textdao/functions/onlyMember/Propose.sol";
+// import {Vote} from "bundle/textdao/functions/onlyReps/Vote.sol";
 
 // contract UpgradeTextDAOScript is MCScript {
 //     function updateFacade() public startBroadcastWith("DEPLOYER_PRIV_KEY") {

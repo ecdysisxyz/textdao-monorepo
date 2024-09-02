@@ -2,9 +2,9 @@
 pragma solidity ^0.8.24;
 
 // Storage
-import {Storage} from "bundle/textDAO/storages/Storage.sol";
+import {Storage} from "bundle/textdao/storages/Storage.sol";
 // Interface
-import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
+import {TextDAOErrors} from "bundle/textdao/interfaces/TextDAOErrors.sol";
 
 abstract contract OnlyVrfCoordinatorBase {
     modifier onlyVrfCoordinator() {

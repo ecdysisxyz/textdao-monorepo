@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {Schema} from "bundle/textDAO/storages/Schema.sol";
-import {BaseSlots} from "bundle/textDAO/storages/BaseSlots.sol";
+import {Schema} from "bundle/textdao/storages/Schema.sol";
+import {BaseSlots} from "bundle/textdao/storages/BaseSlots.sol";
 
 /**
  * @title StorageLib v0.1.0

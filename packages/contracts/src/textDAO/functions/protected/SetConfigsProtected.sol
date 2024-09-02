@@ -3,11 +3,11 @@
 pragma solidity ^0.8.24;
 
 // Access Control
-import {ProtectionBase} from "bundle/textDAO/functions/protected/ProtectionBase.sol";
+import {ProtectionBase} from "bundle/textdao/functions/protected/ProtectionBase.sol";
 // Storage
-import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
+import {Storage, Schema} from "bundle/textdao/storages/Storage.sol";
 // Interfaces
-import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
+import {TextDAOEvents} from "bundle/textdao/interfaces/TextDAOEvents.sol";
 import "@chainlink/vrf/interfaces/VRFCoordinatorV2Interface.sol";
 
 contract SetConfigsProtected is ProtectionBase {

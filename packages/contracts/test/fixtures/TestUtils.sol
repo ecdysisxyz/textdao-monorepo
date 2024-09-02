@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {Storage} from "bundle/textDAO/storages/Storage.sol";
+import {Storage} from "bundle/textdao/storages/Storage.sol";
 import {ForgeHelper} from "@devkit/Flattened.sol";
 
 library TestUtils {

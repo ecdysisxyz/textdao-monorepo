@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {Schema} from "bundle/textDAO/storages/Schema.sol";
-import {TextDAOMainFunctions, TextDAOProtectedFunctions} from "bundle/textDAO/interfaces/TextDAOFunctions.sol";
-import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
-import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
+import {Schema} from "bundle/textdao/storages/Schema.sol";
+import {TextDAOMainFunctions, TextDAOProtectedFunctions} from "bundle/textdao/interfaces/TextDAOFunctions.sol";
+import {TextDAOErrors} from "bundle/textdao/interfaces/TextDAOErrors.sol";
+import {TextDAOEvents} from "bundle/textdao/interfaces/TextDAOEvents.sol";
 
 /**
  * @title TextDAO Interface v0.1.0

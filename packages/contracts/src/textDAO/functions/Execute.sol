@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
-import {DeliberationLib} from "bundle/textDAO/utils/DeliberationLib.sol";
-import {CommandLib} from "bundle/textDAO/utils/CommandLib.sol";
-import {IExecute} from "bundle/textDAO/interfaces/TextDAOFunctions.sol";
-import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
-import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
+import {Storage, Schema} from "bundle/textdao/storages/Storage.sol";
+import {DeliberationLib} from "bundle/textdao/utils/DeliberationLib.sol";
+import {CommandLib} from "bundle/textdao/utils/CommandLib.sol";
+import {IExecute} from "bundle/textdao/interfaces/TextDAOFunctions.sol";
+import {TextDAOErrors} from "bundle/textdao/interfaces/TextDAOErrors.sol";
+import {TextDAOEvents} from "bundle/textdao/interfaces/TextDAOEvents.sol";
 
 /**
  * @title Execute
@@ -56,7 +56,7 @@ contract Execute is IExecute {
 
 // Testing
 import {MCTest, VmSafe, console2} from "@devkit/Flattened.sol";
-import {ProtectionBase} from "bundle/textDAO/functions/protected/ProtectionBase.sol";
+import {ProtectionBase} from "bundle/textdao/functions/protected/ProtectionBase.sol";
 
 contract ExecuteTest is MCTest {
     using DeliberationLib for Schema.Deliberation;

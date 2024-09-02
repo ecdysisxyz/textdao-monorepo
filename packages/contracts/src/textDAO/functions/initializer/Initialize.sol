@@ -4,11 +4,11 @@ pragma solidity ^0.8.24;
 // Access Control
 import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 // Storage
-import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
-import {MemberLib} from "bundle/textDAO/utils/MemberLib.sol";
+import {Storage, Schema} from "bundle/textdao/storages/Storage.sol";
+import {MemberLib} from "bundle/textdao/utils/MemberLib.sol";
 // Interface
-import {IInitialize} from "bundle/textDAO/interfaces/TextDAOFunctions.sol";
-import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
+import {IInitialize} from "bundle/textdao/interfaces/TextDAOFunctions.sol";
+import {TextDAOEvents} from "bundle/textdao/interfaces/TextDAOEvents.sol";
 
 contract Initialize is IInitialize, Initializable {
     using MemberLib for Schema.Members;
@@ -28,8 +28,8 @@ contract Initialize is IInitialize, Initializable {
 
 // Testing
 import {MCTest, console2} from "@devkit/Flattened.sol";
-import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
-import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
+import {TextDAOErrors} from "bundle/textdao/interfaces/TextDAOErrors.sol";
+import {TextDAOEvents} from "bundle/textdao/interfaces/TextDAOEvents.sol";
 
 contract InitializeTest is MCTest {
     function setUp() public {
