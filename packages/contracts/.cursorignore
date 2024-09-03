@@ -1,0 +1,11 @@
+# Compiler files
+cache/
+broadcast/
+out/
+
+# Dotenv file
+.env
+
+# Dependencies
+node_modules/
+lib/
