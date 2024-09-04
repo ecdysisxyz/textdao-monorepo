@@ -3,11 +3,11 @@
 pragma solidity ^0.8.24;
 
 // Access Control
-import {ProtectionBase} from "bundle/textDAO/functions/protected/ProtectionBase.sol";
+import {ProtectionBase} from "bundle/textdao/functions/protected/ProtectionBase.sol";
 // Storage
-import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
+import {Storage, Schema} from "bundle/textdao/storages/Storage.sol";
 
-import { Tally } from "bundle/textDAO/functions/Tally.sol";
+import { Tally } from "bundle/textdao/functions/Tally.sol";
 
 contract ConfigOverrideProtected is ProtectionBase {
     function overrideProposalsConfig(uint pid, Schema.ConfigOverride memory configOverride) public protected(pid) returns (bool) {

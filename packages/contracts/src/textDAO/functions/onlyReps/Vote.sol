@@ -2,17 +2,17 @@
 pragma solidity ^0.8.24;
 
 // Access Control
-import {OnlyRepsBase} from "bundle/textDAO/functions/onlyReps/OnlyRepsBase.sol";
+import {OnlyRepsBase} from "bundle/textdao/functions/onlyReps/OnlyRepsBase.sol";
 // Storage
-import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
+import {Storage, Schema} from "bundle/textdao/storages/Storage.sol";
 // Interface
-import {IVote} from "bundle/textDAO/interfaces/TextDAOFunctions.sol";
-import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
-import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
+import {IVote} from "bundle/textdao/interfaces/TextDAOFunctions.sol";
+import {TextDAOEvents} from "bundle/textdao/interfaces/TextDAOEvents.sol";
+import {TextDAOErrors} from "bundle/textdao/interfaces/TextDAOErrors.sol";
 // Libraries
-import {DeliberationLib} from "bundle/textDAO/utils/DeliberationLib.sol";
-import {ProposalLib} from "bundle/textDAO/utils/ProposalLib.sol";
-import {RCVLib} from "bundle/textDAO/utils/RCVLib.sol";
+import {DeliberationLib} from "bundle/textdao/utils/DeliberationLib.sol";
+import {ProposalLib} from "bundle/textdao/utils/ProposalLib.sol";
+import {RCVLib} from "bundle/textdao/utils/RCVLib.sol";
 
 /**
  * @title Vote Contract

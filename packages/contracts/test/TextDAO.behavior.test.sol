@@ -3,9 +3,9 @@ pragma solidity ^0.8.24;
 
 import {MCTest, console2} from "@devkit/Flattened.sol";
 import {TextDAODeployer} from "script/TextDAODeployer.sol";
-import {ITextDAO, Schema} from "bundle/textDAO/interfaces/ITextDAO.sol";
-import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
-import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
+import {ITextDAO, Schema} from "bundle/textdao/interfaces/ITextDAO.sol";
+import {TextDAOErrors} from "bundle/textdao/interfaces/TextDAOErrors.sol";
+import {TextDAOEvents} from "bundle/textdao/interfaces/TextDAOEvents.sol";
 
 /**
  * @title TextDAO Behavior-Focused Integration Test

@@ -2,11 +2,11 @@
 pragma solidity ^0.8.24;
 
 // Access Control
-import {OnlyVrfCoordinatorBase} from "bundle/textDAO/functions/onlyVrfCoordinator/OnlyVrfCoordinatorBase.sol";
+import {OnlyVrfCoordinatorBase} from "bundle/textdao/functions/onlyVrfCoordinator/OnlyVrfCoordinatorBase.sol";
 // Storage
-import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
+import {Storage, Schema} from "bundle/textdao/storages/Storage.sol";
 // Interface
-import {VRFConsumerV2Interface} from "bundle/textDAO/interfaces/VRFConsumerV2Interface.sol";
+import {VRFConsumerV2Interface} from "bundle/textdao/interfaces/VRFConsumerV2Interface.sol";
 
 contract RawFulfillRandomWords is VRFConsumerV2Interface, OnlyVrfCoordinatorBase {
     function rawFulfillRandomWords(uint256 requestId, uint256[] memory randomWords) external onlyVrfCoordinator {
@@ -27,7 +27,7 @@ contract RawFulfillRandomWords is VRFConsumerV2Interface, OnlyVrfCoordinatorBase
 // Testing
 import {MCTest} from "@devkit/Flattened.sol";
 import {TestUtils} from "test/fixtures/TestUtils.sol";
-import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
+import {TextDAOErrors} from "bundle/textdao/interfaces/TextDAOErrors.sol";
 
 contract RawFulfillRandomWordsTest is MCTest {
 

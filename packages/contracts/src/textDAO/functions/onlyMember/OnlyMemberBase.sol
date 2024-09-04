@@ -2,10 +2,10 @@
 pragma solidity ^0.8.24;
 
 // Storage
-import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
-import {MemberLib} from "bundle/textDAO/utils/MemberLib.sol";
+import {Storage, Schema} from "bundle/textdao/storages/Storage.sol";
+import {MemberLib} from "bundle/textdao/utils/MemberLib.sol";
 // Interface
-import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
+import {TextDAOErrors} from "bundle/textdao/interfaces/TextDAOErrors.sol";
 
 abstract contract OnlyMemberBase {
     using MemberLib for Schema.Members;

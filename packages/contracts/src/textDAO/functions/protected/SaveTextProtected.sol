@@ -2,13 +2,13 @@
 pragma solidity ^0.8.24;
 
 // Access Control
-import {ProtectionBase} from "bundle/textDAO/functions/protected/ProtectionBase.sol";
+import {ProtectionBase} from "bundle/textdao/functions/protected/ProtectionBase.sol";
 // Storage
-import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
+import {Storage, Schema} from "bundle/textdao/storages/Storage.sol";
 // Interface
-import {ISaveText} from "bundle/textDAO/interfaces/TextDAOFunctions.sol";
-import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
-import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
+import {ISaveText} from "bundle/textdao/interfaces/TextDAOFunctions.sol";
+import {TextDAOEvents} from "bundle/textdao/interfaces/TextDAOEvents.sol";
+import {TextDAOErrors} from "bundle/textdao/interfaces/TextDAOErrors.sol";
 
 /**
  * @title SaveTextProtected
@@ -60,8 +60,8 @@ contract SaveTextProtected is ISaveText, ProtectionBase {
 
 // Testing
 import {MCTest} from "@devkit/Flattened.sol";
-import {DeliberationLib} from "bundle/textDAO/utils/DeliberationLib.sol";
-import {CommandLib} from "bundle/textDAO/utils/CommandLib.sol";
+import {DeliberationLib} from "bundle/textdao/utils/DeliberationLib.sol";
+import {CommandLib} from "bundle/textdao/utils/CommandLib.sol";
 
 /**
  * @title SaveTextProtectedTest

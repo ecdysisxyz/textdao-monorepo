@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {Schema} from "bundle/textDAO/storages/Schema.sol";
-import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
-import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
+import {Schema} from "bundle/textdao/storages/Schema.sol";
+import {TextDAOErrors} from "bundle/textdao/interfaces/TextDAOErrors.sol";
+import {TextDAOEvents} from "bundle/textdao/interfaces/TextDAOEvents.sol";
 
 /**
  * @title ProposalLib
@@ -132,8 +132,8 @@ library ProposalLib {
 
 // Testing
 import {Test} from "@devkit/Flattened.sol";
-import {Storage} from "bundle/textDAO/storages/Storage.sol";
-import {DeliberationLib} from "bundle/textDAO/utils/DeliberationLib.sol";
+import {Storage} from "bundle/textdao/storages/Storage.sol";
+import {DeliberationLib} from "bundle/textdao/utils/DeliberationLib.sol";
 
 /**
  * @title ProposalLibTest

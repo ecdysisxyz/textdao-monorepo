@@ -2,7 +2,7 @@
 // pragma solidity ^0.8.24;
 
 // // Storage
-// import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
+// import {Storage, Schema} from "bundle/textdao/storages/Storage.sol";
 
 // // External getter functions
 // contract Getter {
@@ -72,9 +72,9 @@
 
 // import {MCTest, console2} from "@devkit/Flattened.sol";
 
-// import {Getter} from "bundle/textDAO/functions/Getter.sol";
-// import {Storage} from "bundle/textDAO/storages/Storage.sol";
-// import {Schema} from "bundle/textDAO/storages/Schema.sol";
+// import {Getter} from "bundle/textdao/functions/Getter.sol";
+// import {Storage} from "bundle/textdao/storages/Storage.sol";
+// import {Schema} from "bundle/textdao/storages/Schema.sol";
 
 // contract GetterTest is MCTest {
 

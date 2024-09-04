@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
-import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
+import {Storage, Schema} from "bundle/textdao/storages/Storage.sol";
+import {TextDAOErrors} from "bundle/textdao/interfaces/TextDAOErrors.sol";
 
 /**
  * @title DeliberationLib v0.1.0

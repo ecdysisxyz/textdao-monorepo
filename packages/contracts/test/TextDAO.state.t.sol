@@ -3,23 +3,23 @@ pragma solidity ^0.8.24;
 
 import {MCTest, console2} from "@devkit/Flattened.sol";
 
-import {ITextDAO, Schema} from "bundle/textDAO/interfaces/ITextDAO.sol";
-import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
-import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
-import {Storage} from "bundle/textDAO/storages/Storage.sol";
+import {ITextDAO, Schema} from "bundle/textdao/interfaces/ITextDAO.sol";
+import {TextDAOErrors} from "bundle/textdao/interfaces/TextDAOErrors.sol";
+import {TextDAOEvents} from "bundle/textdao/interfaces/TextDAOEvents.sol";
+import {Storage} from "bundle/textdao/storages/Storage.sol";
 
-import {Initialize} from "bundle/textDAO/functions/initializer/Initialize.sol";
-import {Propose} from "bundle/textDAO/functions/onlyMember/Propose.sol";
-import {Fork} from "bundle/textDAO/functions/onlyReps/Fork.sol";
-import {Vote} from "bundle/textDAO/functions/onlyReps/Vote.sol";
-import {Execute} from "bundle/textDAO/functions/Execute.sol";
-import {Tally} from "bundle/textDAO/functions/Tally.sol";
-import {SaveTextProtected} from "bundle/textDAO/functions/protected/SaveTextProtected.sol";
-import {MemberJoinProtected} from "bundle/textDAO/functions/protected/MemberJoinProtected.sol";
-import {DeliberationLib} from "bundle/textDAO/utils/DeliberationLib.sol";
-import {ProposalLib} from "bundle/textDAO/utils/ProposalLib.sol";
-import {CommandLib} from "bundle/textDAO/utils/CommandLib.sol";
-import {RawFulfillRandomWords} from "bundle/textDAO/functions/onlyVrfCoordinator/RawFulfillRandomWords.sol";
+import {Initialize} from "bundle/textdao/functions/initializer/Initialize.sol";
+import {Propose} from "bundle/textdao/functions/onlyMember/Propose.sol";
+import {Fork} from "bundle/textdao/functions/onlyReps/Fork.sol";
+import {Vote} from "bundle/textdao/functions/onlyReps/Vote.sol";
+import {Execute} from "bundle/textdao/functions/Execute.sol";
+import {Tally} from "bundle/textdao/functions/Tally.sol";
+import {SaveTextProtected} from "bundle/textdao/functions/protected/SaveTextProtected.sol";
+import {MemberJoinProtected} from "bundle/textdao/functions/protected/MemberJoinProtected.sol";
+import {DeliberationLib} from "bundle/textdao/utils/DeliberationLib.sol";
+import {ProposalLib} from "bundle/textdao/utils/ProposalLib.sol";
+import {CommandLib} from "bundle/textdao/utils/CommandLib.sol";
+import {RawFulfillRandomWords} from "bundle/textdao/functions/onlyVrfCoordinator/RawFulfillRandomWords.sol";
 import {VRFCoordinatorV2Interface} from "@chainlink/vrf/interfaces/VRFCoordinatorV2Interface.sol";
 
 /**

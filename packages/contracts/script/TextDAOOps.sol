@@ -3,14 +3,14 @@ pragma solidity ^0.8.24;
 
 import {MCDevKit, Dictionary_1 as Dictionary, ForgeHelper, vm} from "@devkit/Flattened.sol";
 import {TextDAODeployer} from "script/TextDAODeployer.sol";
-import {Schema} from "bundle/textDAO/storages/Schema.sol";
-import {OnlyAdminCheats} from "bundle/textDAO/functions/_cheat/OnlyAdminCheats.sol";
-import {Tally} from "bundle/textDAO/functions/Tally.sol";
-import {Initialize} from "bundle/textDAO/functions/initializer/Initialize.sol";
-import {ITextDAO} from "bundle/textDAO/interfaces/ITextDAO.sol";
-import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
+import {Schema} from "bundle/textdao/storages/Schema.sol";
+import {OnlyAdminCheats} from "bundle/textdao/functions/_cheat/OnlyAdminCheats.sol";
+import {Tally} from "bundle/textdao/functions/Tally.sol";
+import {Initialize} from "bundle/textdao/functions/initializer/Initialize.sol";
+import {ITextDAO} from "bundle/textdao/interfaces/ITextDAO.sol";
+import {TextDAOEvents} from "bundle/textdao/interfaces/TextDAOEvents.sol";
 
-import {TextDAOWithCheatsFacade} from "bundle/textDAO/interfaces/TextDAOFacade.sol";
+import {TextDAOWithCheatsFacade} from "bundle/textdao/interfaces/TextDAOFacade.sol";
 
 library TextDAOOps {
     function upgradeToTextDAOWithCheats(MCDevKit storage mc, address textDAO) internal {

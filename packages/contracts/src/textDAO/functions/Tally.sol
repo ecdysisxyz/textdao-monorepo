@@ -2,15 +2,15 @@
 pragma solidity ^0.8.24;
 
 // Storage
-import {Storage, Schema} from "bundle/textDAO/storages/Storage.sol";
-import {DeliberationLib} from "bundle/textDAO/utils/DeliberationLib.sol";
-import {ProposalLib} from "bundle/textDAO/utils/ProposalLib.sol";
-import {RCVLib} from "bundle/textDAO/utils/RCVLib.sol";
+import {Storage, Schema} from "bundle/textdao/storages/Storage.sol";
+import {DeliberationLib} from "bundle/textdao/utils/DeliberationLib.sol";
+import {ProposalLib} from "bundle/textdao/utils/ProposalLib.sol";
+import {RCVLib} from "bundle/textdao/utils/RCVLib.sol";
 // Interface
-import {ITally} from "bundle/textDAO/interfaces/TextDAOFunctions.sol";
-import {IExecute} from "bundle/textDAO/interfaces/TextDAOFunctions.sol";
-import {TextDAOEvents} from "bundle/textDAO/interfaces/TextDAOEvents.sol";
-import {TextDAOErrors} from "bundle/textDAO/interfaces/TextDAOErrors.sol";
+import {ITally} from "bundle/textdao/interfaces/TextDAOFunctions.sol";
+import {IExecute} from "bundle/textdao/interfaces/TextDAOFunctions.sol";
+import {TextDAOEvents} from "bundle/textdao/interfaces/TextDAOEvents.sol";
+import {TextDAOErrors} from "bundle/textdao/interfaces/TextDAOErrors.sol";
 
 /**
  * @title Tally

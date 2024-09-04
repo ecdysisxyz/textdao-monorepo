@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-// import {Getter} from "bundle/textDAO/functions/Getter.sol";
+// import {Getter} from "bundle/textdao/functions/Getter.sol";
 
-import {ITextDAO} from "bundle/textDAO/interfaces/ITextDAO.sol";
+import {ITextDAO} from "bundle/textdao/interfaces/ITextDAO.sol";
 
 contract TextDAOFacade is ITextDAO {
     // TextDAO core functions
