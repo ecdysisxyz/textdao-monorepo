@@ -14,6 +14,11 @@ interface IInitialize {
     function initialize(Schema.Currency calldata currency, Schema.Template[] calldata templates) external;
 }
 
+interface IUserManagement {
+    function updateUserProfile(string calldata metadataCid) external;
+    function removeUserProfile() external;
+}
+
 // Protected
 
 interface ITemplateManagement {
@@ -31,7 +36,8 @@ interface ICheats {
 
 interface HubDAOMainFunctions is
     ICreateDAO,
-    IInitialize
+    IInitialize,
+    IUserManagement
 {}
 
 interface HubDAOProtectedFunctions is

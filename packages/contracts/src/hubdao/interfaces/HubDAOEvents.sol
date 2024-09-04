@@ -12,4 +12,8 @@ interface HubDAOEvents {
     event ProxyCreated(address dictionary, address proxy); /// @dev from ProxyCreator
     event DaoCreated(address daoAddress);
     event DaoRegistered(Schema.Dao daoInfo);
+
+    // UserManagement
+    event UserProfileUpdated(address userAddress, string metadataCid);
+    event UserProfileRemoved(address userAddress);
 }

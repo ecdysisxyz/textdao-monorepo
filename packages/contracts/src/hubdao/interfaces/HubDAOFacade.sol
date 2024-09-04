@@ -11,6 +11,8 @@ contract HubDAOFacade is IHubDAO {
     function initialize(Schema.Currency calldata currency, Schema.Template[] calldata templates) external {}
     function createTextDAO(TextDAOSchema.Member[] calldata initialMembers, TextDAOSchema.DeliberationConfig calldata initialConfig, string calldata metadataCid) external returns(address textDAO) {}
     function createTextDAOWithCheats(TextDAOSchema.Member[] calldata initialMembers, TextDAOSchema.DeliberationConfig calldata initialConfig, string calldata metadataCid) external returns(address textDAOWithCheats) {}
+    function updateUserProfile(string calldata metadataCid) external {}
+    function removeUserProfile() external {}
 }
 
 contract HubDAOWithCheatsFacade is HubDAOFacade, ICheats {
