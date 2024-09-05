@@ -1,7 +1,7 @@
 {
   "name": "textdao-monorepo",
   "private": true,
-  "workspaces": ["packages/contracts/*", "packages/subgraph/*"],
+  "workspaces": ["packages/contracts/*", "packages/subgraph/*", "packages/frontend/*", "packages/documentation/*"],
   "scripts": {
     "prepare": "bun lefthook install"
   },

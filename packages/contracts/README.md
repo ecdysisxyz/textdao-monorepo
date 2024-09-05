@@ -1,107 +1,77 @@
-# TextDAO
+---
+title: "TextDAO Contracts Package"
+version: 0.1.0
+lastUpdated: 2024-09-04
+author: TextDAO Development Team
+scope: contracts
+type: readme
+tags: [smart-contracts, solidity, ethereum, textdao]
+relatedDocs: [
+  "docs/architecture/index.md",
+  "docs/guides/index.md",
+  "docs/development/index.md"
+]
+changeLog:
+  - version: 0.1.0
+    date: 2024-09-04
+    description: Initial version of the contracts package README
+---
 
-# Version Sensitivity Info
-- foundry: 1a4960d 2024-03-20T00:19:54.542150000Z
-- mc: 257d4f5
-- solidity: 0.8.24
+# TextDAO Contracts
+
+This package contains the smart contracts for the TextDAO project, including the HubDAO and TextDAO contracts.
 
 ## Overview
-- A DAO with ERC-7546 UCS, it means DAO plugin architecture.
-- RCV voting for text diff review.
+
+TextDAO is a decentralized autonomous organization (DAO) focused on collaborative text creation and management. The smart contracts in this package form the core of the TextDAO ecosystem, enabling governance, proposal management, and text operations.
 
 ## Motivation
 - No more google docs for DAOs.
 - Any groupware would be acceptable for daily discourse.
 - But decision making over treasury and law must be on this DAO.
 
-## How to start
-- TDD with `forge test`
-- Run `anvil --chain-id 1`
-- Prepare `.env`
-- `forge script script/Deployment.s.sol --rpc-url http://127.0.0.1:8545 --broadcast`
-- `forge script script/Filler.s.sol --rpc-url http://127.0.0.1:8545 --broadcast`
+## Key Components
 
-### extractor
-- `solc --standard-json < extractor/solcSlotRequest.json > ~/Downloads/astnode.json &&  cat ~/Downloads/astnode.json | jq . 1> ~/Downloads/astnodeFormatted.json`
-- `forge script script/SlotTester.s.sol --rpc-url http://127.0.0.1:8545 --broadcast`
-- `cast storage --chain=1 --rpc-url http://127.0.0.1:8545 0x4826533B4897376654Bb4d4AD88B7faFD0C98528 1`
-- `cast storage --chain=1 --rpc-url http://127.0.0.1:8545 0x4826533B4897376654Bb4d4AD88B7faFD0C98528 0xeb29eb983a061a3feb4d4d7a2bced0182db2198396ce3beb0ace67382563d6e4` (ProposeStorage.proposals[0].tallied[0] for ERC-7201 dynamic base slot)
-- `npx ts-node extractor/main.ts`
+- **HubDAO**: The central contract that manages the creation and interaction of individual TextDAOs.
+- **TextDAO**: The core contract for each individual DAO instance, handling proposals, voting, and text management.
+- **Meta Contract (MC)**: A library implementing the UCS (Upgradeable Clone for Scalable Contracts) architecture, providing the foundation for TextDAO's upgradeable and scalable design.
 
----
-# Architecture
-## Functions
-### Join Request
-- ProposeOp({JoinPassOp, arg1, arg2})
-  - if no collateral then revert
-  - pick Reps and let them vote
-- MajorityVoteForForksOp
-  - Assume there exist just a few vote options.
-- ExecuteOp
+## Getting Started
 
-### RCV (Ranked Choice Voting)
-- ProposeOp(XxxPassOp, [...aFewPassOpParams])
-- MajorityVoteForInspectionOp
-  - A nice params need to be provided to RCV to mimic majority voting
-  - pick Reps
-- MajorityVoteForProposalOp
-- ExecuteOp
+### Prerequisites
 
-### Law
-- ProposeOp([{TextSavePassOp, pid, textId, [textURI1, textURI2]}, {XxxPassOp}])
-- MajorityVoteForInspectionOp
-  - pick Reps
-- ForkOp([textURI3, textURI4]) // TextSavePassOp, pid, and textId are to be omitted?
-- RankedChoiceVoteForForksOp(fid, [...ranks])
-  - onlyReps
-- TallyForksOp
-- ExecuteOp
-- TextSavePassOp() // modeling https://gist.github.com/shogochiai/fc636df8c13be967f37884acf8e8f6f3
-- ex) ProposeOp(AddBotPassOp, botAddr)
+- foundry: 0.2.0 or later
+- mc: 0.1.0 or later
+- solidity compiler: v0.8.24 or later
 
---- Common Util Ops
-- ProposeOp(XxxPassOp)
-  - You have to proetct inspectors from
-  - onlyMemberOrDoxxedOrAnonWithColl
-    - Member and Doxxed
-      - rate limit per person per day
-    - Anon
-      - Need collateral
+### Compiling Contracts
 
-- ForkOp(cid)
-  - onlyRepsOrBot
-  - no need collateral
-      - rate limit per person per day
-        - limit share
+To compile the contracts, run:
 
-- ExecuteOp
-  - Check executable condition for all voting types
-  - RCV: the 1st winning fork is to be executed.
-  - Majority: RCV with only 1 choice and only 1 session.
-  - QV: RCV with credit and many options.
+```
+forge build
+```
 
-## Miscellaneous
+### Running Tests
 
-### L1 Shadow Tally
-- SubmitTallyOracleDataOp
-- VetoTallyOracleOp
-- SetTallyOracleOp
+To run the test suite, execute:
 
-### QV for collective funding
-- If you want QV
-  - it means your want a cool donation system, rather DAO
-      - then use `clrfund/monorepo`
+```
+forge test
+```
 
-### RNG
-- ChainLink VRF
+## Documentation
 
-### Deploy Script Design
-- /src/nouns/verbs structure is mandatory
-- verbs belong to a noun
-- nouns are mutually relatable
-- A protocol is the set of nouns
+For more detailed information about the TextDAO contracts, please refer to the following documentation:
 
----
+- [Architecture Overview](docs/architecture/index.md)
+- [Development Guide](docs/development/index.md)
+- [Contract Interaction Guide](docs/guides/contract-interaction.md)
 
-# How to dev
-- `forge test`
+## Contributing
+
+Contributions to the TextDAO contracts are welcome. Please read our [Contributing Guide](../../CONTRIBUTING.md) for more information on how to get started.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

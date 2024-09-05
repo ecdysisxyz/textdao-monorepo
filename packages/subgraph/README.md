@@ -1,36 +1,76 @@
+---
+title: "TextDAO Subgraph"
+version: 0.1.0
+lastUpdated: 2024-09-05
+author: TextDAO Development Team
+scope: subgraph
+type: readme
+tags: [subgraph, graphql, the graph, ethereum]
+relatedDocs: [architecture/index.md, development/index.md, guides/index.md]
+changeLog:
+  - version: 0.1.0
+    date: 2024-09-05
+    description: Initial version of the TextDAO Subgraph README
+---
+
 # TextDAO Subgraph
 
-This subgraph indexes and tracks events from the TextDAO smart contract.
+This subgraph indexes and tracks events from the TextDAO & HubDAO smart contracts, providing efficient querying capabilities for the TextDAO application.
+
+## Overview
+
+The TextDAO subgraph is built using The Graph protocol, allowing for efficient indexing and querying of blockchain data. It tracks events emitted by TextDAO smart contracts and organizes the data into easily queryable entities.
+
+## Key Features
+
+- Indexes TextDAO contract events
+  - ***HubDAO***: A factory for TextDAO instances
+  - ***TextDAOs***
+- Indexes the IPFS contents related with TextDAO
+- Provides GraphQL API for querying HubDAO & TextDAO data
 
 ## Project Structure
 
 ```
-src/
-  handlers/           # Event handlers
-  utils/              # Utility functions
-  types/              # Custom type definitions
-  mapping.ts          # Main entry point for The Graph
-tests/
-  handlers/           # Tests for event handlers
-  utils/              # Test utilities
-subgraph.yaml         # Subgraph manifest
-schema.graphql        # GraphQL schema
+subgraph/
+├── src/
+│   ├──event-handlers
+│   │   └── [contract event handlers (e.g. command-created.ts)]
+│   ├──file-data-handlers
+│   │   └── [file data source template handlers (e.g. text-contents.ts)]
+│   ├──utils
+│   │   │── entity-id-provider.ts
+│   │   │── entity-provider.ts
+│   │   │── schema-types.ts
+│   │   └── type-formatter.ts
+│   └── mapping.ts
+├── tests/
+│   ├──handlers
+│   │   └── [handler unit tests (e.g. command-created.test.ts)]
+│   ├──utils
+│   │   ├──ipfs-file-data
+│   │   │   └── [ipfs file fixtures (e.g. sample-text-metadata1.json)]
+│   │   │── mock-entities.ts
+│   │   └── mock-events.ts
+│   └── textdao-handlers.integration.test.ts
+├── subgraph.yaml
+├── schema.graphql
+├── matchstick.yaml
+└── package.json
 ```
 
-## Development Guidelines
+## Documentation
 
-1. Each event handler should be in its own file under `src/handlers/`.
-2. Common utilities should be placed in `src/utils/`.
-3. Use custom types defined in `src/types/` for improved type safety.
-4. Tests should mirror the structure of the `src/` directory.
-5. Always update tests when modifying handler logic.
+For more detailed information, please refer to the following documentation:
 
-**All code and tests are written in AssemblyScript. Be mindful of its differences from TypeScript.**
+- [Architecture Overview](docs/architecture/index.md)
+- [Development Guide](docs/development/index.md)
+- [Usage Guide](docs/guides/index.md)
 
-## Running Tests
+## Contributing
 
-To run the tests, use the following command:
+Contributions to the TextDAO subgraph are welcome. Please refer to the [CONTRIBUTING.md](../../CONTRIBUTING.md) file in the root of the monorepo for guidelines.
 
-```
-graph test
-```
+## License
+
+This project is licensed under the [MIT License](LICENSE).
