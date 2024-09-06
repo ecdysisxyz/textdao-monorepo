@@ -149,12 +149,26 @@ export function createNewAction(pid: BigInt, commandId: BigInt, actionId: number
   return new Action(id);
 }
 
-function createNewTopHeader(pid: BigInt, epoch: BigInt, index: i32, headerId: string): string {
+// function createNewTopHeader(pid: BigInt, epoch: BigInt, index: i32, headerId: string): string {
+//   const id = genTopHeaderId(pid, epoch, index);
+//   if (TopHeader.load(id) !== null) {
+//     throw new Error("TopHeader already exists");
+//   }
+//   const topHeader = new TopHeader(id);
+//   topHeader.snappedEpoch = epoch;
+//   topHeader.index = BigInt.fromI32(index as i32);
+//   topHeader.header = headerId;
+//   topHeader.save();
+
+//   return id;
+// }
+
+function loadOrCreateTopHeader(pid: BigInt, epoch: BigInt, index: i32, headerId: string): string {
   const id = genTopHeaderId(pid, epoch, index);
-  if (TopHeader.load(id) !== null) {
-    throw new Error("TopHeader already exists");
+  let topHeader = TopHeader.load(id);
+  if (topHeader == null) {
+    topHeader = new TopHeader(id);
   }
-  const topHeader = new TopHeader(id);
   topHeader.snappedEpoch = epoch;
   topHeader.index = BigInt.fromI32(index as i32);
   topHeader.header = headerId;
@@ -166,17 +180,31 @@ function createNewTopHeader(pid: BigInt, epoch: BigInt, index: i32, headerId: st
 export function createNewTopHeaders(pid: BigInt, epoch: BigInt, headerIdsBigInt: Array<BigInt>): Array<string> {
   const topHeaderIds: Array<string> = [];
   for (let i = 0; i < headerIdsBigInt.length; i++) {
-    topHeaderIds.push(createNewTopHeader(pid, epoch, i, genHeaderId(pid, headerIdsBigInt[i])));
+    topHeaderIds.push(loadOrCreateTopHeader(pid, epoch, i, genHeaderId(pid, headerIdsBigInt[i])));
   }
   return topHeaderIds;
 }
 
-function createNewTopCommand(pid: BigInt, epoch: BigInt, index: i32, commandId: string): string {
+// function createNewTopCommand(pid: BigInt, epoch: BigInt, index: i32, commandId: string): string {
+//   const id = genTopCommandId(pid, epoch, index);
+//   if (TopCommand.load(id) !== null) {
+//     throw new Error("TopCommand already exists");
+//   }
+//   const topCommand = new TopCommand(id);
+//   topCommand.snappedEpoch = epoch;
+//   topCommand.index = BigInt.fromI32(index as i32);
+//   topCommand.command = commandId;
+//   topCommand.save();
+
+//   return id;
+// }
+
+function loadOrCreateTopCommand(pid: BigInt, epoch: BigInt, index: i32, commandId: string): string {
   const id = genTopCommandId(pid, epoch, index);
-  if (TopCommand.load(id) !== null) {
-    throw new Error("TopCommand already exists");
+  let topCommand = TopCommand.load(id);
+  if (topCommand == null) {
+    topCommand = new TopCommand(id);
   }
-  const topCommand = new TopCommand(id);
   topCommand.snappedEpoch = epoch;
   topCommand.index = BigInt.fromI32(index as i32);
   topCommand.command = commandId;
@@ -188,7 +216,7 @@ function createNewTopCommand(pid: BigInt, epoch: BigInt, index: i32, commandId: 
 export function createNewTopCommands(pid: BigInt, epoch: BigInt, commandIdsBigInt: Array<BigInt>): Array<string> {
   const topCommandIds: Array<string> = [];
   for (let i = 0; i < commandIdsBigInt.length; i++) {
-    topCommandIds.push(createNewTopCommand(pid, epoch, i, genCommandId(pid, commandIdsBigInt[i])));
+    topCommandIds.push(loadOrCreateTopCommand(pid, epoch, i, genCommandId(pid, commandIdsBigInt[i])));
   }
   return topCommandIds;
 }
