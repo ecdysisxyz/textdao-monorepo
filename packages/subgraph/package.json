@@ -2,18 +2,18 @@
   "name": "textdao-subgraph",
   "license": "MIT",
   "scripts": {
-    "precodegen": "bun ./scripts/build-abi.ts",
+    "precodegen": "npm run ./scripts/build-abi.ts",
     "codegen": "graph clean && graph codegen",
-    "prebuild": "bun codegen && bun format",
+    "prebuild": "npm run codegen && npm run format",
     "build": "graph build",
     "deploy": "graph deploy --studio",
     "create-local": "graph create textdao --node http://localhost:8020/",
     "remove-local": "graph remove textdao --node http://localhost:8020/",
     "deploy-local": "graph deploy textdao --node http://localhost:8020/ --ipfs http://localhost:5001",
     "test": "graph test -d",
-    "format": "bunx biome check --write .",
-    "lint": "bunx biome lint .",
-    "check": "bunx biome check ."
+    "format": "npx biome check --write .",
+    "lint": "npx biome lint .",
+    "check": "npx biome check ."
   },
   "dependencies": {
     "@graphprotocol/graph-ts": "latest"

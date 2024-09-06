@@ -154,3 +154,23 @@ Common testing issues and their solutions:
 - [The Graph Unit Testing Guide](https://thegraph.com/docs/en/developer/unit-testing-framework/)
 
 By following this test strategy, we can ensure the reliability, correctness, and maintainability of the TextDAO subgraph. Regular review and updates to this strategy will help keep our testing practices aligned with the evolving needs of the project.
+
+## Running Tests
+
+To run the tests for the TextDAO subgraph, we use Matchstick, a unit testing framework for AssemblyScript mappings in The Graph.
+
+### Prerequisites
+
+Before running the tests, ensure you have the following installed:
+
+- Docker: Matchstick requires Docker to run the tests in a controlled environment.
+
+### Running Tests
+
+To execute the tests, run the following command:
+
+```
+bun test
+```
+
+This command will run all the tests in the `tests` directory.

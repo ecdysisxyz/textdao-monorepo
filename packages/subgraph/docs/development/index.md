@@ -22,6 +22,7 @@ This guide provides essential information for developers working on the TextDAO 
 ### Prerequisites
 
 - node.js: version 18 or later
+- Docker: Latest stable version (required for running tests)
 
 ### Setup flow
 
@@ -45,9 +46,9 @@ This guide provides essential information for developers working on the TextDAO 
    bun run build
    ```
 
-5. Test the subgraph with matchstick-as:
+5. Test the subgraph with matchstick-as (ensure Docker is running):
    ```
-   bun test
+   bun run test
    ```
 
 6. Deploy the subgraph (replace `<subgraph-name>` and `version-label` with your actual value):
