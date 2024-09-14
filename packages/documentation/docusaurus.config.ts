@@ -8,22 +8,16 @@ const config: Config = {
   favicon: "img/favicon.ico",
 
   // Set the production url of your site here
-  url: "https://your-docusaurus-site.example.com",
-  // Set the /<baseUrl>/ pathname under which your site is served
-  // For GitHub pages deployment, it is often '/<projectName>/'
+  url: "https://textdao-docs.ecdysis.xyz",
   baseUrl: "/",
 
   // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
   organizationName: "ecdysisxyz",
   projectName: "textdao-monorepo",
 
   onBrokenLinks: "warn",
   onBrokenMarkdownLinks: "warn",
 
-  // Even if you don't use internationalization, you can use this field to set
-  // useful metadata like html lang. For example, if your site is Chinese, you
-  // may want to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: "en",
     locales: ["en"],
@@ -92,6 +86,11 @@ const config: Config = {
     ],
   ],
 
+  markdown: {
+    mermaid: true,
+  },
+  themes: ["@docusaurus/theme-mermaid"],
+
   themeConfig: {
     image: "img/docusaurus-social-card.jpg", // TODO
     navbar: {
@@ -140,11 +139,19 @@ const config: Config = {
       style: "dark",
       links: [
         {
-          title: "Docs",
+          title: "Packages",
           items: [
             {
-              label: "Introduction",
-              to: "/",
+              label: "Contracts",
+              to: "/contracts",
+            },
+            {
+              label: "Subgraph",
+              to: "/subgraph",
+            },
+            {
+              label: "Frontend",
+              to: "/frontend",
             },
           ],
         },
@@ -153,15 +160,11 @@ const config: Config = {
           items: [
             {
               label: "Stack Overflow",
-              href: "https://stackoverflow.com/questions/tagged/docusaurus",
+              href: "https://stackoverflow.com/questions/tagged/textdao",
             },
             {
-              label: "Discord",
-              href: "https://discordapp.com/invite/docusaurus",
-            },
-            {
-              label: "Twitter",
-              href: "https://twitter.com/docusaurus",
+              label: "X",
+              href: "https://x.com/ecdysis_xyz",
             },
           ],
         },
@@ -182,10 +185,6 @@ const config: Config = {
       darkTheme: prismThemes.dracula,
       additionalLanguages: ["solidity"],
     },
-    markdown: {
-      mermaid: true,
-    },
-    themes: ["@docusaurus/theme-mermaid"],
   } satisfies Preset.ThemeConfig,
 };
 
