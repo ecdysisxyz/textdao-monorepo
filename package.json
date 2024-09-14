@@ -3,12 +3,12 @@
   "private": true,
   "workspaces": ["packages/contracts/*", "packages/subgraph/*", "packages/frontend/*", "packages/documentation/*"],
   "scripts": {
-    "prepare": "bun lefthook install"
+    "prepare": "npm run lefthook install"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.8.3",
-    "@commitlint/cli": "^19.4.0",
-    "@commitlint/config-conventional": "^19.2.2",
-    "lefthook": "^1.7.14"
+    "@biomejs/biome": "1.8.3",
+    "@commitlint/cli": "19.4.0",
+    "@commitlint/config-conventional": "19.2.2",
+    "lefthook": "1.7.14"
   }
 }
