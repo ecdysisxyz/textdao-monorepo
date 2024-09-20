@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {MCDevKit} from "@devkit/Flattened.sol";
+import {MCDevKit} from "@mc-devkit/Flattened.sol";
 
 import {Schema} from "bundle/textdao/storages/Schema.sol";
 // Main core functions

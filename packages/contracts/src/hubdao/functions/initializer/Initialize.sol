@@ -47,7 +47,7 @@ contract Initialize is IInitialize, Initializable {
 
 
 // Testing
-import {MCTest, console2} from "@devkit/Flattened.sol";
+import {MCTest, console} from "@mc-devkit/Flattened.sol";
 import {HubDAOErrors} from "bundle/hubdao/interfaces/HubDAOErrors.sol";
 import {HubDAOEvents} from "bundle/hubdao/interfaces/HubDAOEvents.sol";
 

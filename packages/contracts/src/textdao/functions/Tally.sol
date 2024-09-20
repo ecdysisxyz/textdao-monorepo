@@ -105,7 +105,7 @@ contract Tally is ITally {
 
 
 /// Testing
-import {MCTest} from "@devkit/Flattened.sol";
+import {MCTest} from "@mc-devkit/Flattened.sol";
 
 /**
  * @title TallyTest

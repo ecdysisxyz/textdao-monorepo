@@ -126,7 +126,7 @@ contract Propose is IPropose, OnlyMemberBase {
 
 
 // Testing
-import {MCTest, console2} from "@devkit/Flattened.sol";
+import {MCTest, console} from "@mc-devkit/Flattened.sol";
 
 /**
  * @title ProposeTest
@@ -461,8 +461,8 @@ contract ProposeTest is MCTest {
         Propose(target).propose(_headerMetadataCid, _actions);
         uint256 gasUsedWithVRF = gasStart - gasleft();
 
-        console2.log("Gas used without VRF:", gasUsedWithoutVRF);
-        console2.log("Gas used with VRF:", gasUsedWithVRF);
+        console.log("Gas used without VRF:", gasUsedWithoutVRF);
+        console.log("Gas used with VRF:", gasUsedWithVRF);
 
         // Assert that gas usage is within acceptable limits
         assert(gasUsedWithoutVRF < 300000);  // Adjust these values based on your requirements

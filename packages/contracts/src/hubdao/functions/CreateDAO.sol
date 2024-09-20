@@ -69,7 +69,7 @@ contract CreateDAO is ICreateDAO {
 
 
 /// Testing
-import {MCTest, vm} from "@devkit/Flattened.sol";
+import {MCTest, vm} from "@mc-devkit/Flattened.sol";
 import {IDictionaryCore} from "@ucs.mc/dictionary/interfaces/IDictionaryCore.sol";
 
 /**

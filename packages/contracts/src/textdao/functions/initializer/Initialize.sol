@@ -27,7 +27,7 @@ contract Initialize is IInitialize, Initializable {
 
 
 // Testing
-import {MCTest, console2} from "@devkit/Flattened.sol";
+import {MCTest, console} from "@mc-devkit/Flattened.sol";
 import {TextDAOErrors} from "bundle/textdao/interfaces/TextDAOErrors.sol";
 import {TextDAOEvents} from "bundle/textdao/interfaces/TextDAOEvents.sol";
 

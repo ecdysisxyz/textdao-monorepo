@@ -202,7 +202,7 @@ library RCVLib {
 
 
 // Testing
-import {Test, console2} from "@devkit/Flattened.sol";
+import {Test, console} from "@mc-devkit/Flattened.sol";
 import {Storage} from "bundle/textdao/storages/Storage.sol";
 import {DeliberationLib} from "bundle/textdao/utils/DeliberationLib.sol";
 import {ProposalLib} from "bundle/textdao/utils/ProposalLib.sol";

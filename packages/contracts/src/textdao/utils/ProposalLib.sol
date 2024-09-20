@@ -131,7 +131,7 @@ library ProposalLib {
 
 
 // Testing
-import {Test} from "@devkit/Flattened.sol";
+import {Test} from "@mc-devkit/Flattened.sol";
 import {Storage} from "bundle/textdao/storages/Storage.sol";
 import {DeliberationLib} from "bundle/textdao/utils/DeliberationLib.sol";
 

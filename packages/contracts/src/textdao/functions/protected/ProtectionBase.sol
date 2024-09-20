@@ -50,7 +50,7 @@ abstract contract ProtectionBase {
 
 
 // Testing
-import {MCTest} from "@devkit/Flattened.sol";
+import {MCTest} from "@mc-devkit/Flattened.sol";
 
 contract ProtectionBaseTester is ProtectionBase {
     function doSomething(uint pid) public protected(pid) returns(bool) {

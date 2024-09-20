@@ -2,7 +2,7 @@
 pragma solidity ^0.8.24;
 
 import {Storage} from "bundle/textdao/storages/Storage.sol";
-import {ForgeHelper} from "@devkit/Flattened.sol";
+import {ForgeHelper} from "@mc-devkit/Flattened.sol";
 
 library TestUtils {
     function setMsgSenderAsMember() internal {

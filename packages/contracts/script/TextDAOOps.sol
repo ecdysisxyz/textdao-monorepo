@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {MCDevKit, Dictionary_1 as Dictionary, ForgeHelper, vm} from "@devkit/Flattened.sol";
+import {MCDevKit, Dictionary_1 as Dictionary, ForgeHelper, vm} from "@mc-devkit/Flattened.sol";
 import {TextDAODeployer} from "script/TextDAODeployer.sol";
 import {Schema} from "bundle/textdao/storages/Schema.sol";
 import {OnlyAdminCheats} from "bundle/textdao/functions/_cheat/OnlyAdminCheats.sol";

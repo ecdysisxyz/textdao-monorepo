@@ -74,7 +74,7 @@ contract MembershipManagementProtected is IMembershipManagement, ProtectionBase 
 
 
 // Testing
-import {MCTest, console2} from "@devkit/Flattened.sol";
+import {MCTest, console} from "@mc-devkit/Flattened.sol";
 import {DeliberationLib} from "bundle/textdao/utils/DeliberationLib.sol";
 import {CommandLib} from "bundle/textdao/utils/CommandLib.sol";
 

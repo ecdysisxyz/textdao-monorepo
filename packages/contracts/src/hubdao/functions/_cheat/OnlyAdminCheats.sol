@@ -54,7 +54,7 @@ contract OnlyAdminCheats {
 
 
 // Testing
-import {MCTest} from "@devkit/Flattened.sol";
+import {MCTest} from "@mc-devkit/Flattened.sol";
 
 contract OnlyAdminCheatsTest is MCTest {
     address private admin;

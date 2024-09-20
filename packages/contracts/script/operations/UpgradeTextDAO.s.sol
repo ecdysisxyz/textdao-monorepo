@@ -1,7 +1,7 @@
 // // SPDX-License-Identifier: MIT
 // pragma solidity ^0.8.24;
 
-// import {MCScript} from "@devkit/Flattened.sol";
+// import {MCScript} from "@mc-devkit/Flattened.sol";
 
 // import {TextDAOFacade} from "bundle/textdao/interfaces/TextDAOFacade.sol";
 // import {Propose} from "bundle/textdao/functions/onlyMember/Propose.sol";

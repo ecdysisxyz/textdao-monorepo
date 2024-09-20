@@ -70,7 +70,7 @@
 // }
 
 
-// import {MCTest, console2} from "@devkit/Flattened.sol";
+// import {MCTest, console} from "@mc-devkit/Flattened.sol";
 
 // import {Getter} from "bundle/textdao/functions/Getter.sol";
 // import {Storage} from "bundle/textdao/storages/Storage.sol";

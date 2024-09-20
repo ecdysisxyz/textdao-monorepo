@@ -55,7 +55,7 @@ contract Execute is IExecute {
 
 
 // Testing
-import {MCTest, VmSafe, console2} from "@devkit/Flattened.sol";
+import {MCTest, VmSafe, console} from "@mc-devkit/Flattened.sol";
 import {ProtectionBase} from "bundle/textdao/functions/protected/ProtectionBase.sol";
 
 contract ExecuteTest is MCTest {

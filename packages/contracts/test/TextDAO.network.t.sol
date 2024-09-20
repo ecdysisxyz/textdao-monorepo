@@ -1,7 +1,7 @@
 // // SPDX-License-Identifier: MIT
 // pragma solidity ^0.8.24;
 
-// import {MCTest, console2, StdChains} from "@devkit/Flattened.sol";
+// import {MCTest, console, StdChains} from "@mc-devkit/Flattened.sol";
 
 // import {TestUtils} from "test/fixtures/TestUtils.sol";
 
@@ -65,7 +65,7 @@
 //             NetworkConfig memory _config = networks[i];
 
 //             _setupNetwork(_config);
-//             console2.log("Testing on", _config.name, "at block", block.number);
+//             console.log("Testing on", _config.name, "at block", block.number);
 
 //             _getOrDeployTextDAO(_config.chainId);
 
@@ -88,7 +88,7 @@
 //         NetworkConfig memory _config = networks[networkIndex];
 
 //         _setupNetwork(_config);
-//         console2.log("Testing VRF integration on", _config.name, "at block", block.number);
+//         console.log("Testing VRF integration on", _config.name, "at block", block.number);
 
 //         _getOrDeployTextDAO(_config.chainId);
 
@@ -144,9 +144,9 @@
 //         });
 
 //         try textDAO.initialize(initialMembers, deliberationConfig) {
-//             console2.log("TextDAO initialized successfully");
+//             console.log("TextDAO initialized successfully");
 //         } catch {
-//             console2.log("Initialization failed but skipped (TextDAO might be already initialized)");
+//             console.log("Initialization failed but skipped (TextDAO might be already initialized)");
 //         }
 //     }
 
@@ -163,7 +163,7 @@
 //             abiParams: abi.encode(0, new Schema.Member[](1))
 //         });
 //         _pid = textDAO.propose(_headerMetadataCid, _actions);
-//         console2.log("Proposal created with ID:", _pid);
+//         console.log("Proposal created with ID:", _pid);
 //     }
 
 //     /**
@@ -179,7 +179,7 @@
 //             abiParams: abi.encode(0, new Schema.Member[](1))
 //         });
 //         textDAO.fork(_pid, _headerMetadataCid, _actions);
-//         console2.log("Proposal forked");
+//         console.log("Proposal forked");
 //     }
 
 //     /**
@@ -193,7 +193,7 @@
 //             rankedCommandIds: [uint(1), 0, 0]
 //         });
 //         textDAO.vote(_pid, _vote1);
-//         console2.log("MEMBER1 voted");
+//         console.log("MEMBER1 voted");
 
 //         vm.prank(MEMBER2);
 //         Schema.Vote memory _vote2 = Schema.Vote({
@@ -201,7 +201,7 @@
 //             rankedCommandIds: [uint(1), 0, 0]
 //         });
 //         textDAO.vote(_pid, _vote2);
-//         console2.log("MEMBER2 voted");
+//         console.log("MEMBER2 voted");
 //     }
 
 //     /**
@@ -212,10 +212,10 @@
 //         vm.warp(block.timestamp + 8 days); // Advance time past the expiry duration
 
 //         textDAO.tally(_pid);
-//         console2.log("Votes tallied");
+//         console.log("Votes tallied");
 
 //         textDAO.execute(_pid);
-//         console2.log("Proposal executed");
+//         console.log("Proposal executed");
 //     }
 
 //     /**
@@ -242,7 +242,7 @@
 //         string memory _headerMetadataCid = "VRF Test Proposal";
 //         Schema.Action[] memory _actions = new Schema.Action[](0);
 //         _pid = textDAO.propose(_headerMetadataCid, _actions);
-//         console2.log("VRF test proposal created with ID:", _pid);
+//         console.log("VRF test proposal created with ID:", _pid);
 //     }
 
 //     /**
@@ -271,7 +271,7 @@
 //         vm.prank(VRF_COORDINATOR);
 //         RawFulfillRandomWords(target).rawFulfillRandomWords(_requestId, _randomWords);
 
-//         console2.log("VRF response simulated");
+//         console.log("VRF response simulated");
 //     }
 
 //     // function test_scenario() public {
@@ -283,7 +283,7 @@
 //     //         repsNum: 1,
 //     //         quorumScore: 3
 //     //     })) {} catch {
-//     //         console2.log("Initialization failed but skipped.");
+//     //         console.log("Initialization failed but skipped.");
 //     //     }
 
 

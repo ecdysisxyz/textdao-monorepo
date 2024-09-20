@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {MCTest, console2} from "@devkit/Flattened.sol";
+import {MCTest, console} from "@mc-devkit/Flattened.sol";
 
 import {Storage} from "bundle/textdao/storages/Storage.sol";
 import {BaseSlots} from "bundle/textdao/storages/BaseSlots.sol";

@@ -21,7 +21,7 @@ abstract contract OnlyMemberBase {
 
 
 // Testing
-import {MCTest} from "@devkit/Flattened.sol";
+import {MCTest} from "@mc-devkit/Flattened.sol";
 import {TestUtils} from "test/fixtures/TestUtils.sol";
 
 contract OnlyMemberTester is OnlyMemberBase {

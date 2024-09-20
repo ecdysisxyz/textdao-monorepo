@@ -25,7 +25,7 @@ contract RawFulfillRandomWords is VRFConsumerV2Interface, OnlyVrfCoordinatorBase
 
 
 // Testing
-import {MCTest} from "@devkit/Flattened.sol";
+import {MCTest} from "@mc-devkit/Flattened.sol";
 import {TestUtils} from "test/fixtures/TestUtils.sol";
 import {TextDAOErrors} from "bundle/textdao/interfaces/TextDAOErrors.sol";
 

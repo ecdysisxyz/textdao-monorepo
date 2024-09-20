@@ -142,7 +142,7 @@ function calculateSum(uint256 a, uint256 b) public pure returns (uint256) {
 Example of MC DevKit usage in tests:
 
 ```solidity
-import {MCTest} from "@devkit/Flattened.sol";
+import {MCTest} from "@mc-devkit/Flattened.sol";
 
 contract MyContractTest is MCTest {
     function setUp() public {

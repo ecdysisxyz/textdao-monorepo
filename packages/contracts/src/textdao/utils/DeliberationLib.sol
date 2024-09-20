@@ -28,7 +28,7 @@ library DeliberationLib {
 
 
 // Testing
-import {MCTest, console2} from "@devkit/Flattened.sol";
+import {MCTest, console} from "@mc-devkit/Flattened.sol";
 
 contract DeliberationLibTest is MCTest {
     using DeliberationLib for Schema.Deliberation;

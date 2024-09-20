@@ -30,7 +30,7 @@ contract UserManagement is IUserManagement {
 
 
 /// Testing
-import {MCTest, vm} from "@devkit/Flattened.sol";
+import {MCTest, vm} from "@mc-devkit/Flattened.sol";
 
 /**
  * @title UserManagementTest

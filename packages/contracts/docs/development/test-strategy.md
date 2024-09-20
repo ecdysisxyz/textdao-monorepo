@@ -57,7 +57,7 @@ contract SomeFunction {
 }
 
 // Testing
-import {MCTest} from "@devkit/Flattened.sol";
+import {MCTest} from "@mc-devkit/Flattened.sol";
 
 contract SomeFunctionTest is MCTest {
     // Unit tests

@@ -61,7 +61,7 @@ contract Vote is IVote, OnlyRepsBase {
 
 
 // Testing
-import {MCTest} from "@devkit/Flattened.sol";
+import {MCTest} from "@mc-devkit/Flattened.sol";
 import {TestUtils} from "test/fixtures/TestUtils.sol";
 
 /**

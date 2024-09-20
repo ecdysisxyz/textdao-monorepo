@@ -57,7 +57,7 @@ contract Fork is IFork, OnlyRepsBase {
 
 
 // Testing
-import {MCTest} from "@devkit/Flattened.sol";
+import {MCTest} from "@mc-devkit/Flattened.sol";
 import {DeliberationLib} from "bundle/textdao/utils/DeliberationLib.sol";
 import {TestUtils} from "test/fixtures/TestUtils.sol";
 import {TextDAOErrors} from "bundle/textdao/interfaces/TextDAOErrors.sol";

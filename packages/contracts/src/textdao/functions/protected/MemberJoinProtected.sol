@@ -24,7 +24,7 @@ contract MemberJoinProtected is IMemberJoin, ProtectionBase {
 
 
 // Testing
-import {MCTest} from "@devkit/Flattened.sol";
+import {MCTest} from "@mc-devkit/Flattened.sol";
 import {DeliberationLib} from "bundle/textdao/utils/DeliberationLib.sol";
 import {CommandLib} from "bundle/textdao/utils/CommandLib.sol";
 import {TextDAOErrors} from "bundle/textdao/interfaces/TextDAOErrors.sol";
