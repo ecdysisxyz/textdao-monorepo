@@ -50,6 +50,7 @@ contract OnlyAdminCheats is Initializable {
 
     function addMembers(address[] memory newMembers) external onlyAdmin {
         for (uint i; i < newMembers.length; ++i) {
+            if (Storage.Members().isMember(newMembers[i])) break;
             Storage.Members().addMember(Schema.Member({
                 addr: newMembers[i],
                 metadataCid: ""
