@@ -1,7 +1,7 @@
 ---
 title: "TextDAO Test Strategy"
-version: 0.1.0
-lastUpdated: 2024-09-04
+version: 0.2.0
+lastUpdated: 2024-10-01
 author: TextDAO Development Team
 scope: contracts
 type: guide
@@ -13,6 +13,9 @@ relatedDocs: [
   "../architecture/index.md"
 ]
 changeLog:
+  - version: 0.2.0
+    date: 2024-10-01
+    description: Updated test structure and strategy for TextDAO contracts
   - version: 0.1.0
     date: 2024-09-04
     description: Initial version of the TextDAO test strategy document
@@ -24,25 +27,15 @@ This document outlines the comprehensive test strategy for the TextDAO smart con
 
 ## Test Types
 
-1. Unit Tests
-2. Integration Tests
-3. State-Focused Integration Tests
-4. Behavior-Focused Integration Tests
-5. Fuzzing Tests
-6. Gas Optimization Tests
-7. Upgrade Tests
-8. Snapshot Tests
+- **Functional Testing**
+    - **Unit Tests**
+        - Tests that validate individual components of the system, including both function contracts and libraries.
+        - **Test Location**: Colocated with their implementation in the same file.
+    - **Integration Tests**
+        - Tests that validate the interaction between multiple components of the system.
+        - **Test Location**: Located in separate files from their implementations under the `test` directory.
 
-## Test Location
-
-Given the structure of the Meta Contract where functions are separated into individual files, we adopt the following test location strategy:
-
-1. Unit Tests: Colocated with the function implementation in the same file under the `src` directory.
-2. Integration Tests: Located in separate files under the `test` directory.
-3. Upgrade Tests: Located in the `test` directory, typically in a file named `UpgradeTest.sol` or similar.
-4. Snapshot Tests: Incorporated into State-Focused Integration Tests or other test types as needed.
-
-## Test File Structure
+## Unit Tests
 
 A typical Solidity file containing a function implementation and its unit tests should have the following structure:
 
@@ -64,39 +57,11 @@ contract SomeFunctionTest is MCTest {
 }
 ```
 
-## Test Function Naming Convention
-
-Use the following format for test function names:
-
-```
-test_[MethodName]_[ExpectedBehavior]_[TestCondition]()
-```
-
-Example:
-```solidity
-function test_propose_success_withValidInput() public {
-    // Test implementation
-}
-```
-
 ## Integration Testing Strategy
-
-### State-Focused Integration Tests
-
-These tests utilize MC's State Fuzzing capabilities to test individual functions and state transitions.
-
-Example:
-
-```solidity
-function test_someStateCondition() public {
-    Schema.Proposal storage $proposal = Storage.Deliberation().getProposal(0);
-    // ... perform state modifications and assertions
-}
-```
 
 ### Behavior-Focused Integration Tests
 
-These tests simulate end-to-end flows and specific use cases of the TextDAO system from an end-user perspective.
+These tests simulate end-to-end flows and specific use cases of the TextDAO system from an end-user perspective. They ensure that the system behaves as expected when multiple components interact.
 
 Example:
 
@@ -108,17 +73,62 @@ function test_fullProposalLifecycle() public {
 }
 ```
 
-## Fuzzing Tests
+### State-Focused Integration Tests
 
-For fuzz tests, include "Random" in the name and describe the varying input:
+These tests utilize MC's State Fuzzing capabilities to test individual functions and state transitions. They help identify edge cases and ensure that state changes occur as expected.
+
+Example:
 
 ```solidity
-function test_vote_success_withRandomVoteValues(uint8 rnd_headerChoice, uint8 rnd_commandChoice) public {
+function test_someStateCondition() public {
+    Schema.Proposal storage $proposal = Storage.Deliberation().getProposal(0);
+    // ... perform state modifications and assertions
+}
+```
+
+## Non-Functional Testing
+
+- **Test Location**: Integrated into unit tests or integration tests as needed, rather than being standalone test files.
+
+### Security-Focused Testing
+
+1. Implement specific tests for known vulnerabilities (e.g., reentrancy, integer overflow) to ensure the contract is secure against common attack vectors.
+2. Use symbolic execution tools (e.g., MythX, Slither) to identify potential security issues.
+3. Test access control and permission systems thoroughly to ensure that only authorized users can perform sensitive actions.
+
+#### Fuzzing Tests
+
+For fuzz tests, include "Random" in the name and describe the varying input. These tests help uncover unexpected behaviors by testing a wide range of inputs.
+
+```solidity
+function test_vote_success_withRandomVoteValues(uint8 fuzz_headerChoice, uint8 fuzz_commandChoice) public {
     // Implement test with random inputs
 }
 ```
 
-## Gas Optimization Testing
+#### Invariant Testing
+
+Implement tests to ensure that certain conditions hold true throughout the execution of the contract. For example, you might check that the total supply of tokens remains constant after certain operations.
+
+Example:
+
+```solidity
+function testInvariant_totalSupplyRemainsConstant() public {
+    uint256 initialSupply = token.totalSupply();
+    // Perform operations that should not change total supply
+    // ...
+    assertEq(token.totalSupply(), initialSupply, "Total supply should remain constant");
+}
+```
+
+### Performance Testing
+
+For critical operations, include performance tests to measure execution time and resource usage. This ensures that the contract performs efficiently under various conditions.
+
+1. Set performance benchmarks and ensure they are met in each release.
+2. Test performance under various network conditions and gas prices.
+
+#### Gas Optimization Testing
 
 Include gas usage checks for potentially heavy operations:
 
@@ -135,19 +145,23 @@ function test_heavyOperation_gasUsage(uint256 inputSize) public {
 }
 ```
 
-## Upgrade Tests
+### Upgrade Fork Tests
+
+These tests are crucial for ensuring that upgrades can be safely executed in a production environment. They simulate the upgrade process on a fork of the mainnet to verify that the contract behaves as expected after the upgrade.
 
 Ensure that contract upgrades maintain expected functionality:
 
-1. Test the upgrade process itself
-2. Verify that existing state is preserved after an upgrade
-3. Test new functionality introduced in the upgrade
-4. Ensure that existing functionality continues to work as expected post-upgrade
+1. Test the upgrade process itself to confirm that it executes without errors.
+2. Verify that existing state is preserved after an upgrade to ensure no data loss occurs.
+3. Test new functionality introduced in the upgrade to confirm it works as intended.
+4. Ensure that existing functionality continues to work as expected post-upgrade to prevent regressions.
+
+Located in the `test` directory, typically in a file named `UpgradeTest.sol` or similar.
 
 Example:
 
 ```solidity
-function testUpgrade() public {
+function test_upgradeToV2_1_10() public {
     // Set up initial state
     // ...
 
@@ -165,7 +179,9 @@ function testUpgrade() public {
 }
 ```
 
-## Snapshot Tests
+### Snapshot Tests
+
+Incorporated into State-Focused Integration Tests or other test types as needed.
 
 Use Foundry's snapshot feature to capture and verify the state of the system at specific points:
 
@@ -188,6 +204,21 @@ function testSnapshot() public {
 
     // Verify reverted state
     // ... assertions ...
+}
+```
+
+## Test Function Naming Convention
+
+Use the following format for test function names:
+
+```
+test_[MethodName]_[ExpectedBehavior]_[TestCondition]()
+```
+
+Example:
+```solidity
+function test_propose_success_withValidInput() public {
+    // Test implementation
 }
 ```
 
@@ -259,20 +290,6 @@ function generateCustomDeliberation() internal returns (Schema.Deliberation memo
     // Generate and return a custom Deliberation state
 }
 ```
-
-## Security-Focused Testing
-
-1. Implement specific tests for known vulnerabilities (e.g., reentrancy, integer overflow).
-2. Use symbolic execution tools to identify potential security issues.
-3. Test access control and permission systems thoroughly.
-
-## Performance Testing
-
-For critical operations, include performance tests:
-
-1. Measure execution time and resource usage.
-2. Set performance benchmarks and ensure they are met in each release.
-3. Test performance under various network conditions and gas prices.
 
 ## Documentation
 

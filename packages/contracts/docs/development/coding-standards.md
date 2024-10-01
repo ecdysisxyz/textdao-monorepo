@@ -1,7 +1,7 @@
 ---
 title: "TextDAO Contracts Coding Standards"
-version: 0.1.0
-lastUpdated: 2024-09-04
+version: 0.2.0
+lastUpdated: 2024-10-01
 author: TextDAO Development Team
 scope: contracts
 type: guide
@@ -12,6 +12,9 @@ relatedDocs: [
   "../architecture/index.md"
 ]
 changeLog:
+  - version: 0.2.0
+    date: 2024-10-01
+    description: Updated naming conventions and documentation guidelines
   - version: 0.1.0
     date: 2024-09-04
     description: Initial version of the coding standards for TextDAO contracts
@@ -30,51 +33,54 @@ This document outlines the coding standards and best practices for developing sm
 ## Naming Conventions
 
 ### Contracts and Libraries
-- Use PascalCase
-  Example: `MyContract`, `TextDAOLibrary`
+- Use PascalCase for contract and library names.
+- Example: `TextDAO`, `TextDaoRegistry`
 
 ### Interfaces
-- Prefix with `I` and use PascalCase
-  Example: `IMyInterface`, `ITextDAO`
+- Prefix with `I` and use PascalCase.
+- Example: `IMyInterface`, `ITextDAO`
 
 ### Functions
-- Use camelCase
-- Prefix internal functions in contracts with an underscore (_)
-- Do not prefix internal functions in libraries with an underscore
-  Example: `myFunction`, `calculateTotal`, `_internalFunction` (in contracts)
+- Use camelCase for function names.
+- Prefix internal functions in contracts with an underscore (_).
+- Do not prefix internal functions in libraries with an underscore.
+- Example: `myFunction`, `calculateTotal`, `_internalFunction` (in contracts)
 
 ### Variables
-- Use camelCase for function parameters, return variables, and local variables
-- Prefix storage variables with `s_`
-- Prefix immutable variables with `i_`
-- Prefix constant variables with `c_`
-  Example: `uint256 totalAmount`, `address s_owner`, `uint256 i_maxSupply`, `uint256 public constant c_MAX_SUPPLY = 1000000`
+- Use camelCase for function parameters, return variables, and local variables.
+- Prefix storage variables with `$`.
+- Example: `uint256 totalAmount`, `address $owner`
+
+### Immutable and Constant Variables
+- Do not use prefixes for immutable and constant variables.
+- Use CONSTANT_CASE for constant variables.
+- Example: `uint256 public constant MAX_SUPPLY = 1000000`
 
 ### Events
-- Use PascalCase
-- Prefix warning events with `WARN_`
-  Example: `TransferEvent`, `ProposalCreated`, `WARN_InsufficientFunds`
+- Use PascalCase for event names.
+- Events should generally be in the past tense.
+- Example: `ProposalCreated`
 
 ### Modifiers
-- Use mixedCase
-  Example: `onlyOwner`, `nonReentrant`
+- Use mixedCase for modifier names.
+- Example: `onlyOwner`, `nonReentrant`
 
 ### Enums
-- Use PascalCase for enum name, and ALL_CAPS for values
-  Example:
+- Use PascalCase for enum names, and ALL_CAPS for values.
+- Example:
   ```solidity
   enum Color { RED, GREEN, BLUE }
   ```
 
-### Struct
-- Use PascalCase
-  Example: `struct UserInfo { ... }`
+### Structs
+- Use PascalCase for struct names.
+- Example: `struct UserInfo { ... }`
 
 ## Code Layout
 
 - Use 4 spaces for indentation (not tabs).
 - Maximum line length is 120 characters.
-- Use single quotes for strings.
+- Use double quotes for strings.
 - Place the opening brace on the same line as the declaration.
 - Place the closing brace on a new line.
 
@@ -82,10 +88,10 @@ Example:
 
 ```solidity
 contract MyContract {
-    uint256 private constant c_MAX_VALUE = 100;
+    uint256 private constant MAX_VALUE = 100;
 
     function calculateSum(uint256 a, uint256 b) public pure returns (uint256) {
-        require(a < c_MAX_VALUE && b < c_MAX_VALUE, 'Values too large');
+        require(a < MAX_VALUE && b < MAX_VALUE, "Values too large");
         return a + b;
     }
 }
@@ -96,18 +102,17 @@ contract MyContract {
 - Use NatSpec comments for all public and external functions and state variables.
 - Write clear and concise comments explaining complex logic.
 - Keep comments up-to-date when changing code.
+- If events or errors are included, document them in NatSpec comments.
 
 Example:
 
 ```solidity
-/// @notice Calculates the sum of two numbers
-/// @param a The first number
-/// @param b The second number
-/// @return The sum of a and b
-function calculateSum(uint256 a, uint256 b) public pure returns (uint256) {
-    // Ensure inputs are within acceptable range
-    require(a < c_MAX_VALUE && b < c_MAX_VALUE, 'Values too large');
-    return a + b;
+/// @notice Adds a new template to the DAO
+/// @param template The template to add
+/// @dev Emits a DaoTemplateAdded event on success
+/// @dev Reverts with HubDAOErrors.TemplateAlreadyExist if the template already exists
+function addTemplate(Schema.Template memory template) public {
+    // Implementation
 }
 ```
 
@@ -115,7 +120,7 @@ function calculateSum(uint256 a, uint256 b) public pure returns (uint256) {
 
 - Use the `checks-effects-interactions` pattern to prevent reentrancy.
 - Be cautious with `delegatecall` and understand its implications.
-- Use `transfer()` or `call.value()()` with checks for ETH transfers.
+- Use `transfer()` or `call{value: _value}("")` with checks for ETH transfers.
 - Avoid using `tx.origin` for authentication.
 - Use SafeMath for versions < 0.8.0 (for 0.8.0 and later, built-in overflow checks are sufficient).
 
@@ -132,6 +137,8 @@ function calculateSum(uint256 a, uint256 b) public pure returns (uint256) {
 - Use the MC DevKit for enhanced testing capabilities.
 - Implement fuzzing tests for critical functions.
 - Test for edge cases and boundary conditions.
+
+See details in [Test Strategy](./test-strategy.md)
 
 ## Meta Contract (MC) Specific Guidelines
 
@@ -156,6 +163,8 @@ contract MyContractTest is MCTest {
     }
 }
 ```
+
+See details in [Meta Contract Specification](./meta-contract-spec.md) and [MC DevKit Usage](./mc-devkit-usage.md).
 
 ## Version Control
 
