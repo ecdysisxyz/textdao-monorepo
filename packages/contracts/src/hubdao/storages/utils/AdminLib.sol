@@ -5,10 +5,10 @@ import {Storage, Schema} from "bundle/hubdao/storages/Storage.sol";
 import {HubDAOEvents} from "bundle/hubdao/interfaces/HubDAOEvents.sol";
 
 /**
- * @title AdminsLib v0.1.0
+ * @title AdminLib v0.1.0
  * @dev Library for managing admin addresses
  */
-library AdminsLib {
+library AdminLib {
     /**
      * @dev Adds an admin address to the list of admins
      * @param $admins The storage reference to the Admins structure
@@ -23,14 +23,12 @@ library AdminsLib {
 // Testing
 import {Test} from "forge-std/Test.sol";
 
-contract AdminsLibTest is Test {
-    using AdminsLib for Schema.Admins;
+contract AdminLibTest is Test {
+    using AdminLib for Schema.Admins;
 
     Schema.Admins private $admins;
 
-    function setUp() public {
-        // No setup required for this library test
-    }
+    function setUp() public {} // No setup required for this library test
 
     function test_addAdmin_success() public {
         // Test adding a new admin address
