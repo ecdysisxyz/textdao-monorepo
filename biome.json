@@ -3,6 +3,7 @@
   "organizeImports": {
     "enabled": true
   },
+  "extends": ["./packages/*/biome.json"],
   "files": {
     "ignore": [
       "**/lib/**",
