@@ -35,6 +35,7 @@ type Header @entity {
     contents: HeaderContents
     cid: String!
     createdAt: BigInt!
+    index: BigInt!
 }
 
 type HeaderContents @entity {
@@ -48,6 +49,7 @@ type Command @entity {
     proposal: Proposal!
     actions: [Action!]! @derivedFrom(field: "command")
     createdAt: BigInt!
+    index: BigInt!
 }
 
 type Action @entity {
@@ -84,12 +86,17 @@ type Vote @entity {
     rep: Bytes! # mapping-key
     rankedHeaderIds: [BigInt!]
     rankedCommandIds: [BigInt!]
+    createdAt: BigInt!
+    updatedAt: BigInt!
 }
 
 type Text @entity {
     id: ID! "{textId}"
     contents: TextContents
     cid: String!
+    createdAt: BigInt!
+    updatedAt: BigInt!
+    index: BigInt!
 }
 
 type TextContents @entity {
@@ -103,6 +110,9 @@ type Member @entity {
     addr: Bytes!
     info: MemberInfo
     cid: String
+    createdAt: BigInt!
+    updatedAt: BigInt!
+    index: BigInt!
 }
 
 type MemberInfo @entity {

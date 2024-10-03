@@ -13,7 +13,7 @@ import { createNewAction, createNewCommand, loadOrCreateProposal } from "../util
  * @param event - The CommandCreated event containing the event data
  */
 export function handleCommandCreated(event: CommandCreated): void {
-  const command = createNewCommand(event.params.pid, event.params.commandId);
+  const command = createNewCommand(event.params.pid, event.params.commandId, event.block.timestamp);
 
   command.proposal = loadOrCreateProposal(event.params.pid).id;
 
@@ -26,8 +26,6 @@ export function handleCommandCreated(event: CommandCreated): void {
     action.status = "Proposed";
     action.save();
   }
-
-  command.createdAt = event.block.timestamp;
 
   command.save();
 }

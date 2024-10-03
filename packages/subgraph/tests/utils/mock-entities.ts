@@ -1,6 +1,7 @@
 import { BigInt, Bytes } from "@graphprotocol/graph-ts";
 import { Action, Command, Proposal } from "../../generated/schema";
 import { genActionId, genCommandId, genProposalId } from "../../src/utils/entity-id-provider";
+import { createNewCommand } from "../../src/utils/entity-provider";
 
 export function createMockProposalEntity(
   pid: BigInt,
@@ -25,9 +26,8 @@ export function createMockCommandEntity(
   commandId: BigInt,
   createdAt: BigInt = BigInt.fromI32(1721900001),
 ): void {
-  const command = new Command(genCommandId(pid, commandId));
+  const command = createNewCommand(pid, commandId, createdAt);
   command.proposal = genProposalId(pid);
-  command.createdAt = createdAt;
   command.save();
 }
 

@@ -15,12 +15,11 @@ import { createNewHeader, loadOrCreateProposal } from "../utils/entity-provider"
  * @param event The HeaderCreated event containing the event data
  */
 export function handleHeaderCreated(event: HeaderCreated): void {
-  const header = createNewHeader(event.params.pid, event.params.headerId);
+  const header = createNewHeader(event.params.pid, event.params.headerId, event.block.timestamp);
 
   header.proposal = loadOrCreateProposal(event.params.pid).id;
   header.contents = genHeaderContentsId(event.params.metadataCid);
   header.cid = event.params.metadataCid;
-  header.createdAt = event.block.timestamp;
   HeaderContents.create(event.params.metadataCid);
 
   header.save();

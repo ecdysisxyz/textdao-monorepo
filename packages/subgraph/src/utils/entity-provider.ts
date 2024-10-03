@@ -90,12 +90,15 @@ export function loadProposal(pid: BigInt): Proposal {
  * @returns The newly created Header entity
  * @throws Error if the Header already exists
  */
-export function createNewHeader(pid: BigInt, headerId: BigInt): Header {
+export function createNewHeader(pid: BigInt, headerId: BigInt, createdAt: BigInt): Header {
   const id = genHeaderId(pid, headerId);
   if (Header.load(id) !== null) {
     throw new Error("Header already exists");
   }
-  return new Header(id);
+  const header = new Header(id);
+  header.index = headerId;
+  header.createdAt = createdAt;
+  return header;
 }
 
 // Command
@@ -107,12 +110,15 @@ export function createNewHeader(pid: BigInt, headerId: BigInt): Header {
  * @returns The newly created Command entity
  * @throws Error if the Command already exists
  */
-export function createNewCommand(pid: BigInt, commandId: BigInt): Command {
+export function createNewCommand(pid: BigInt, commandId: BigInt, createdAt: BigInt): Command {
   const id = genCommandId(pid, commandId);
   if (Command.load(id) !== null) {
     throw new Error("Command already exists");
   }
-  return new Command(id);
+  const command = new Command(id);
+  command.index = commandId;
+  command.createdAt = createdAt;
+  return command;
 }
 
 /**
@@ -227,15 +233,18 @@ export function createNewTopCommands(pid: BigInt, epoch: BigInt, commandIdsBigIn
  * Loads an existing Vote entity or creates a new one if it doesn't exist.
  * @param pid The proposal ID
  * @param rep The representative's address
+ * @param createdAt The block timestamp
  * @returns The loaded or newly created Vote entity
  */
-export function loadOrCreateVote(pid: BigInt, rep: Bytes): Vote {
+export function loadOrCreateVote(pid: BigInt, rep: Bytes, createdAt: BigInt): Vote {
   const id = genVoteId(pid, rep);
   let vote = Vote.load(id);
   if (vote == null) {
     vote = new Vote(id);
     vote.proposal = genProposalId(pid);
     vote.rep = rep;
+    vote.createdAt = createdAt;
+    vote.updatedAt = createdAt;
     vote.save();
   }
   return vote;
@@ -254,7 +263,9 @@ export function createNewText(textId: BigInt): Text {
   if (Text.load(id) !== null) {
     throw new Error("Text already exists");
   }
-  return new Text(id);
+  const text = new Text(id);
+  text.index = textId;
+  return text;
 }
 
 /**
@@ -293,7 +304,9 @@ export function createNewMember(memberId: BigInt): Member {
   if (Member.load(id) !== null) {
     throw new Error("Member already exists");
   }
-  return new Member(id);
+  const member = new Member(id);
+  member.index = memberId;
+  return member;
 }
 
 export function loadMember(memberId: BigInt): Member {

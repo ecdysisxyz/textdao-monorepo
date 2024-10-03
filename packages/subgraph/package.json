@@ -1,25 +1,26 @@
 {
-  "name": "textdao-subgraph",
-  "license": "MIT",
-  "scripts": {
-    "precodegen": "npm run ./scripts/build-abi.ts",
-    "codegen": "graph clean && graph codegen",
-    "prebuild": "npm run codegen && npm run format",
-    "build": "graph build",
-    "deploy": "graph deploy --studio",
-    "create-local": "graph create textdao --node http://localhost:8020/",
-    "remove-local": "graph remove textdao --node http://localhost:8020/",
-    "deploy-local": "graph deploy textdao --node http://localhost:8020/ --ipfs http://localhost:5001",
-    "test": "graph test -d",
-    "format": "npx biome check --write .",
-    "lint": "npx biome lint .",
-    "check": "npx biome check ."
-  },
-  "dependencies": {
-    "@graphprotocol/graph-ts": "latest"
-  },
-  "devDependencies": {
-    "@graphprotocol/graph-cli": "latest",
-    "matchstick-as": "latest"
-  }
+	"name": "textdao-subgraph",
+	"version": "0.1.1",
+	"license": "MIT",
+	"scripts": {
+		"precodegen": "npm run ./scripts/build-abi.ts",
+		"codegen": "graph clean && graph codegen",
+		"prebuild": "npm run codegen && npm run format",
+		"build": "graph build",
+		"deploy": "graph deploy --studio",
+		"create-local": "graph create textdao --node http://localhost:8020/",
+		"remove-local": "graph remove textdao --node http://localhost:8020/",
+		"deploy-local": "graph deploy textdao --node http://localhost:8020/ --ipfs http://localhost:5001",
+		"test": "graph test -d",
+		"format": "npx biome check --write .",
+		"lint": "npx biome lint .",
+		"check": "npx biome check ."
+	},
+	"dependencies": {
+		"@graphprotocol/graph-ts": "latest"
+	},
+	"devDependencies": {
+		"@graphprotocol/graph-cli": "latest",
+		"matchstick-as": "latest"
+	}
 }

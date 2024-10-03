@@ -20,6 +20,8 @@ export function handleTextCreated(event: TextCreated): void {
   const text = createNewText(event.params.textId);
   text.contents = genTextContentsId(event.params.metadataCid);
   text.cid = event.params.metadataCid;
+  text.createdAt = event.block.timestamp;
+  text.updatedAt = event.block.timestamp;
   TextContents.create(event.params.metadataCid);
   text.save();
 }
@@ -33,6 +35,8 @@ export function handleTextCreatedByProposal(event: TextCreatedByProposal): void 
   const text = createNewText(event.params.textId);
   text.contents = genTextContentsId(event.params.metadataCid);
   text.cid = event.params.metadataCid;
+  text.createdAt = event.block.timestamp;
+  text.updatedAt = event.block.timestamp;
   TextContents.create(event.params.metadataCid);
   text.save();
 }
@@ -46,6 +50,7 @@ export function handleTextUpdated(event: TextUpdated): void {
   const text = loadText(event.params.textId);
   text.contents = genTextContentsId(event.params.newMetadataCid);
   text.cid = event.params.newMetadataCid;
+  text.updatedAt = event.block.timestamp;
   TextContents.create(event.params.newMetadataCid);
   text.save();
 }
@@ -59,6 +64,7 @@ export function handleTextUpdatedByProposal(event: TextUpdatedByProposal): void 
   const text = loadText(event.params.textId);
   text.contents = genTextContentsId(event.params.newMetadataCid);
   text.cid = event.params.newMetadataCid;
+  text.updatedAt = event.block.timestamp;
   TextContents.create(event.params.newMetadataCid);
   text.save();
 }
