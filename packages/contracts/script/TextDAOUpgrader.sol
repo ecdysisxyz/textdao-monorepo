@@ -115,4 +115,11 @@ library TextDAOUpgrader {
         _dictionary.upgradeFacade(address(new TextDAOWithCheatsFacade()));
     }
 
+    function addextendExpirationTimeCheat(MCDevKit storage mc, address textDAO) internal {
+        Dictionary memory _dictionary = mc.loadDictionary("TextDAODictionary", mc.getDictionaryAddress(textDAO));
+        address newCheats = address(new OnlyAdminCheats());
+        _dictionary.set(OnlyAdminCheats.extendExpirationTime.selector, newCheats);
+        _dictionary.upgradeFacade(address(new TextDAOWithCheatsFacade()));
+    }
+
 }

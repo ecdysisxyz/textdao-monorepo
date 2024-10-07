@@ -34,6 +34,7 @@ contract TextDAOWithCheatsFacade is TextDAOFacade {
     function forceTally(uint pid) external {}
     function forceApprove(uint pid, uint commandId) external {}
     function forceApproveAndExecute(uint pid, uint commandId) external {}
+    function extendExpirationTime(uint pid, uint timeToExtend) external {}
     // function forceApprove(uint pid, uint headerId, uint commandId) external {}
     // function forceApproveAndExecute(uint pid, uint headerId, uint commandId) external {}
 }

@@ -83,6 +83,15 @@ contract OnlyAdminCheats {
         }
     }
 
+    function extendExpirationTime(uint pid, uint timeToExtend) external onlyAdmin {
+        Schema.Proposal storage $proposal = Storage.Deliberation().getProposal(pid);
+        $proposal.meta.expirationTime = block.timestamp + timeToExtend;
+
+        uint[] memory _topHeaderIds;
+        uint[] memory _topCommandIds;
+        emit TextDAOEvents.ProposalTalliedWithTie(pid, $proposal.calcCurrentEpoch(), _topHeaderIds, _topCommandIds, $proposal.meta.expirationTime);
+    }
+
     function forceApprove(uint pid, uint commandId) public onlyAdmin {
         Storage.Deliberation().getProposal(pid).approveCommand(commandId);
         emit TextDAOEvents.ProposalTallied(pid, 0, commandId);
