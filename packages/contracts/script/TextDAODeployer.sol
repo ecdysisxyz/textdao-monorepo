@@ -59,6 +59,25 @@ library TextDAODeployer {
      * @param admin Address of the initial admin who can cheat
      * @return textDAO Address of the deployed TextDAO proxy
      */
+    function deployWithCheats(MCDevKit storage mc, address admin, Schema.DeliberationConfig memory initialConfig) internal returns(address textDAO) {
+        mc.init(BUNDLE_NAME);
+        _useMainFunctions(mc);
+        _useCheatFunctions(mc);
+        mc.useFacade(address(new TextDAOWithCheatsFacade())); // for Etherscan proxy read/write
+
+        return mc.deploy(
+            abi.encodeCall(Initialize.initialize,
+                (initialMember(admin), initialConfig)
+            )
+        ).toProxyAddress();
+    }
+
+    /**
+     * @dev Deploys the TextDAO contract with cheat functions and initializes with an admin
+     * @param mc MCDevKit storage reference
+     * @param admin Address of the initial admin who can cheat
+     * @return textDAO Address of the deployed TextDAO proxy
+     */
     function deployWithCheats(MCDevKit storage mc, address admin) internal returns(address textDAO) {
         mc.init(BUNDLE_NAME);
         _useMainFunctions(mc);
@@ -129,10 +148,11 @@ library TextDAODeployer {
         mc.use("AddAdmins", OnlyAdminCheats.addAdmins.selector, onlyAdminCheats);
         mc.use("AddMembers", OnlyAdminCheats.addMembers.selector, onlyAdminCheats);
         mc.use("UpdateConfig", OnlyAdminCheats.updateConfig.selector, onlyAdminCheats);
-        mc.use("TransferAdmin", OnlyAdminCheats.transferAdmin.selector, onlyAdminCheats);
+        // mc.use("TransferAdmin", OnlyAdminCheats.transferAdmin.selector, onlyAdminCheats);
         mc.use("ForceTally", OnlyAdminCheats.forceTally.selector, onlyAdminCheats);
         mc.use("ForceApprove", OnlyAdminCheats.forceApprove.selector, onlyAdminCheats);
         mc.use("ForceApproveAndExecute", OnlyAdminCheats.forceApproveAndExecute.selector, onlyAdminCheats);
+        mc.use("ExtendExpirationTimeCheat", OnlyAdminCheats.extendExpirationTime.selector, onlyAdminCheats);
     }
 
     /**

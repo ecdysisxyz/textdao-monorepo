@@ -10,8 +10,10 @@ import {RCVLib} from "bundle/textdao/utils/RCVLib.sol";
 import {MemberLib} from "bundle/textdao/utils/MemberLib.sol";
 // Interfaces
 import {IExecute} from "bundle/textdao/interfaces/TextDAOFunctions.sol";
+// Access Control
+import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 
-contract OnlyAdminCheats {
+contract OnlyAdminCheats is Initializable {
     using DeliberationLib for Schema.Deliberation;
     using ProposalLib for Schema.Proposal;
     using RCVLib for Schema.Proposal;
@@ -30,15 +32,21 @@ contract OnlyAdminCheats {
         _;
     }
 
+    function initialize(address admin, Schema.DeliberationConfig calldata config) external initializer {
+        Storage.Admins().admins.push(admin);
+        Storage.Deliberation().config = config;
+        emit TextDAOEvents.DeliberationConfigUpdated(config);
+    }
+
     function addAdmins(address[] memory newAdmins) external onlyAdmin() {
         for (uint i; i < newAdmins.length; ++i) {
             Storage.Admins().admins.push(newAdmins[i]);
         }
     }
 
-    function forceAddAdmin(address admin) external {
-        Storage.Admins().admins.push(admin);
-    }
+    // function forceAddAdmin(address admin) external {
+    //     Storage.Admins().admins.push(admin);
+    // }
 
     function addMembers(address[] memory newMembers) external onlyAdmin {
         for (uint i; i < newMembers.length; ++i) {
@@ -49,15 +57,26 @@ contract OnlyAdminCheats {
         }
     }
 
-    function updateConfig(Schema.DeliberationConfig calldata newConfig) external onlyAdmin {
-        Storage.Deliberation().config = newConfig;
+    function addReps(uint pid,address[] memory newMembers) external onlyAdmin {
+        for (uint i; i < newMembers.length; ++i) {
+            Storage.Members().addMember(Schema.Member({
+                addr: newMembers[i],
+                metadataCid: ""
+            }));
+            Storage.Deliberation().getProposal(pid).meta.reps.push(newMembers[i]);
+        }
     }
 
-    function transferAdmin(address newAdmin) external onlyAdmin { // TODO revokeAdmin
-        Schema.Member storage $member = Storage.Members().members[0];
-        $member.addr = newAdmin;
-        emit TextDAOEvents.MemberUpdated(0, newAdmin, $member.metadataCid);
+    function updateConfig(Schema.DeliberationConfig calldata newConfig) external onlyAdmin {
+        Storage.Deliberation().config = newConfig;
+        emit TextDAOEvents.DeliberationConfigUpdated(newConfig);
     }
+
+    // function transferAdmin(address newAdmin) external onlyAdmin { // TODO revokeAdmin
+    //     Schema.Member storage $member = Storage.Members().members[0];
+    //     $member.addr = newAdmin;
+    //     emit TextDAOEvents.MemberUpdated(0, newAdmin, $member.metadataCid);
+    // }
 
     function forceTally(uint pid) external onlyAdmin {
         Schema.Proposal storage $proposal = Storage.Deliberation().getProposal(pid);
@@ -80,6 +99,32 @@ contract OnlyAdminCheats {
             $proposal.approveHeader(_topHeaderIds[0]);
             $proposal.approveCommand(_topCommandIds[0]);
             emit TextDAOEvents.ProposalTallied(pid, _topHeaderIds[0], _topCommandIds[0]);
+        }
+    }
+
+    function getCurrentTopIds(uint pid) external view returns(uint[] memory topHeaderIds, uint[] memory topCommandIds) {
+        (uint[] memory _headerScores, uint[] memory _commandScores) = Storage.Deliberation().getProposal(pid).calcRCVScores();
+        return (_headerScores.findTopScorer(), _commandScores.findTopScorer());
+    }
+
+    function getCurrentScores(uint pid) external view returns(uint[] memory headerScores, uint[] memory commandScores) {
+        return Storage.Deliberation().getProposal(pid).calcRCVScores();
+    }
+
+    function getCurrentTopScores(uint pid) external view returns(uint[] memory topHeaderScores, uint[] memory topCommandScores) {
+        (uint[] memory _headerScores, uint[] memory _commandScores) = Storage.Deliberation().getProposal(pid).calcRCVScores();
+        uint[] memory _topHeaderIds = _headerScores.findTopScorer();
+        uint[] memory _topCommandIds = _commandScores.findTopScorer();
+
+        topHeaderScores = new uint[](_topHeaderIds.length);
+        topCommandScores = new uint[](_topCommandIds.length);
+
+        for (uint i; i < _topHeaderIds.length; ++i) {
+            topHeaderScores[i] = _headerScores[_topHeaderIds[i]];
+        }
+
+        for (uint i; i < _topCommandIds.length; ++i) {
+            topCommandScores[i] = _commandScores[_topCommandIds[i]];
         }
     }
 
