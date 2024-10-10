@@ -4,6 +4,7 @@ pragma solidity ^0.8.24;
 import {Schema} from "bundle/textdao/storages/Schema.sol";
 import {TextDAOEvents} from "bundle/textdao/interfaces/TextDAOEvents.sol";
 
+// import {console} from "@mc-devkit/Flattened.sol";
 /**
  * @title RCVLib
  * @dev Library for Ranked Choice Voting (RCV) calculations and utilities
@@ -27,9 +28,12 @@ library RCVLib {
     * @return headerScores An array of scores for headers, where the index represents the header ID
     * @return commandScores An array of scores for commands, where the index represents the command ID
     */
-    function calcRCVScores(Schema.Proposal storage $proposal) internal returns(uint[] memory headerScores, uint[] memory commandScores) {
+    function calcRCVScores(Schema.Proposal storage $proposal) internal view returns(uint[] memory headerScores, uint[] memory commandScores) {
         headerScores = new uint[]($proposal.headers.length);
         commandScores = new uint[]($proposal.cmds.length);
+
+        // console.log("headerScores.length", headerScores.length);
+        // console.log("commandScores.length", commandScores.length);
 
         for (uint i; i < $proposal.meta.reps.length; ++i) {
             Schema.Vote memory _repVote = $proposal.meta.votes[$proposal.meta.reps[i]];
@@ -42,61 +46,83 @@ library RCVLib {
             uint _headerRange = headerScores.length;
 
             // Process first header
-            if (!isWithinRange(_h1, _headerRange)) {
-                emit TextDAOEvents.WARN_HeaderChoiceIsOutOfRange(_h1);
-            } else {
+            if (isWithinRange(_h1, _headerRange)) {
                 headerScores[_h1] += 3;
             }
+            // if (!isWithinRange(_h1, _headerRange)) {
+            //     emit TextDAOEvents.WARN_HeaderChoiceIsOutOfRange(_h1);
+            // } else {
+            //     headerScores[_h1] += 3;
+            // }
 
             // Process second header
-            if (!isWithinRange(_h2, _headerRange)) {
-                emit TextDAOEvents.WARN_HeaderChoiceIsOutOfRange(_h2);
-            } else if (_h2 == _h1) {
-                emit TextDAOEvents.WARN_HeaderChoiceIsDuplicate(_h2);
-            } else {
+            if (isWithinRange(_h2, _headerRange) && _h2 != _h1) {
                 headerScores[_h2] += 2;
             }
+            // if (!isWithinRange(_h2, _headerRange)) {
+            //     emit TextDAOEvents.WARN_HeaderChoiceIsOutOfRange(_h2);
+            // } else if (_h2 == _h1) {
+            //     emit TextDAOEvents.WARN_HeaderChoiceIsDuplicate(_h2);
+            // } else {
+            //     headerScores[_h2] += 2;
+            // }
 
             // Process third header
-            if (!isWithinRange(_h3, _headerRange)) {
-                emit TextDAOEvents.WARN_HeaderChoiceIsOutOfRange(_h3);
-            } else if (_h3 == _h1 || _h3 == _h2) {
-                emit TextDAOEvents.WARN_HeaderChoiceIsDuplicate(_h3);
-            } else {
+            if (isWithinRange(_h3, _headerRange) && _h3 != _h1 && _h3 != _h2) {
                 headerScores[_h3] += 1;
             }
+            // if (!isWithinRange(_h3, _headerRange)) {
+            //     emit TextDAOEvents.WARN_HeaderChoiceIsOutOfRange(_h3);
+            // } else if (_h3 == _h1 || _h3 == _h2) {
+            //     emit TextDAOEvents.WARN_HeaderChoiceIsDuplicate(_h3);
+            // } else {
+            //     headerScores[_h3] += 1;
+            // }
 
             // Process command votes
             uint _c1 = _repVote.rankedCommandIds[0];
             uint _c2 = _repVote.rankedCommandIds[1];
             uint _c3 = _repVote.rankedCommandIds[2];
 
-            uint _commandRange = headerScores.length;
+            uint _commandRange = commandScores.length;
+            // console.log("_commandRange", _commandRange);
+            // console.log("_c1", _c1);
+            // console.log("isWithinRange(_c1, _commandRange)", isWithinRange(_c1, _commandRange));
 
             // Process first command
-            if (!isWithinRange(_c1, _commandRange)) {
-                emit TextDAOEvents.WARN_CommandChoiceIsOutOfRange(_c1);
-            } else {
+            if (isWithinRange(_c1, _commandRange)) {
                 commandScores[_c1] += 3;
+                // console.log("commandScores[_c1]", commandScores[_c1]);
             }
+            // if (!isWithinRange(_c1, _commandRange)) {
+            //     emit TextDAOEvents.WARN_CommandChoiceIsOutOfRange(_c1);
+            // } else {
+            //     commandScores[_c1] += 3;
+            // }
 
             // Process second command
-            if (!isWithinRange(_c2, _commandRange)) {
-                emit TextDAOEvents.WARN_CommandChoiceIsOutOfRange(_c2);
-            } else if (_c2 == _c1) {
-                emit TextDAOEvents.WARN_CommandChoiceIsDuplicate(_c2);
-            } else {
+            if (isWithinRange(_c2, _commandRange) && _c2 != _c1) {
                 commandScores[_c2] += 2;
             }
+            // if (!isWithinRange(_c2, _commandRange)) {
+            //     emit TextDAOEvents.WARN_CommandChoiceIsOutOfRange(_c2);
+            // } else if (_c2 == _c1) {
+            //     emit TextDAOEvents.WARN_CommandChoiceIsDuplicate(_c2);
+            // } else {
+            //     commandScores[_c2] += 2;
+            // }
 
             // Process third command
-            if (!isWithinRange(_c3, _commandRange)) {
-                emit TextDAOEvents.WARN_CommandChoiceIsOutOfRange(_c3);
-            } else if (_c3 == _c1 || _c3 == _c2) {
-                emit TextDAOEvents.WARN_CommandChoiceIsDuplicate(_c3);
-            } else {
+            if (isWithinRange(_c3, _commandRange) && _c3 != _c1 && _c3 != _c2) {
                 commandScores[_c3] += 1;
             }
+            // if (!isWithinRange(_c3, _commandRange)) {
+            //     emit TextDAOEvents.WARN_CommandChoiceIsOutOfRange(_c3);
+            // } else if (_c3 == _c1 || _c3 == _c2) {
+            //     emit TextDAOEvents.WARN_CommandChoiceIsDuplicate(_c3);
+            // } else {
+            //     commandScores[_c3] += 1;
+            // }
         }
     }
 
