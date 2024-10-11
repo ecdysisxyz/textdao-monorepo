@@ -6,11 +6,11 @@ features:
 dataSources:
   - name: TextDAO
     kind: ethereum
-    network: holesky
+    network: base
     source:
-      address: "0x7f5ACc2e4E2b5330497a76836DfED766929d70D7"
+      address: "0x4BCa2f13d54Fe50B7a9E9062f5e3337f23B4562c"
       abi: TextDAOEvents
-      startBlock: 2018088
+      startBlock: 20902608
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -65,8 +65,6 @@ dataSources:
           handler: handleTextDeletedByProposal
         - event: Voted(uint256,address,(uint256[3],uint256[3]))
           handler: handleVoted
-        - event: VRFRequested(uint256,uint256)
-          handler: handleVRFRequested
         - event: MemberAdded(uint256,address,string)
           handler: handleMemberAdded
         - event: MemberUpdated(uint256,address,string)
