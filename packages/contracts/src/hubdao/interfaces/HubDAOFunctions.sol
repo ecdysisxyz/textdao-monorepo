@@ -2,29 +2,32 @@
 pragma solidity ^0.8.24;
 
 import {Schema} from "../storages/Schema.sol";
-// TextDAO
 import {Schema as TextDAOSchema} from "bundle/textdao/storages/Schema.sol";
 
-interface ICreateDAO {
-    function createTextDAO(TextDAOSchema.Member[] calldata initialMembers, TextDAOSchema.DeliberationConfig calldata initialConfig, string calldata metadataCid) external returns(address textDAO);
-    function createTextDAOWithCheats(TextDAOSchema.Member[] calldata initialMembers, TextDAOSchema.DeliberationConfig calldata initialConfig, string calldata metadataCid) external returns(address textDAOWithCheats);
+interface IInitialize {
+    function initialize(
+        Schema.Currency calldata currency,
+        Schema.Template[] calldata templates,
+        TextDAOSchema.DeliberationConfig calldata textDaoDefaultConfig
+    ) external;
+    function initializeWithAdmin(
+        Schema.Currency calldata baseCurrency,
+        Schema.Template[] calldata templates,
+        TextDAOSchema.DeliberationConfig calldata textDaoDefaultConfig,
+        address admin
+    ) external;
 }
 
-interface IInitialize {
-    function initialize(Schema.Currency calldata currency, Schema.Template[] calldata templates) external;
+interface ICreateDAO {
+    function createTextDAO(string calldata metadataCid) external returns(address textDAO);
+    function createTextDAOWithParams(TextDAOSchema.Member[] calldata initialMembers, TextDAOSchema.DeliberationConfig calldata initialConfig, string calldata metadataCid) external returns(address textDAO);
+    function createTextDAOWithCheats(string calldata metadataCid) external returns(address textDAOWithCheats);
+    function createTextDAOWithCheatsWithParams(TextDAOSchema.Member[] calldata initialMembers, TextDAOSchema.DeliberationConfig calldata initialConfig, string calldata metadataCid) external returns(address textDAOWithCheats);
 }
 
 interface IUserManagement {
     function updateUserProfile(string calldata metadataCid) external;
     function removeUserProfile() external;
-}
-
-// Protected
-
-interface ITemplateManagement {
-}
-
-interface IConfigManagement {
 }
 
 // Cheats
@@ -35,12 +38,7 @@ interface ICheats {
 }
 
 interface HubDAOMainFunctions is
-    ICreateDAO,
     IInitialize,
+    ICreateDAO,
     IUserManagement
-{}
-
-interface HubDAOProtectedFunctions is
-    ITemplateManagement,
-    IConfigManagement
 {}

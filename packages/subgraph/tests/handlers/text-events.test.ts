@@ -18,7 +18,7 @@ import {
   handleTextUpdatedByProposal,
 } from "../../src/event-handlers/text-events";
 import { handleTextContents } from "../../src/file-data-handlers/text-contents";
-import { genTextContentsId, genTextId } from "../../src/utils/entity-id-provider";
+import { genTextContentsId, genTextId } from "../../src/textdao/utils/entity-id-provider";
 import {
   createMockTextCreatedByProposalEvent,
   createMockTextCreatedEvent,

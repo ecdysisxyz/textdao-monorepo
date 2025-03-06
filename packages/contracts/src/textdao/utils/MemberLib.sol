@@ -37,4 +37,9 @@ library MemberLib {
             }
         }
     }
+
+    function newMember(address memberAddr) internal pure returns(Schema.Member[] memory members) {
+        members = new Schema.Member[](1);
+        members[0] = Schema.Member({addr: memberAddr, metadataCid: ""});
+    }
 }

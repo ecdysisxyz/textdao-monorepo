@@ -1,7 +1,7 @@
 import { BigInt, Bytes } from "@graphprotocol/graph-ts";
 import { Action, Command, Proposal } from "../../generated/schema";
-import { genActionId, genCommandId, genProposalId } from "../../src/utils/entity-id-provider";
-import { createNewCommand } from "../../src/utils/entity-provider";
+import { genActionId, genCommandId, genProposalId } from "../../src/textdao/utils/entity-id-provider";
+import { createNewCommand } from "../../src/textdao/utils/entity-provider";
 
 export function createMockProposalEntity(
   pid: BigInt,

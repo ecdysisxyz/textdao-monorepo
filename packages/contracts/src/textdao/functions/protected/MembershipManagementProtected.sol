@@ -99,7 +99,7 @@ contract MembershipManagementProtectedTest is MCTest {
         $cmd.createAddMembersAction(0, candidates);
         $proposal.meta.actionStatuses[0] = Schema.ActionStatus.Approved;
 
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         for (uint i; i < candidates.length; ++i) {
             emit TextDAOEvents.MemberAddedByProposal(0, i, candidates[i].addr, candidates[i].metadataCid);
         }
@@ -144,7 +144,7 @@ contract MembershipManagementProtectedTest is MCTest {
         // Test: Update member
         string memory newMetadataCid = "newURI";
         vm.prank(address(0x1234));
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.MemberUpdated(0, address(0x1234), newMetadataCid);
 
         MembershipManagementProtected(target).updateMember(0, newMetadataCid);
@@ -197,7 +197,7 @@ contract MembershipManagementProtectedTest is MCTest {
         $removeCmd.createRemoveMemberAction(_removePid, 0);
         $removeProposal.meta.actionStatuses[0] = Schema.ActionStatus.Approved;
 
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.MemberRemovedByProposal(1, 0, address(0x1234));
 
         MembershipManagementProtected(target).removeMember(1, 0);
@@ -249,7 +249,7 @@ contract MembershipManagementProtectedTest is MCTest {
 
         // Test: Member leaves DAO
         vm.prank(address(0x1234));
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.MemberRemoved(0, address(0x1234));
 
         MembershipManagementProtected(target).leaveDAO(0);

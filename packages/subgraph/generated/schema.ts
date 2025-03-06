@@ -11,6 +11,575 @@ import {
   BigDecimal,
 } from "@graphprotocol/graph-ts";
 
+export class DaoRegistry extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save DaoRegistry entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type DaoRegistry must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+      );
+      store.set("DaoRegistry", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): DaoRegistry | null {
+    return changetype<DaoRegistry | null>(
+      store.get_in_block("DaoRegistry", id),
+    );
+  }
+
+  static load(id: string): DaoRegistry | null {
+    return changetype<DaoRegistry | null>(store.get("DaoRegistry", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get daoInfos(): Array<string> | null {
+    let value = this.get("daoInfos");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set daoInfos(value: Array<string> | null) {
+    if (!value) {
+      this.unset("daoInfos");
+    } else {
+      this.set("daoInfos", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+}
+
+export class DaoTemplate extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save DaoTemplate entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type DaoTemplate must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+      );
+      store.set("DaoTemplate", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): DaoTemplate | null {
+    return changetype<DaoTemplate | null>(
+      store.get_in_block("DaoTemplate", id),
+    );
+  }
+
+  static load(id: string): DaoTemplate | null {
+    return changetype<DaoTemplate | null>(store.get("DaoTemplate", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get daoType(): string | null {
+    let value = this.get("daoType");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set daoType(value: string | null) {
+    if (!value) {
+      this.unset("daoType");
+    } else {
+      this.set("daoType", Value.fromString(<string>value));
+    }
+  }
+
+  get dictionaryAddress(): Bytes | null {
+    let value = this.get("dictionaryAddress");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set dictionaryAddress(value: Bytes | null) {
+    if (!value) {
+      this.unset("dictionaryAddress");
+    } else {
+      this.set("dictionaryAddress", Value.fromBytes(<Bytes>value));
+    }
+  }
+}
+
+export class DaoInfo extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save DaoInfo entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type DaoInfo must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+      );
+      store.set("DaoInfo", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): DaoInfo | null {
+    return changetype<DaoInfo | null>(store.get_in_block("DaoInfo", id));
+  }
+
+  static load(id: string): DaoInfo | null {
+    return changetype<DaoInfo | null>(store.get("DaoInfo", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get daoType(): string | null {
+    let value = this.get("daoType");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set daoType(value: string | null) {
+    if (!value) {
+      this.unset("daoType");
+    } else {
+      this.set("daoType", Value.fromString(<string>value));
+    }
+  }
+
+  get address(): Bytes | null {
+    let value = this.get("address");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set address(value: Bytes | null) {
+    if (!value) {
+      this.unset("address");
+    } else {
+      this.set("address", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get cid(): string {
+    let value = this.get("cid");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set cid(value: string) {
+    this.set("cid", Value.fromString(value));
+  }
+
+  get metadata(): string | null {
+    let value = this.get("metadata");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set metadata(value: string | null) {
+    if (!value) {
+      this.unset("metadata");
+    } else {
+      this.set("metadata", Value.fromString(<string>value));
+    }
+  }
+}
+
+export class DaoMetadata extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save DaoMetadata entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type DaoMetadata must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+      );
+      store.set("DaoMetadata", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): DaoMetadata | null {
+    return changetype<DaoMetadata | null>(
+      store.get_in_block("DaoMetadata", id),
+    );
+  }
+
+  static load(id: string): DaoMetadata | null {
+    return changetype<DaoMetadata | null>(store.get("DaoMetadata", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get name(): string | null {
+    let value = this.get("name");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set name(value: string | null) {
+    if (!value) {
+      this.unset("name");
+    } else {
+      this.set("name", Value.fromString(<string>value));
+    }
+  }
+
+  get image(): string | null {
+    let value = this.get("image");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set image(value: string | null) {
+    if (!value) {
+      this.unset("image");
+    } else {
+      this.set("image", Value.fromString(<string>value));
+    }
+  }
+
+  get description(): string | null {
+    let value = this.get("description");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set description(value: string | null) {
+    if (!value) {
+      this.unset("description");
+    } else {
+      this.set("description", Value.fromString(<string>value));
+    }
+  }
+}
+
+export class GlobalConfig extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save GlobalConfig entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type GlobalConfig must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+      );
+      store.set("GlobalConfig", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): GlobalConfig | null {
+    return changetype<GlobalConfig | null>(
+      store.get_in_block("GlobalConfig", id),
+    );
+  }
+
+  static load(id: string): GlobalConfig | null {
+    return changetype<GlobalConfig | null>(store.get("GlobalConfig", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get baseCurrency(): Bytes | null {
+    let value = this.get("baseCurrency");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set baseCurrency(value: Bytes | null) {
+    if (!value) {
+      this.unset("baseCurrency");
+    } else {
+      this.set("baseCurrency", Value.fromBytes(<Bytes>value));
+    }
+  }
+}
+
+export class User extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save User entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type User must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+      );
+      store.set("User", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): User | null {
+    return changetype<User | null>(store.get_in_block("User", id));
+  }
+
+  static load(id: string): User | null {
+    return changetype<User | null>(store.get("User", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get addr(): Bytes {
+    let value = this.get("addr");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set addr(value: Bytes) {
+    this.set("addr", Value.fromBytes(value));
+  }
+
+  get infoCid(): string | null {
+    let value = this.get("infoCid");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set infoCid(value: string | null) {
+    if (!value) {
+      this.unset("infoCid");
+    } else {
+      this.set("infoCid", Value.fromString(<string>value));
+    }
+  }
+
+  get info(): string | null {
+    let value = this.get("info");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set info(value: string | null) {
+    if (!value) {
+      this.unset("info");
+    } else {
+      this.set("info", Value.fromString(<string>value));
+    }
+  }
+}
+
+export class UserInfo extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save UserInfo entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type UserInfo must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+      );
+      store.set("UserInfo", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): UserInfo | null {
+    return changetype<UserInfo | null>(store.get_in_block("UserInfo", id));
+  }
+
+  static load(id: string): UserInfo | null {
+    return changetype<UserInfo | null>(store.get("UserInfo", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get name(): string | null {
+    let value = this.get("name");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set name(value: string | null) {
+    if (!value) {
+      this.unset("name");
+    } else {
+      this.set("name", Value.fromString(<string>value));
+    }
+  }
+
+  get image(): string | null {
+    let value = this.get("image");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set image(value: string | null) {
+    if (!value) {
+      this.unset("image");
+    } else {
+      this.set("image", Value.fromString(<string>value));
+    }
+  }
+
+  get bio(): string | null {
+    let value = this.get("bio");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set bio(value: string | null) {
+    if (!value) {
+      this.unset("bio");
+    } else {
+      this.set("bio", Value.fromString(<string>value));
+    }
+  }
+}
+
 export class DeliberationConfig extends Entity {
   constructor(id: string) {
     super();

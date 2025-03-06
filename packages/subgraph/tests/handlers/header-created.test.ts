@@ -12,7 +12,7 @@ import {
 import { HeaderContents } from "../../generated/schema";
 import { handleHeaderCreated } from "../../src/event-handlers/header-created";
 import { handleHeaderContents } from "../../src/file-data-handlers/header-contents";
-import { genHeaderContentsId, genHeaderId, genProposalId } from "../../src/utils/entity-id-provider";
+import { genHeaderContentsId, genHeaderId, genProposalId } from "../../src/textdao/utils/entity-id-provider";
 import { createMockHeaderCreatedEvent } from "../utils/mock-events";
 
 function assertProposalFieldFilledWithMetadata1(headerContentsEntityId: string): void {

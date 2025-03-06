@@ -9,7 +9,7 @@ import {
   handleMemberUpdatedByProposal,
 } from "../../src/event-handlers/member-events";
 import { handleMemberInfo } from "../../src/file-data-handlers/member-info";
-import { genMemberId, genMemberInfoId } from "../../src/utils/entity-id-provider";
+import { genMemberId, genMemberInfoId } from "../../src/textdao/utils/entity-id-provider";
 import {
   createMockMemberAddedByProposalEvent,
   createMockMemberAddedEvent,

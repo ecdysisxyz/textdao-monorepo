@@ -1,9 +1,9 @@
 import { Address, BigInt } from "@graphprotocol/graph-ts";
 import { assert, beforeEach, clearStore, describe, test } from "matchstick-as/assembly/index";
 import { handleVoted } from "../../src/event-handlers/voted";
-import { genProposalId, genVoteId } from "../../src/utils/entity-id-provider";
-import { Vote } from "../../src/utils/schema-types";
-import { formatBigIntArray } from "../../src/utils/type-formatter";
+import { genProposalId, genVoteId } from "../../src/textdao/utils/entity-id-provider";
+import { Vote } from "../../src/textdao/utils/schema-types";
+import { formatBigIntArray } from "../../src/textdao/utils/type-formatter";
 import { createMockVotedEvent } from "../utils/mock-events";
 
 describe("Voted Event Handler", () => {

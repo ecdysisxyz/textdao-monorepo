@@ -26,7 +26,7 @@ import {
   VRFRequested,
   Voted,
 } from "../../generated/TextDAO/TextDAOEvents";
-import { Action, Vote } from "../../src/utils/schema-types";
+import { Action, Vote } from "../../src/textdao/utils/schema-types";
 
 /**
  * Creates a mock HeaderCreated event

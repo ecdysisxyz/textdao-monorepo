@@ -410,18 +410,18 @@ contract ProposeTest is MCTest {
         _actions[0] = Schema.Action("test()", "0x");
 
         // Expect events
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.HeaderCreated(0, 1, _headerMetadataCid);
 
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.CommandCreated(0, 1, _actions);
 
         address[] memory _reps = new address[](1);
         _reps[0] = address(this);
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.RepresentativesAssigned(0, _reps);
 
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.Proposed(0, address(this), block.timestamp, block.timestamp + Storage.Deliberation().config.expiryDuration, Storage.Deliberation().config.snapInterval);
 
         // Act

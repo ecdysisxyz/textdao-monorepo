@@ -34,7 +34,8 @@ import {
  * @dev Library for deploying and initializing TextDAO contracts
  */
 library TextDAODeployer {
-    string internal constant BUNDLE_NAME = "TextDAO";
+    string internal constant TEXT_DAO = "TextDAO";
+    string internal constant TEXT_DAO_WITH_CHEATS = "TextDAOWithCheats";
 
     /**
      * @dev Deploys the TextDAO contract
@@ -42,7 +43,7 @@ library TextDAODeployer {
      * @return textDAO Address of the deployed TextDAO proxy
      */
     function deploy(MCDevKit storage mc, Schema.Member[] memory initialMembers) internal returns(address textDAO) {
-        mc.init(BUNDLE_NAME);
+        mc.init(TEXT_DAO);
         _useMainFunctions(mc);
         mc.useFacade(address(new TextDAOFacade())); // for Etherscan proxy read/write
 
@@ -51,6 +52,19 @@ library TextDAODeployer {
                 (initialMembers, initialConfig())
             )
         ).toProxyAddress();
+    }
+
+    /**
+     * @dev Deploys the TextDAO Dictionary contract (without proxy)
+     * @param mc MCDevKit storage reference
+     * @return textDaoDictionary Address of the deployed TextDAO Dictionary
+     */
+    function deployDictionary(MCDevKit storage mc) internal returns(address textDaoDictionary) {
+        mc.init(TEXT_DAO);
+        _useMainFunctions(mc);
+        mc.useFacade(address(new TextDAOFacade())); // for Etherscan proxy read/write
+
+        return mc.deployDictionary().addr;
     }
 
     /**
@@ -79,7 +93,7 @@ library TextDAODeployer {
      * @return textDAO Address of the deployed TextDAO proxy
      */
     function deployWithCheats(MCDevKit storage mc, address admin) internal returns(address textDAO) {
-        mc.init(BUNDLE_NAME);
+        mc.init(TEXT_DAO_WITH_CHEATS);
         _useMainFunctions(mc);
         _useCheatFunctions(mc);
         mc.useFacade(address(new TextDAOWithCheatsFacade())); // for Etherscan proxy read/write
@@ -92,21 +106,17 @@ library TextDAODeployer {
     }
 
     /**
-     * @dev Deploys the TextDAO contract with getter functions
+     * @dev Deploys the TextDAOWithCheats Dictionary contract (without proxy)
      * @param mc MCDevKit storage reference
-     * @return textDAO Address of the deployed TextDAO proxy
+     * @return textDaoDictionary Address of the deployed TextDAOWithCheats Dictionary
      */
-    function deployWithGetter(MCDevKit storage mc, Schema.Member[] memory initialMembers) internal returns(address textDAO) {
-        mc.init(BUNDLE_NAME);
+    function deployDictionaryWithCheats(MCDevKit storage mc) internal returns(address textDaoDictionary) {
+        mc.init(TEXT_DAO_WITH_CHEATS);
         _useMainFunctions(mc);
-        _useGetterFunctions(mc);
-        mc.useFacade(address(new TextDAOWithGetterFacade())); // for Etherscan proxy read/write
+        _useCheatFunctions(mc);
+        mc.useFacade(address(new TextDAOWithCheatsFacade())); // for Etherscan proxy read/write
 
-        return mc.deploy(
-            abi.encodeCall(Initialize.initialize,
-                (initialMembers, initialConfig())
-            )
-        ).toProxyAddress();
+        return mc.deployDictionary().addr;
     }
 
     //=============================
@@ -153,27 +163,6 @@ library TextDAODeployer {
         mc.use("ForceApprove", OnlyAdminCheats.forceApprove.selector, onlyAdminCheats);
         mc.use("ForceApproveAndExecute", OnlyAdminCheats.forceApproveAndExecute.selector, onlyAdminCheats);
         mc.use("ExtendExpirationTimeCheat", OnlyAdminCheats.extendExpirationTime.selector, onlyAdminCheats);
-    }
-
-    /**
-     * @dev Sets up getter functions (commented out in current implementation)
-     * @param mc MCDevKit storage reference
-     */
-    function _useGetterFunctions(MCDevKit storage mc) internal {
-        // address getter = address(new Getter());
-        // mc.use("getProposal", Getter.getProposal.selector, getter);
-        // mc.use("getProposalHeaders", Getter.getProposalHeaders.selector, getter);
-        // // mc.use("getProposalCommand", Getter.getProposalCommand.selector, getter);
-        // mc.use("getProposalsConfig", Getter.getProposalsConfig.selector, getter);
-        // mc.use("getText", Getter.getText.selector, getter);
-        // mc.use("getTexts", Getter.getTexts.selector, getter);
-        // mc.use("getMember", Getter.getMember.selector, getter);
-        // mc.use("getMembers", Getter.getMembers.selector, getter);
-        // // mc.use("getVRFRequest", Getter.getVRFRequest.selector, getter);
-        // // mc.use("getNextVRFId", Getter.getNextVRFId.selector, getter);
-        // mc.use("getSubscriptionId", Getter.getSubscriptionId.selector, getter);
-        // mc.use("getVRFConfig", Getter.getVRFConfig.selector, getter);
-        // mc.use("getConfigOverride", Getter.getConfigOverride.selector, getter);
     }
 
     /**

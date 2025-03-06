@@ -133,7 +133,7 @@ contract TallyTest is MCTest {
 
         $proposalMeta.expirationTime = block.timestamp - 1;
 
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.ProposalTallied(0, 1, 3);
         Tally(target).tally(0);
 
@@ -172,7 +172,7 @@ contract TallyTest is MCTest {
         uint[] memory _tieCommandIds = new uint[](1);
         _tieCommandIds[0] = 3;
 
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.ProposalTalliedWithTie(0, _epoch, _tieHeaderIds, _tieCommandIds, _extendedExpirationTime);
         Tally(target).tally(0);
 
@@ -199,7 +199,7 @@ contract TallyTest is MCTest {
         uint _initialExpirationTime = $proposalMeta.expirationTime;
         uint _extendedExpirationTime = _initialExpirationTime + Storage.Deliberation().config.expiryDuration;
 
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.ProposalTalliedWithTie(0, _epoch, new uint[](0), new uint[](0), _extendedExpirationTime);
         Tally(target).tally(0);
 
@@ -244,7 +244,7 @@ contract TallyTest is MCTest {
         _top3CommandIdsExpected[1] = 2;
         _top3CommandIdsExpected[2] = 1;
 
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.ProposalSnapped(0, $proposal.calcCurrentEpoch(), _top3HeaderIdsExpected, _top3CommandIdsExpected);
         Tally(target).tally(0);
 

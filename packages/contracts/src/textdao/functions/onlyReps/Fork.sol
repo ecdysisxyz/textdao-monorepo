@@ -88,9 +88,9 @@ contract ForkTest is MCTest {
         TestUtils.setMsgSenderAsRep(pid);
 
         // Expect correct events to be emitted
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.HeaderCreated(pid, 1, "Qc.....xh");
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.CommandCreated(pid, 1, new Schema.Action[](1));
 
         Fork(target).fork({
@@ -115,7 +115,7 @@ contract ForkTest is MCTest {
         TestUtils.setMsgSenderAsRep(pid);
 
         // Expect correct event to be emitted
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.HeaderCreated(pid, 1, "Qc.....xh");
 
         Fork(target).fork({
@@ -140,7 +140,7 @@ contract ForkTest is MCTest {
         TestUtils.setMsgSenderAsRep(pid);
 
         // Expect correct event to be emitted
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.CommandCreated(pid, 1, new Schema.Action[](1));
 
         Fork(target).fork({

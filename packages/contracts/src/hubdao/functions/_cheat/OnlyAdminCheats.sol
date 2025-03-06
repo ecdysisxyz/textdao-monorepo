@@ -8,6 +8,7 @@ import {DaoTemplateLib} from "bundle/hubdao/storages/utils/DaoTemplateLib.sol";
 import {GlobalConfigLib} from "bundle/hubdao/storages/utils/GlobalConfigLib.sol";
 import {AdminLib} from "bundle/hubdao/storages/utils/AdminLib.sol";
 // Interfaces
+import {ICheats} from "bundle/hubdao/interfaces/HubDAOFunctions.sol";
 import {HubDAOErrors} from "bundle/hubdao/interfaces/HubDAOErrors.sol";
 
 /**

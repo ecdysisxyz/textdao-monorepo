@@ -2,7 +2,7 @@
 pragma solidity ^0.8.24;
 
 import {Schema} from "bundle/hubdao/storages/Schema.sol";
-import {HubDAOMainFunctions, HubDAOProtectedFunctions, ICheats} from "bundle/hubdao/interfaces/HubDAOFunctions.sol";
+import {HubDAOMainFunctions, ICheats} from "bundle/hubdao/interfaces/HubDAOFunctions.sol";
 import {HubDAOErrors} from "bundle/hubdao/interfaces/HubDAOErrors.sol";
 import {HubDAOEvents} from "bundle/hubdao/interfaces/HubDAOEvents.sol";
 
@@ -16,5 +16,3 @@ import {HubDAOEvents} from "bundle/hubdao/interfaces/HubDAOEvents.sol";
 interface IHubDAO is Schema, HubDAOMainFunctions, HubDAOErrors, HubDAOEvents {}
 
 interface IHubDAOWithCheats is IHubDAO, ICheats {}
-
-interface HubDAOFullInterface is IHubDAO, HubDAOProtectedFunctions {}

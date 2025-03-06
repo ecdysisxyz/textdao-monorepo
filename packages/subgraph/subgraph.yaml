@@ -4,13 +4,44 @@ schema:
 features:
   - ipfsOnEthereumContracts
 dataSources:
-  - name: TextDAO
-    kind: ethereum
-    network: base
+  - name: HubDAO
+    kind: ethereum/contract
+    network: holesky
     source:
-      address: "0x4BCa2f13d54Fe50B7a9E9062f5e3337f23B4562c"
+      address: "0x7f5ACc2e4E2b5330497a76836DfED766929d70D7"
+      abi: HubDAOEvents
+      startBlock: 2018088
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      abis:
+        - name: HubDAOEvents
+          file: ../contracts/out/HubDAOEvents.sol/HubDAOEvents.json
+      entities:
+        - DaoRegistry
+        - DaoTemplate
+        - DaoInfo
+        - GlobalConfig
+        - User
+      file: ./src/hubdao/index.ts
+      eventHandlers:
+        - event: BaseCurrencyUpdated((address))
+          handler: handleBaseCurrencyUpdated
+        - event: DaoRegistered((uint8,address,string))
+          handler: handleDaoRegistered
+        - event: DaoTemplateAdded((uint8,address))
+          handler: handleDaoTemplateAdded
+        - event: UserProfileUpdated(address,string)
+          handler: handleUserProfileUpdated
+        - event: UserProfileRemoved(address)
+          handler: handleUserProfileRemoved
+templates:
+  - name: TextDAO
+    kind: ethereum/contract
+    network: holesky
+    source:
       abi: TextDAOEvents
-      startBlock: 20902608
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -29,7 +60,7 @@ dataSources:
         - Vote
         - Text
         - Member
-      file: ./src/mapping.ts
+      file: ./src/textdao/index.ts
       eventHandlers:
         - event: DeliberationConfigUpdated((uint256,uint256,uint256,uint256))
           handler: handleDeliberationConfigUpdated
@@ -73,7 +104,32 @@ dataSources:
           handler: handleMemberAddedByProposal
         - event: MemberUpdatedByProposal(uint256,uint256,address,string)
           handler: handleMemberUpdatedByProposal
-templates:
+  # HubDAO IPFS
+  - name: DaoMetadata
+    kind: file/ipfs
+    mapping:
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      abis:
+        - name: HubDAOEvents
+          file: ../contracts/out/HubDAOEvents.sol/HubDAOEvents.json
+      entities:
+        - DaoMetadata
+      file: ./src/file-data-handlers/header-contents.ts
+      handler: handleDaoMetadata
+  - name: UserInfo
+    kind: file/ipfs
+    mapping:
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      abis:
+        - name: HubDAOEvents
+          file: ../contracts/out/HubDAOEvents.sol/HubDAOEvents.json
+      entities:
+        - UserInfo
+      file: ./src/file-data-handlers/header-contents.ts
+      handler: handleUserInfo
+  # TextDAO IPFS
   - name: HeaderContents
     kind: file/ipfs
     mapping:

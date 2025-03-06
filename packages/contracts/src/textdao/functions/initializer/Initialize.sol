@@ -5,12 +5,14 @@ pragma solidity ^0.8.24;
 import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 // Storage
 import {Storage, Schema} from "bundle/textdao/storages/Storage.sol";
+import {DeliberationLib} from "bundle/textdao/utils/DeliberationLib.sol";
 import {MemberLib} from "bundle/textdao/utils/MemberLib.sol";
 // Interface
 import {IInitialize} from "bundle/textdao/interfaces/TextDAOFunctions.sol";
 import {TextDAOEvents} from "bundle/textdao/interfaces/TextDAOEvents.sol";
 
 contract Initialize is IInitialize, Initializable {
+    using DeliberationLib for Schema.Deliberation;
     using MemberLib for Schema.Members;
 
     function initialize(Schema.Member[] calldata _initialMembers, Schema.DeliberationConfig calldata _initialConfig) external initializer {
@@ -18,8 +20,7 @@ contract Initialize is IInitialize, Initializable {
         Storage.Members().addMembers(_initialMembers);
 
         // 2. Set Initial DeliberationConfig
-        Storage.Deliberation().config = _initialConfig;
-        emit TextDAOEvents.DeliberationConfigUpdated(_initialConfig);
+        Storage.Deliberation().setConfig(_initialConfig);
 
         /// @dev emit Initialized(1) @Initializable.initializer()
     }

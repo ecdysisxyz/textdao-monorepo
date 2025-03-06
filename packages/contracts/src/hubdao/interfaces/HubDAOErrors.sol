@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
+import {Schema} from "bundle/hubdao/storages/Schema.sol";
+
 /**
  * @title HubDAOErrors
  * @dev Error definitions for HubDAO
@@ -12,4 +14,12 @@ interface HubDAOErrors {
     error InvalidInitialization();
     /// @dev Thrown when an operation is performed outside of the initializing phase
     error NotInitializing();
+
+    error TemplateAlreadyExist(Schema.TemplateType templateType);
+    error TemplateNotFound(Schema.TemplateType templateType);
+
+    error DaoAlreadyRegistered(address daoAddress);
+    error DaoNotFound(address daoAddress);
+
+    error NotAdmin(address target);
 }

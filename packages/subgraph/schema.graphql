@@ -1,3 +1,55 @@
+# HubDAO
+type DaoRegistry @entity {
+    id: ID! "DaoRegistryID"
+    daoInfos: [DaoInfo!]
+}
+
+type DaoTemplate @entity {
+    id: ID! "{TemplateType}"
+    daoType: DaoTemplateType
+    dictionaryAddress: Bytes
+}
+enum DaoTemplateType {
+    undefined
+    TextDAO
+    TextDAOWithCheats
+}
+
+type DaoInfo @entity {
+    id: ID! "{DaoAddress}"
+    daoType: DaoTemplateType
+    address: Bytes
+    cid: String! # metadataCid
+    metadata: DaoMetadata
+}
+type DaoMetadata @entity {
+    id: ID! "{ipfsCid}"
+    name: String
+    image: String
+    description: String
+}
+
+type GlobalConfig @entity {
+    id: ID! "GlobalConfigID"
+    baseCurrency: Bytes
+}
+
+type User @entity {
+    id: ID! "{address}"
+    addr: Bytes!
+    infoCid: String
+    info: UserInfo
+}
+
+type UserInfo @entity {
+    id: ID! "{ipfsCid}"
+    name: String
+    image: String
+    bio: String
+}
+
+# TextDAOs
+
 type DeliberationConfig @entity {
     id: ID! "DeliberationConfigID"
     expiryDuration: BigInt!

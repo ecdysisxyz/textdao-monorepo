@@ -114,7 +114,7 @@ library TextDAOOps {
             funcSig: "memberJoin(uint256,(address,string)[])",
             abiParams: abi.encode(__.pid, _memberCandidates)
         });
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.HeaderCreated(__.pid, 2, __.headerMetadataCid2);
         emit TextDAOEvents.CommandCreated(__.pid, 1, _actions);
         textDAO.fork(__.pid, __.headerMetadataCid2, _actions);
@@ -124,7 +124,7 @@ library TextDAOOps {
             rankedHeaderIds: [uint(1), 2, 0],
             rankedCommandIds: [uint(1), 0, 0]
         });
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.Voted(__.pid, __.sender, _vote1);
         textDAO.vote(__.pid, _vote1);
 
@@ -134,7 +134,7 @@ library TextDAOOps {
             rankedHeaderIds: [uint(2), 1, 0],
             rankedCommandIds: [uint(1), 0, 0]
         });
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.Voted(__.pid, __.sender2, _vote2);
         textDAO.vote(__.pid, _vote2);
 
@@ -151,7 +151,7 @@ library TextDAOOps {
         __.tieHeaderIds[1] = 2;
         __.tieCommandIds = new uint256[](1);
         __.tieCommandIds[0] = 1;
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.ProposalTalliedWithTie(__.pid, __.epoch, __.tieHeaderIds, __.tieCommandIds, __.extendedExpirationTime);
         textDAO.forceTally(__.pid);
 
@@ -163,7 +163,7 @@ library TextDAOOps {
             rankedHeaderIds: [uint(1), 2, 0],
             rankedCommandIds: [uint(1), 0, 0]
         });
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.Voted(__.pid, __.sender2, _vote3);
         textDAO.vote(__.pid, _vote3);
 
@@ -173,7 +173,7 @@ library TextDAOOps {
         vm.startBroadcast(__.key1);
 
         // Tally votes again, expect resolution
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.ProposalTallied(__.pid, 1, 1);
         textDAO.forceTally(__.pid);
     }

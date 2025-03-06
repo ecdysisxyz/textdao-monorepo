@@ -5,7 +5,7 @@ import {
   handleDeliberationConfigUpdated,
   handleDeliberationConfigUpdatedByProposal,
 } from "../../src/event-handlers/deliberation-config-updated";
-import { genDeliberationConfigId } from "../../src/utils/entity-id-provider";
+import { genDeliberationConfigId } from "../../src/textdao/utils/entity-id-provider";
 import {
   createMockDeliberationConfigUpdatedByProposalEvent,
   createMockDeliberationConfigUpdatedEvent,

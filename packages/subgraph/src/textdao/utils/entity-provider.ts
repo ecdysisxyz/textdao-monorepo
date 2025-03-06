@@ -10,7 +10,7 @@ import {
   TopCommand,
   TopHeader,
   Vote,
-} from "../../generated/schema";
+} from "../../../generated/schema";
 import {
   genActionId,
   genCommandId,

@@ -28,10 +28,10 @@ import {
   genTopCommandId,
   genTopHeaderId,
   genVoteId,
-} from "../src/utils/entity-id-provider";
-import { loadProposal } from "../src/utils/entity-provider";
-import { Action, Vote } from "../src/utils/schema-types";
-import { formatAddressArray, formatBigIntArray } from "../src/utils/type-formatter";
+} from "../src/textdao/utils/entity-id-provider";
+import { loadProposal } from "../src/textdao/utils/entity-provider";
+import { Action, Vote } from "../src/textdao/utils/schema-types";
+import { formatAddressArray, formatBigIntArray } from "../src/textdao/utils/type-formatter";
 import {
   createMockCommandCreatedEvent,
   createMockHeaderCreatedEvent,

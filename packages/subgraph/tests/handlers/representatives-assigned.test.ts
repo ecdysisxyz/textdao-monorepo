@@ -1,8 +1,8 @@
 import { Address, BigInt } from "@graphprotocol/graph-ts";
 import { assert, beforeEach, clearStore, describe, test } from "matchstick-as/assembly/index";
 import { handleRepresentativesAssigned } from "../../src/event-handlers/representatives-assigned";
-import { genProposalId } from "../../src/utils/entity-id-provider";
-import { formatAddressArray } from "../../src/utils/type-formatter";
+import { genProposalId } from "../../src/textdao/utils/entity-id-provider";
+import { formatAddressArray } from "../../src/textdao/utils/type-formatter";
 import { createMockRepresentativesAssignedEvent } from "../utils/mock-events";
 
 describe("RepresentativesAssigned Event Handler", () => {

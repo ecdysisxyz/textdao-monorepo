@@ -3,6 +3,7 @@ pragma solidity ^0.8.24;
 
 import {Storage, Schema} from "bundle/textdao/storages/Storage.sol";
 import {TextDAOErrors} from "bundle/textdao/interfaces/TextDAOErrors.sol";
+import {TextDAOEvents} from "bundle/textdao/interfaces/TextDAOEvents.sol";
 
 /**
  * @title DeliberationLib v0.1.0
@@ -24,6 +25,26 @@ library DeliberationLib {
         if ($deliberation.proposals.length <= pid) revert TextDAOErrors.ProposalNotFound();
         return $deliberation.proposals[pid];
     }
+
+    function setConfig(Schema.Deliberation storage $deliberation, Schema.DeliberationConfig memory config) internal {
+        $deliberation.config = config;
+        emit TextDAOEvents.DeliberationConfigUpdated(config);
+    }
+
+    function setConfig(Schema.DeliberationConfig storage $deliberationConfig, Schema.DeliberationConfig memory config) internal {
+        $deliberationConfig.expiryDuration = config.expiryDuration;
+        $deliberationConfig.snapInterval = config.snapInterval;
+        $deliberationConfig.repsNum = config.repsNum;
+        $deliberationConfig.quorumScore = config.quorumScore;
+        emit TextDAOEvents.DeliberationConfigUpdated(config);
+    }
+
+    function newConfig(uint expiryDuration, uint snapInterval, uint repsNum, uint quorumScore) internal pure returns(Schema.DeliberationConfig memory config) {
+        config.expiryDuration = expiryDuration;
+        config.snapInterval = snapInterval;
+        config.repsNum = repsNum;
+        config.quorumScore = quorumScore;
+    }
 }
 
 
@@ -39,9 +60,9 @@ contract DeliberationLibTest is MCTest {
 
         vm.record();
         Schema.Proposal storage $proposal = Storage.Deliberation().createProposal();
-        (, bytes32[] memory writes) = vm.accesses(
-            address(this)
-        );
+        // (, bytes32[] memory writes) = vm.accesses(
+        //     address(this)
+        // );
         assertEq($proposal.headers.length, 1, "Headers array should be initialized with one element");
         assertEq($proposal.cmds.length, 1, "Commands array should be initialized with one element");
         assertEq($proposal.meta.createdAt, block.timestamp);
@@ -56,9 +77,9 @@ contract DeliberationLibTest is MCTest {
         proposal.cmds.push();
 
         proposal.meta.createdAt = block.timestamp;
-        (, bytes32[] memory writes) = vm.accesses(
-            address(this)
-        );
+        // (, bytes32[] memory writes) = vm.accesses(
+        //     address(this)
+        // );
 
     }
 

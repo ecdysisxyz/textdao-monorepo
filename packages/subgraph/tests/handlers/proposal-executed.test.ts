@@ -1,7 +1,7 @@
 import { BigInt } from "@graphprotocol/graph-ts";
 import { assert, beforeEach, clearStore, describe, test } from "matchstick-as/assembly/index";
 import { handleProposalExecuted } from "../../src/event-handlers/proposal-executed";
-import { genActionId, genCommandId, genProposalId } from "../../src/utils/entity-id-provider";
+import { genActionId, genCommandId, genProposalId } from "../../src/textdao/utils/entity-id-provider";
 import { createMockActionEntity, createMockCommandEntity, createMockProposalEntity } from "../utils/mock-entities";
 import { createMockProposalExecutedEvent } from "../utils/mock-events";
 

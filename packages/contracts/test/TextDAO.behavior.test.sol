@@ -39,7 +39,7 @@ contract TextDAOBehaviorTest is MCTest {
         _reps[2] = MEMBER3;
         string memory _metadataCid = "originalProposalCid";
         vm.prank(MEMBER1);
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.HeaderCreated(0, 1, _metadataCid);
         emit TextDAOEvents.RepresentativesAssigned(0, _reps);
         emit TextDAOEvents.Proposed(0, MEMBER1, block.timestamp, _expirationTime, TextDAODeployer.initialConfig().snapInterval);
@@ -53,7 +53,7 @@ contract TextDAOBehaviorTest is MCTest {
             funcSig: "memberJoin(uint256,(address,string)[])",
             abiParams: abi.encode(_pid, new Schema.Member[](1))
         });
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.HeaderCreated(_pid, 2, _forkCid);
         emit TextDAOEvents.CommandCreated(_pid, 1, _actions);
         textDAO.fork(_pid, _forkCid, _actions);
@@ -64,7 +64,7 @@ contract TextDAOBehaviorTest is MCTest {
             rankedHeaderIds: [uint(1), 2, 0],
             rankedCommandIds: [uint(1), 0, 0]
         });
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.Voted(_pid, MEMBER1, _vote1);
         textDAO.vote(_pid, _vote1);
 
@@ -73,7 +73,7 @@ contract TextDAOBehaviorTest is MCTest {
             rankedHeaderIds: [uint(2), 1, 0],
             rankedCommandIds: [uint(1), 0, 0]
         });
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.Voted(_pid, MEMBER2, _vote2);
         textDAO.vote(_pid, _vote2);
 
@@ -82,7 +82,7 @@ contract TextDAOBehaviorTest is MCTest {
             rankedHeaderIds: [uint(2), 1, 0],
             rankedCommandIds: [uint(1), 0, 0]
         });
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.Voted(_pid, MEMBER3, _vote3);
         textDAO.vote(_pid, _vote3);
 
@@ -90,7 +90,7 @@ contract TextDAOBehaviorTest is MCTest {
         vm.warp(_expirationTime + 1);
 
         // Tally votes and then executed
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.ProposalTallied(_pid, 2, 1);
         emit TextDAOEvents.MemberAddedByProposal(_pid, 3, address(0), ""); // memberId: 3
         emit TextDAOEvents.ProposalExecuted(_pid, 1);
@@ -124,7 +124,7 @@ contract TextDAOBehaviorTest is MCTest {
         __.reps[2] = MEMBER3;
         __.metadataCid = "tieProposalCid";
         vm.prank(MEMBER1);
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.HeaderCreated(0, 1, __.metadataCid);
         emit TextDAOEvents.RepresentativesAssigned(0, __.reps);
         emit TextDAOEvents.Proposed(0, MEMBER1, block.timestamp, __.expirationTime, TextDAODeployer.initialConfig().snapInterval);
@@ -138,7 +138,7 @@ contract TextDAOBehaviorTest is MCTest {
             funcSig: "memberJoin(uint256,(address,string)[])",
             abiParams: abi.encode(__.pid, new Schema.Member[](1))
         });
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.HeaderCreated(__.pid, 2, __.forkCid);
         emit TextDAOEvents.CommandCreated(__.pid, 1, __.actions);
         textDAO.fork(__.pid, __.forkCid, __.actions);
@@ -149,7 +149,7 @@ contract TextDAOBehaviorTest is MCTest {
             rankedHeaderIds: [uint(1), 2, 0],
             rankedCommandIds: [uint(1), 0, 0]
         });
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.Voted(__.pid, MEMBER1, _vote1);
         textDAO.vote(__.pid, _vote1);
 
@@ -158,7 +158,7 @@ contract TextDAOBehaviorTest is MCTest {
             rankedHeaderIds: [uint(2), 1, 0],
             rankedCommandIds: [uint(1), 0, 0]
         });
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.Voted(__.pid, MEMBER2, _vote2);
         textDAO.vote(__.pid, _vote2);
 
@@ -174,7 +174,7 @@ contract TextDAOBehaviorTest is MCTest {
         __.tieHeaderIds[1] = 2;
         __.tieCommandIds = new uint256[](1);
         __.tieCommandIds[0] = 1;
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.ProposalTalliedWithTie(__.pid, __.epoch, __.tieHeaderIds, __.tieCommandIds, __.extendedExpirationTime);
         textDAO.tallyAndExecute(__.pid);
 
@@ -184,7 +184,7 @@ contract TextDAOBehaviorTest is MCTest {
             rankedHeaderIds: [uint(1), 2, 0],
             rankedCommandIds: [uint(1), 0, 0]
         });
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.Voted(__.pid, MEMBER3, _vote3);
         textDAO.vote(__.pid, _vote3);
 
@@ -192,7 +192,7 @@ contract TextDAOBehaviorTest is MCTest {
         vm.warp(__.expirationTime + TextDAODeployer.initialConfig().expiryDuration + 1);
 
         // Tally votes again, expect resolution
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.ProposalTallied(__.pid, 1, 1);
         emit TextDAOEvents.MemberAddedByProposal(__.pid, 3, address(0), "");
         emit TextDAOEvents.ProposalExecuted(__.pid, 1);
@@ -219,7 +219,7 @@ contract TextDAOBehaviorTest is MCTest {
         string memory _metadataCid = "proposalCid";
         uint256 _snapInterval = TextDAODeployer.initialConfig().snapInterval;
         vm.prank(MEMBER1);
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.HeaderCreated(0, 1, _metadataCid);
         emit TextDAOEvents.RepresentativesAssigned(0, _reps);
         emit TextDAOEvents.Proposed(0, MEMBER1, block.timestamp, _expirationTime, _snapInterval);
@@ -227,7 +227,7 @@ contract TextDAOBehaviorTest is MCTest {
 
         uint256 _epoch = block.timestamp / _snapInterval * _snapInterval;
         // uint256 _epoch = 1; // snapInterval == 0
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.ProposalSnapped(proposalId, _epoch, new uint[](0), new uint[](0));
         textDAO.tallyAndExecute(proposalId);
 

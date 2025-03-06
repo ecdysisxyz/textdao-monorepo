@@ -7,7 +7,7 @@ import {
   genProposalId,
   genTopCommandId,
   genTopHeaderId,
-} from "../../src/utils/entity-id-provider";
+} from "../../src/textdao/utils/entity-id-provider";
 import { createMockProposalEntity } from "../utils/mock-entities";
 import { createMockProposalTalliedEvent, createMockProposalTalliedWithTieEvent } from "../utils/mock-events";
 

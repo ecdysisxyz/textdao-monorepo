@@ -271,9 +271,9 @@ contract RCVLibTest is Test {
         $testProposal.meta.votes[address(2)] = Schema.Vote(uintArray(2, 3, 2), uintArray(2, 4, 2)); // Note the duplicate votes
         $testProposal.meta.votes[address(3)] = Schema.Vote(uintArray(3, 1, 0), uintArray(1, 5, 3)); // Note the out-of-range votes
 
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.WARN_HeaderChoiceIsOutOfRange(0);
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.WARN_CommandChoiceIsOutOfRange(5);
 
         (uint[] memory _headerScores, uint[] memory _commandScores) = $testProposal.calcRCVScores();
@@ -475,7 +475,7 @@ contract RCVLibTest is Test {
         $testProposal.meta.votes[address(1)] = Schema.Vote(uintArray(0, 4, 5), uintArray(0, 4, 5));
 
         // Expect warning events for each invalid vote
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.WARN_HeaderChoiceIsOutOfRange(0);
         emit TextDAOEvents.WARN_HeaderChoiceIsOutOfRange(4);
         emit TextDAOEvents.WARN_HeaderChoiceIsOutOfRange(5);
@@ -516,7 +516,7 @@ contract RCVLibTest is Test {
         $testProposal.meta.votes[address(1)] = Schema.Vote(uintArray(1, 1, 1), uintArray(2, 2, 2));
 
         // Expect warning events for duplicate votes
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.WARN_HeaderChoiceIsDuplicate(1);
         emit TextDAOEvents.WARN_HeaderChoiceIsDuplicate(1);
         emit TextDAOEvents.WARN_CommandChoiceIsDuplicate(2);

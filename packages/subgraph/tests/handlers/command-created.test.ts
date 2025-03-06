@@ -1,8 +1,8 @@
 import { BigInt, Bytes } from "@graphprotocol/graph-ts";
 import { assert, beforeEach, clearStore, describe, test } from "matchstick-as/assembly/index";
 import { handleCommandCreated } from "../../src/event-handlers/command-created";
-import { genActionId, genCommandId, genProposalId } from "../../src/utils/entity-id-provider";
-import { Action } from "../../src/utils/schema-types";
+import { genActionId, genCommandId, genProposalId } from "../../src/textdao/utils/entity-id-provider";
+import { Action } from "../../src/textdao/utils/schema-types";
 import { createMockCommandCreatedEvent } from "../utils/mock-events";
 
 describe("CommandCreated Event Handler", () => {

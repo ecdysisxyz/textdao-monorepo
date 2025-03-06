@@ -286,7 +286,7 @@ contract TextDAOStateTest is MCTest {
         _tieHeaderIds[1] = 2;
         uint256[] memory _tieCommandIds = new uint256[](1);
         _tieCommandIds[0] = 1;
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.ProposalTalliedWithTie(_pid, _epoch, _tieHeaderIds, _tieCommandIds, $proposal.meta.expirationTime + _config.expiryDuration);
         textDAO.tallyAndExecute(_pid);
 
@@ -314,7 +314,7 @@ contract TextDAOStateTest is MCTest {
         _winningHeaderIds[0] = 1;
         uint256[] memory _winningCommandIds = new uint256[](1);
         _winningCommandIds[0] = 1;
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.ProposalTallied(_pid, _winningHeaderIds[0], _winningCommandIds[0]);
         emit TextDAOEvents.ProposalExecuted(_pid, _winningCommandIds[0]);
         textDAO.tallyAndExecute(_pid);
@@ -452,7 +452,7 @@ contract TextDAOStateTest is MCTest {
         uint256 pid = textDAO.propose("proposalCid", new Schema.Action[](0));
         uint _epoch = Storage.Deliberation().getProposal(pid).calcCurrentEpoch();
 
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit TextDAOEvents.ProposalSnapped(pid, _epoch, new uint[](0), new uint[](0));
         textDAO.tallyAndExecute(pid);
     }
